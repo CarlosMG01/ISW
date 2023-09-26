@@ -95,7 +95,8 @@ def mostrar_ventana_home():
     ventana_home.title(f"Bienvenido, {usuario_actual}")
 
     # Aquí puedes diseñar la interfaz de tu ventana "home"
-
+    # Este home es el de nuestra aplicacion. 
+    # Habría que hacer que si inicio de sesion exitoso te lleve al home linea 78-85
 # Función para abrir la ventana de registro
 def abrir_ventana_registro():
     global correo_entry, usuario_entry, password_entry, ventana_inicio_sesion
