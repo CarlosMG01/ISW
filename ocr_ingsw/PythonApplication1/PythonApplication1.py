@@ -45,10 +45,12 @@ def registrar_usuario():
             correo_entry.delete(0, tk.END)
             usuario_entry.delete(0, tk.END)
             password_entry.delete(0, tk.END)
-
+            
             # Mostrar un mensaje de exito
             messagebox.showinfo("Registro Exitoso", "Usuario registrado con exito.")
-
+            # Cierro mi pestaña de registro
+       
+        #Mostrar mensajes de error
         except Exception as e:
             messagebox.showerror("Error", f"Error al registrar usuario: {str(e)}")
     else:
@@ -75,25 +77,30 @@ def iniciar_sesion():
 
         if usuario_encontrado:
                messagebox.showinfo("Exito", "Inicio de sesion exitoso.")
+               # Almacenar el nombre de usuario actual
                usuario_actual = usuario
-               
-               mostrar_ventana_home()
+               #Ocultar la ventana de inicio de sesion
+               ventana_principal.destroy()
+               # Mostrar la ventana del "home" de la
+               mostrar_ventana_home()         
+            
         else:
             messagebox.showerror("Error", "Usuario o password incorrectos.")
 
     except Exception as e:
         messagebox.showerror("Error", f"Error al iniciar sesion: {str(e)}")
-    
-# Funcion para mostrar la ventana "home" de la 
-def mostrar_ventana_home():
-    global usuario_actual
-    ventana_home = tk.Toplevel(ventana_principal)
-    ventana_home.title(f"Bienvenido, {usuario_actual}")
 
-    # Aqui puedes diseñar la interfaz de tu ventana "home"
+# Función para mostrar la ventana "home" 
+def mostrar_ventana_home():
+    ventana_home = tk.Toplevel(ventana_principal1)
+    ventana_home.title(f"Bienvenido, {usuario_actual}")
+    ventana_principal1.withdraw()
+    cambiarpass_button = tk.Button(ventana_home, text="Cambiar contrasena", command=cambiar_passw)
+    cambiarpass_button.pack()
+
     # Este home es el de nuestra aplicacion. 
-    # Habria que hacer que si inicio de sesion exitoso te lleve al home linea 78-85
-# Funcion para abrir la ventana de registro
+    # Habría que hacer que si inicio de sesion exitoso te lleve al home linea 78-85
+# Función para abrir la ventana de registro
 def abrir_ventana_registro():
     global correo_entry, usuario_entry, password_entry, ventana_inicio_sesion
     
@@ -116,6 +123,45 @@ def abrir_ventana_registro():
     registrar_button = tk.Button(ventana_registro, text="Registrar", command=registrar_usuario)
     registrar_button.pack()
 
+def cambiar_passw():
+    global usuario_actual
+    
+    # Crear una nueva ventana para cambiar la contraseña
+    ventana_cambio_passw = tk.Toplevel(ventana_principal1)
+    ventana_cambio_passw.title("Cambiar Contrasena")
+
+    # Crear etiquetas y campos de entrada para el cambio de contraseña
+    tk.Label(ventana_cambio_passw, text=f"Cambiar contrasena para {usuario_actual}").pack()
+
+    tk.Label(ventana_cambio_passw, text="Nueva Contrasena:").pack()
+    nueva_contrasena_entry = tk.Entry(ventana_cambio_passw, show="*")
+    nueva_contrasena_entry.pack()
+
+    # Agregar un botón para cambiar la contraseña
+    cambiar_contrasena_button = tk.Button(ventana_cambio_passw, text="Cambiar Contrasena", command=lambda: cambiar_contrasena_confirmado(nueva_contrasena_entry.get()))
+    cambiar_contrasena_button.pack()
+
+# Función para cambiar la contraseña en la base de datos
+def cambiar_contrasena_confirmado(nueva_contrasena):
+    global usuario_actual
+    
+    try:
+        # Conectar a la base de datos
+        conn = sqlite3.connect("usuarios.db")
+        cursor = conn.cursor()
+
+        # Actualizar la contraseña en la base de datos
+        cursor.execute("UPDATE usuarios SET password = ? WHERE nombre_usuario = ?", (nueva_contrasena, usuario_actual))
+        conn.commit()
+        conn.close()
+
+        # Mostrar un mensaje de éxito
+        messagebox.showinfo("Contrasena Cambiada", "La contrasena se ha cambiado con exito.")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Error al cambiar la contrasena: {str(e)}")
+
+    
 # Crear la ventana principal
 ventana_principal = tk.Tk()
 ventana_principal.title("Inicio de sesion")
@@ -137,4 +183,8 @@ iniciar_sesion_button.pack()
 registrar_usuario_button = tk.Button(ventana_principal, text="Registrar Usuario", command=abrir_ventana_registro)
 registrar_usuario_button.pack()
 
+ventana_principal1 = tk.Tk()
+ventana_principal1.title("Inicio de sesion")
+
+ventana_principal1.withdraw()
 ventana_principal.mainloop()
