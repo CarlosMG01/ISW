@@ -75,29 +75,25 @@ def iniciar_sesion():
 
         if usuario_encontrado:
                messagebox.showinfo("Exito", "Inicio de sesion exitoso.")
-         #   # Almacenar el nombre de usuario actual
-         #   usuario_actual = usuario
-
-            # Ocultar la ventana de inicio de sesion
-         #   ventana_inicio_sesion.destroy()
-
-            # Mostrar la ventana del "home" de la
-          #  mostrar_ventana_home()
+               usuario_actual = usuario
+               
+               mostrar_ventana_home()
         else:
             messagebox.showerror("Error", "Usuario o password incorrectos.")
 
     except Exception as e:
         messagebox.showerror("Error", f"Error al iniciar sesion: {str(e)}")
-
-# Función para mostrar la ventana "home" de la 
+    
+# Funcion para mostrar la ventana "home" de la 
 def mostrar_ventana_home():
+    global usuario_actual
     ventana_home = tk.Toplevel(ventana_principal)
     ventana_home.title(f"Bienvenido, {usuario_actual}")
 
-    # Aquí puedes diseñar la interfaz de tu ventana "home"
+    # Aqui puedes diseñar la interfaz de tu ventana "home"
     # Este home es el de nuestra aplicacion. 
-    # Habría que hacer que si inicio de sesion exitoso te lleve al home linea 78-85
-# Función para abrir la ventana de registro
+    # Habria que hacer que si inicio de sesion exitoso te lleve al home linea 78-85
+# Funcion para abrir la ventana de registro
 def abrir_ventana_registro():
     global correo_entry, usuario_entry, password_entry, ventana_inicio_sesion
     
