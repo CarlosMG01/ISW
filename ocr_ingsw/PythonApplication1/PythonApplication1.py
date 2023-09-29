@@ -6,6 +6,7 @@ from tkinter import messagebox
 correo_entry = None
 usuario_entry = None
 password_entry = None
+confirm_password_entry = None
 ventana_inicio_sesion = None
 
 # Variable global para almacenar el nombre de usuario después del inicio de sesion
@@ -13,15 +14,16 @@ usuario_actual = None
 
 # Función para registrar un nuevo usuario
 def registrar_usuario():
-    global correo_entry, usuario_entry, password_entry
+    global correo_entry, usuario_entry, password_entry, confirm_password_entry
     
     # Obtener los datos del formulario de registro
     correo = correo_entry.get()
     nombre_usuario = usuario_entry.get()
     password = password_entry.get()
+    confirm_password = confirm_password_entry.get()
 
     # Verificar si todos los campos están llenos
-    if correo and nombre_usuario and password:
+    if correo and nombre_usuario and password == confirm_password:
         try:
             # Conectar a la base de datos (o crearla si no existe)
             conn = sqlite3.connect("usuarios.db")
@@ -102,7 +104,7 @@ def mostrar_ventana_home():
     # Habría que hacer que si inicio de sesion exitoso te lleve al home linea 78-85
 # Función para abrir la ventana de registro
 def abrir_ventana_registro():
-    global correo_entry, usuario_entry, password_entry, ventana_inicio_sesion
+    global correo_entry, usuario_entry, password_entry, confirm_password_entry, ventana_inicio_sesion
     
     ventana_registro = tk.Toplevel(ventana_principal)
     ventana_registro.title("Registro de Usuario")
@@ -119,6 +121,10 @@ def abrir_ventana_registro():
     tk.Label(ventana_registro, text="password:").pack()
     password_entry = tk.Entry(ventana_registro, show="*")
     password_entry.pack()
+    
+    tk.Label(ventana_registro, text="confirm password").pack()
+    confirm_password_entry = tk.Entry(ventana_registro, show="*")
+    confirm_password_entry.pack()
 
     registrar_button = tk.Button(ventana_registro, text="Registrar", command=registrar_usuario)
     registrar_button.pack()
