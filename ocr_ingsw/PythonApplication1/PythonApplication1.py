@@ -56,7 +56,7 @@ def registrar_usuario():
         except Exception as e:
             messagebox.showerror("Error", f"Error al registrar usuario: {str(e)}")
     else:
-        messagebox.showerror("Campos Incompletos", "Por favor, complete todos los campos.")
+        messagebox.showerror("Campos Incompletos o no coindicden las contrasenas", "Por favor, complete todos los campos.")
 
 # Función para iniciar sesion
 def iniciar_sesion():
@@ -139,16 +139,20 @@ def cambiar_passw():
     # Crear etiquetas y campos de entrada para el cambio de contraseña
     tk.Label(ventana_cambio_passw, text=f"Cambiar contrasena para {usuario_actual}").pack()
 
+    tk.Label(ventana_cambio_passw, text="Contrasena Actual:").pack()
+    contrasena_actual_entry = tk.Entry(ventana_cambio_passw, show="*")
+    contrasena_actual_entry.pack()
+
     tk.Label(ventana_cambio_passw, text="Nueva Contrasena:").pack()
     nueva_contrasena_entry = tk.Entry(ventana_cambio_passw, show="*")
     nueva_contrasena_entry.pack()
 
     # Agregar un botón para cambiar la contraseña
-    cambiar_contrasena_button = tk.Button(ventana_cambio_passw, text="Cambiar Contrasena", command=lambda: cambiar_contrasena_confirmado(nueva_contrasena_entry.get()))
+    cambiar_contrasena_button = tk.Button(ventana_cambio_passw, text="Cambiar Contrasena", command=lambda: cambiar_contrasena_confirmado(contrasena_actual_entry.get(), nueva_contrasena_entry.get()))
     cambiar_contrasena_button.pack()
 
 # Función para cambiar la contraseña en la base de datos
-def cambiar_contrasena_confirmado(nueva_contrasena):
+def cambiar_contrasena_confirmado(contrasena_actual, nueva_contrasena):
     global usuario_actual
     
     try:
@@ -156,13 +160,20 @@ def cambiar_contrasena_confirmado(nueva_contrasena):
         conn = sqlite3.connect("usuarios.db")
         cursor = conn.cursor()
 
-        # Actualizar la contraseña en la base de datos
-        cursor.execute("UPDATE usuarios SET password = ? WHERE nombre_usuario = ?", (nueva_contrasena, usuario_actual))
-        conn.commit()
-        conn.close()
+        # Verificar si la contraseña actual coincide con la almacenada en la base de datos
+        cursor.execute("SELECT * FROM usuarios WHERE nombre_usuario = ? AND password = ?", (usuario_actual, contrasena_actual))
+        usuario_encontrado = cursor.fetchone()
 
-        # Mostrar un mensaje de éxito
-        messagebox.showinfo("Contrasena Cambiada", "La contrasena se ha cambiado con exito.")
+        if usuario_encontrado:
+            # Actualizar la contraseña en la base de datos
+            cursor.execute("UPDATE usuarios SET password = ? WHERE nombre_usuario = ?", (nueva_contrasena, usuario_actual))
+            conn.commit()
+            conn.close()
+
+            # Mostrar un mensaje de éxito
+            messagebox.showinfo("Contrasena Cambiada", "La contrasena se ha cambiado con exito.")
+        else:
+            messagebox.showerror("Error", "Contrasena actual incorrecta. No se pudo cambiar la contrasena.")            
 
     except Exception as e:
         messagebox.showerror("Error", f"Error al cambiar la contrasena: {str(e)}")
