@@ -47,6 +47,7 @@ def registrar_usuario():
             correo_entry.delete(0, tk.END)
             usuario_entry.delete(0, tk.END)
             password_entry.delete(0, tk.END)
+            confirm_password_entry.delete(0, tk.END)
             
             # Mostrar un mensaje de exito
             messagebox.showinfo("Registro Exitoso", "Usuario registrado con exito.")
@@ -146,13 +147,17 @@ def cambiar_passw():
     tk.Label(ventana_cambio_passw, text="Nueva Contrasena:").pack()
     nueva_contrasena_entry = tk.Entry(ventana_cambio_passw, show="*")
     nueva_contrasena_entry.pack()
+    
+    tk.Label(ventana_cambio_passw, text="Confirmar Nueva Contrasena:").pack()
+    confirmar_nueva_contrasena_entry = tk.Entry(ventana_cambio_passw, show="*")
+    confirmar_nueva_contrasena_entry.pack()
 
     # Agregar un botón para cambiar la contraseña
-    cambiar_contrasena_button = tk.Button(ventana_cambio_passw, text="Cambiar Contrasena", command=lambda: cambiar_contrasena_confirmado(contrasena_actual_entry.get(), nueva_contrasena_entry.get()))
+    cambiar_contrasena_button = tk.Button(ventana_cambio_passw, text="Cambiar Contrasena", command=lambda: cambiar_contrasena_confirmado(contrasena_actual_entry.get(), nueva_contrasena_entry.get(), confirmar_nueva_contrasena_entry.get()))
     cambiar_contrasena_button.pack()
 
 # Función para cambiar la contraseña en la base de datos
-def cambiar_contrasena_confirmado(contrasena_actual, nueva_contrasena):
+def cambiar_contrasena_confirmado(contrasena_actual, nueva_contrasena, confirmar_nueva_contrasena):
     global usuario_actual
     
     try:
@@ -165,15 +170,19 @@ def cambiar_contrasena_confirmado(contrasena_actual, nueva_contrasena):
         usuario_encontrado = cursor.fetchone()
 
         if usuario_encontrado:
-            # Actualizar la contraseña en la base de datos
-            cursor.execute("UPDATE usuarios SET password = ? WHERE nombre_usuario = ?", (nueva_contrasena, usuario_actual))
-            conn.commit()
-            conn.close()
+            # Verificar si las dos nuevas contraseñas coinciden
+            if nueva_contrasena == confirmar_nueva_contrasena:
+                # Actualizar la contraseña en la base de datos
+                cursor.execute("UPDATE usuarios SET password = ? WHERE nombre_usuario = ?", (nueva_contrasena, usuario_actual))
+                conn.commit()
+                conn.close()
 
-            # Mostrar un mensaje de éxito
-            messagebox.showinfo("Contrasena Cambiada", "La contrasena se ha cambiado con exito.")
+                # Mostrar un mensaje de éxito
+                messagebox.showinfo("Contrasena Cambiada", "La contrasena se ha cambiado con exito.")
+            else:
+                messagebox.showerror("Error", "Las nuevas contrasenas no coinciden.")
         else:
-            messagebox.showerror("Error", "Contrasena actual incorrecta. No se pudo cambiar la contrasena.")            
+            messagebox.showerror("Error", "Contrasena actual incorrecta. No se pudo cambiar la contrasena.")
 
     except Exception as e:
         messagebox.showerror("Error", f"Error al cambiar la contrasena: {str(e)}")
