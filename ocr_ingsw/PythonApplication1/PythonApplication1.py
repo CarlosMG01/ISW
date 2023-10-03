@@ -9,10 +9,10 @@ password_entry = None
 confirm_password_entry = None
 ventana_inicio_sesion = None
 
-# Variable global para almacenar el nombre de usuario después del inicio de sesion
+# Variable global para almacenar el nombre de usuario despues del inicio de sesion
 usuario_actual = None
 
-# Función para registrar un nuevo usuario
+# Funcion para registrar un nuevo usuario
 def registrar_usuario():
     global correo_entry, usuario_entry, password_entry, confirm_password_entry
     
@@ -22,7 +22,7 @@ def registrar_usuario():
     password = password_entry.get()
     confirm_password = confirm_password_entry.get()
 
-    # Verificar si todos los campos están llenos
+    # Verificar si todos los campos estan llenos
     if correo and nombre_usuario and password == confirm_password:
         try:
             # Conectar a la base de datos (o crearla si no existe)
@@ -51,7 +51,7 @@ def registrar_usuario():
             
             # Mostrar un mensaje de exito
             messagebox.showinfo("Registro Exitoso", "Usuario registrado con exito.")
-            # Cierro mi pestaña de registro
+            # Cierro mi pestana de registro
        
         #Mostrar mensajes de error
         except Exception as e:
@@ -59,7 +59,7 @@ def registrar_usuario():
     else:
         messagebox.showerror("Campos Incompletos o no coindicden las contrasenas", "Por favor, complete todos los campos.")
 
-# Función para iniciar sesion
+# Funcion para iniciar sesion
 def iniciar_sesion():
     global usuario_actual
 
@@ -93,7 +93,7 @@ def iniciar_sesion():
     except Exception as e:
         messagebox.showerror("Error", f"Error al iniciar sesion: {str(e)}")
 
-# Función para mostrar la ventana "home" 
+# Funcion para mostrar la ventana "home" 
 def mostrar_ventana_home():
     ventana_home = tk.Toplevel(ventana_principal1)
     ventana_home.title(f"Bienvenido, {usuario_actual}")
@@ -102,8 +102,8 @@ def mostrar_ventana_home():
     cambiarpass_button.pack()
 
     # Este home es el de nuestra aplicacion. 
-    # Habría que hacer que si inicio de sesion exitoso te lleve al home linea 78-85
-# Función para abrir la ventana de registro
+    # Habria que hacer que si inicio de sesion exitoso te lleve al home linea 78-85
+# Funcion para abrir la ventana de registro
 def abrir_ventana_registro():
     global correo_entry, usuario_entry, password_entry, confirm_password_entry, ventana_inicio_sesion
     
@@ -133,11 +133,11 @@ def abrir_ventana_registro():
 def cambiar_passw():
     global usuario_actual
     
-    # Crear una nueva ventana para cambiar la contraseña
+    # Crear una nueva ventana para cambiar la contrasena
     ventana_cambio_passw = tk.Toplevel(ventana_principal1)
     ventana_cambio_passw.title("Cambiar Contrasena")
 
-    # Crear etiquetas y campos de entrada para el cambio de contraseña
+    # Crear etiquetas y campos de entrada para el cambio de contrasena
     tk.Label(ventana_cambio_passw, text=f"Cambiar contrasena para {usuario_actual}").pack()
 
     tk.Label(ventana_cambio_passw, text="Contrasena Actual:").pack()
@@ -152,11 +152,11 @@ def cambiar_passw():
     confirmar_nueva_contrasena_entry = tk.Entry(ventana_cambio_passw, show="*")
     confirmar_nueva_contrasena_entry.pack()
 
-    # Agregar un botón para cambiar la contraseña
+    # Agregar un boton para cambiar la contrasena
     cambiar_contrasena_button = tk.Button(ventana_cambio_passw, text="Cambiar Contrasena", command=lambda: cambiar_contrasena_confirmado(contrasena_actual_entry.get(), nueva_contrasena_entry.get(), confirmar_nueva_contrasena_entry.get()))
     cambiar_contrasena_button.pack()
 
-# Función para cambiar la contraseña en la base de datos
+# Funcion para cambiar la contrasena en la base de datos
 def cambiar_contrasena_confirmado(contrasena_actual, nueva_contrasena, confirmar_nueva_contrasena):
     global usuario_actual
     
@@ -165,19 +165,19 @@ def cambiar_contrasena_confirmado(contrasena_actual, nueva_contrasena, confirmar
         conn = sqlite3.connect("usuarios.db")
         cursor = conn.cursor()
 
-        # Verificar si la contraseña actual coincide con la almacenada en la base de datos
+        # Verificar si la contrasena actual coincide con la almacenada en la base de datos
         cursor.execute("SELECT * FROM usuarios WHERE nombre_usuario = ? AND password = ?", (usuario_actual, contrasena_actual))
         usuario_encontrado = cursor.fetchone()
 
         if usuario_encontrado:
-            # Verificar si las dos nuevas contraseñas coinciden
+            # Verificar si las dos nuevas contrasenas coinciden
             if nueva_contrasena == confirmar_nueva_contrasena:
-                # Actualizar la contraseña en la base de datos
+                # Actualizar la contrasena en la base de datos
                 cursor.execute("UPDATE usuarios SET password = ? WHERE nombre_usuario = ?", (nueva_contrasena, usuario_actual))
                 conn.commit()
                 conn.close()
 
-                # Mostrar un mensaje de éxito
+                # Mostrar un mensaje de exito
                 messagebox.showinfo("Contrasena Cambiada", "La contrasena se ha cambiado con exito.")
             else:
                 messagebox.showerror("Error", "Las nuevas contrasenas no coinciden.")
@@ -205,7 +205,7 @@ password_login_entry.pack()
 iniciar_sesion_button = tk.Button(ventana_principal, text="Iniciar sesion", command=iniciar_sesion)
 iniciar_sesion_button.pack()
 
-# Botón para abrir la ventana de registro
+# Boton para abrir la ventana de registro
 registrar_usuario_button = tk.Button(ventana_principal, text="Registrar Usuario", command=abrir_ventana_registro)
 registrar_usuario_button.pack()
 
