@@ -8,6 +8,8 @@ from src.bbdd import DatabaseManager
 
 def test_register_user():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
+    db_manager.cursor.execute("DELETE FROM usuarios WHERE correo='test@example.com'")
+
     assert db_manager.register_user('test@example.com', 'password123') == True
 
 
@@ -23,6 +25,7 @@ def test_register_user_missing_fields():
 
 def test_duplicate_email_registration():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+    db_manager.cursor.execute("DELETE FROM usuarios WHERE correo='test@example.com'")
     db_manager.register_user("test@example.com", "password123")
     with pytest.raises(ValueError):
         db_manager.register_user("test@example.com", "otracontrasena")
