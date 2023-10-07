@@ -11,10 +11,13 @@ def test_register_user():
     assert db_manager.register_user('test@example.com', 'password123') == True
 
 
-def test_register_user_exception():
+def test_register_user_missing_fields():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    with pytest.raises(mysql.connector.Error):
-        db_manager.register_user("test@example.com", "")
+    
+    with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
+        db_manager.register_user("", "password123")
 
+    with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
+        db_manager.register_user("test@example.com", "")
 
 

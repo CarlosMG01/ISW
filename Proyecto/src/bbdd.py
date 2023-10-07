@@ -91,6 +91,9 @@ class DatabaseManager:
         self.connection.close()
 
     def register_user(self, correo, contrasena):
+     if not correo or not contrasena:
+            raise ValueError("Correo y contraseña son obligatorios")
+     
      try:
             query = "INSERT INTO usuarios (correo, contraseña) VALUES (%s, %s)"
             values = (correo, contrasena)
