@@ -1,5 +1,6 @@
 import mysql.connector
 
+
 class BaseDeDatosMariaDB:
     def __init__(self):
         self.host = "localhost"
@@ -38,7 +39,7 @@ class BaseDeDatosMariaDB:
                     contraseña VARCHAR(255) NOT NULL
                 )
             """)
-            
+
             # Crear la tabla de textos
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS textos (
@@ -49,7 +50,7 @@ class BaseDeDatosMariaDB:
                     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
                 )
             """)
-            
+
             print("Tablas creadas correctamente.")
         except mysql.connector.Error as err:
             print(f"Error al crear las tablas: {err}")
@@ -62,17 +63,18 @@ class BaseDeDatosMariaDB:
                 INSERT INTO usuarios (correo, contraseña)
                 VALUES (%s, %s)
             """, ("ejemplo@correo.com", "contraseña123"))
-            
+
             # Insertar una fila de ejemplo en la tabla de textos
             cursor.execute("""
                 INSERT INTO textos (usuario_id, titulo, contenido)
                 VALUES (%s, %s, %s)
             """, (1, "Título de ejemplo", "Contenido de ejemplo"))
-            
+
             self.conexion.commit()
             print("Filas de ejemplo insertadas correctamente.")
         except mysql.connector.Error as err:
             print(f"Error al insertar filas de ejemplo: {err}")
+
 
 class DatabaseManager:
     def __init__(self, host, user, password, database):
@@ -89,8 +91,15 @@ class DatabaseManager:
         self.connection.close()
 
     def register_user(self, correo, contrasena):
-        pass
-
+     try:
+            query = "INSERT INTO usuarios (correo, contraseña) VALUES (%s, %s)"
+            values = (correo, contrasena)
+            self.cursor.execute(query, values)
+            self.connection.commit()
+            return True
+     except mysql.connector.Error as err:
+            print(f"Error al registrar usuario: {err}")
+            return False
 
 db = BaseDeDatosMariaDB()
 db.conectar()
