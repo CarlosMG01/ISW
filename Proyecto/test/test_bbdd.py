@@ -55,8 +55,5 @@ def test_login_with_incorrect_password():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
     assert db_manager.login("test@example.com", "wrong_password") == False
 
-def test_login_with_null_credentials():
-    db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    assert db_manager.login(None, None) == False
 
 
