@@ -29,3 +29,9 @@ def test_duplicate_email_registration():
     db_manager.register_user("test@example.com", "password123")
     with pytest.raises(ValueError):
         db_manager.register_user("test@example.com", "otracontrasena")
+
+
+def test_login_successful():
+    db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
+    db_manager.register_user('test@example.com', 'password123')
+    assert db_manager.login('test@example.com', 'password123') == True

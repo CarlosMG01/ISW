@@ -103,7 +103,6 @@ class DatabaseManager:
                 raise ValueError("Correo ya registrado, por favor use otro correo.")
 
 
-
             query = "INSERT INTO usuarios (correo, contraseña) VALUES (%s, %s)"
             values = (correo, contrasena)
             self.cursor.execute(query, values)
