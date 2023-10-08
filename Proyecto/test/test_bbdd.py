@@ -47,3 +47,11 @@ def test_login_missing_fields():
     with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
         db_manager.login("test@example.com", "")
 
+def test_login_with_incorrect_email():
+    db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+    assert db_manager.login("nonexistent@example.com", "password123") == False
+
+def test_login_with_incorrect_password():
+    db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+    assert db_manager.login("test@example.com", "wrong_password") == False
+
