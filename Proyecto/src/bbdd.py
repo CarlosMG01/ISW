@@ -111,6 +111,9 @@ class DatabaseManager:
      except mysql.connector.Error as err:
             print(f"Error al registrar usuario: {err}")
             return False
+     
+    def login(self, correo, contrasena):
+        return True
 
 db = BaseDeDatosMariaDB()
 db.conectar()
