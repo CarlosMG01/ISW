@@ -113,7 +113,12 @@ class DatabaseManager:
             return False
      
     def login(self, correo, contrasena):
-        return True
+        query = "SELECT * FROM usuarios WHERE correo = %s AND contraseña = %s"
+        values = (correo, contrasena)
+        self.cursor.execute(query, values)
+        user = self.cursor.fetchone()
+        return user is not None
+
 
 db = BaseDeDatosMariaDB()
 db.conectar()
