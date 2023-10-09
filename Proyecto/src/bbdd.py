@@ -123,4 +123,3 @@ class DatabaseManager:
 
 db = BaseDeDatosMariaDB()
 db.conectar()
-db.desconectar()
