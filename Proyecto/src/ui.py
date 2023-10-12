@@ -25,9 +25,9 @@ def registro():
         else:
             return "Correo y contraseña son obligatorios"
     
-    return render_template('registro.html')
+    return render_template('inicio_sesion.html')
 
-@auth_bp.route('/inicio-sesion', methods=['GET', 'POST'])
+@auth_bp.route('/inicio_sesion', methods=['GET', 'POST'])
 def inicio_sesion():
     if request.method == 'POST':
         correo = request.form['correo']
