@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from .bbdd import DatabaseManager
 from flask import Blueprint
 
@@ -7,7 +7,7 @@ auth_bp = Blueprint('auth', __name__)
 
 db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
 
-@auth_bp.route('/home')
+@auth_bp.route('/')
 def index():
     return render_template('home.html')
 
