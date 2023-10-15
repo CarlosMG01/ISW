@@ -79,8 +79,6 @@ class DatabaseManager:
         elif contrasena != confirmar_contrasena:
             error = "Las Contraseñas no coinciden"
 
-        
-
         elif not re.match(r'^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\.[a-zA-Z]+$', correo):
             error = 'Formato de correo incorrecto'
 

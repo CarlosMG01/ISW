@@ -76,4 +76,11 @@ def test_register_different_password_and_confirm_password():
     response = db_manager.register_user("hola@gmail.com", "password123", "password1234")
     assert response == ("Las Contraseñas no coinciden",None)
 
+def test_register_invalid_password():
+    db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+
+    response = db_manager.register_user("hola@gmail.com", "pass", "pass")
+    assert response == ("La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.",None)
+
+
 
