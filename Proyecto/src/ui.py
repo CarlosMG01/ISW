@@ -16,12 +16,16 @@ def registro():
     if request.method == 'POST':
         correo = request.form['correo']
         contrasena = request.form['contrasena']
+        confirmar_contrasena = request.form['confirmar_contrasena']
 
-        if correo and contrasena:
-            if db_manager.register_user(correo, contrasena):
-                return "Registro exitoso"
+        if correo and contrasena and confirmar_contrasena:
+            if contrasena == confirmar_contrasena:
+                if db_manager.register_user(correo, contrasena):
+                    return "Registro exitoso"
+                else:
+                    return "Error en el registro"
             else:
-                return "Error en el registro"
+                return "Las contraseñas no coinciden"
         else:
             return "Correo y contraseña son obligatorios"
     
