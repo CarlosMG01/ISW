@@ -4,17 +4,12 @@ import os
 from flask import Flask, url_for
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.ui import auth_bp
+from main import app
 
 @pytest.fixture
-def app():
-    app = Flask(__name__)
-    app.config['TESTING'] = True
-    app.register_blueprint(auth_bp)
-    return app
-
-@pytest.fixture
-def client(app):
-    return app.test_client()
+def client():
+    with app.test_client() as client:
+        yield client
 
 def test_index(client):
     response = client.get('/')
@@ -30,7 +25,7 @@ def test_inicio_sesion_form(client):
 
 def test_registro_post_success(client):
     data = {
-        'correo': 'test@example.com',
+        'correo': 'correotest@example.com',
         'contrasena': 'password'
     }
     response = client.post('/registro', data=data)
@@ -44,16 +39,16 @@ def test_registro_post_failure(client):
     }
     response = client.post('/registro', data=data)
     assert response.status_code == 200
-    assert b"Correo y contrasena son obligatorios" in response.data
+    assert u"Correo y contraseña son obligatorios" in response.data.decode('utf-8')
 
 def test_inicio_sesion_post_success(client):
     data = {
         'correo': 'test@example.com',
-        'contrasena': 'password'
+        'contrasena': 'password123'
     }
     response = client.post('/inicio_sesion', data=data)
     assert response.status_code == 200
-    assert b"Inicio de sesion exitoso" in response.data
+    assert u"Inicio de sesión exitoso" in response.data.decode('utf-8')
 
 def test_inicio_sesion_post_failure(client):
     data = {
@@ -71,7 +66,7 @@ def test_inicio_sesion_post_blank_fields(client):
     }
     response = client.post('/inicio_sesion', data=data)
     assert response.status_code == 200
-    assert b"Correo y contrasena son obligatorios" in response.data
+    assert u"Correo y contraseña son obligatorios" in response.data.decode('utf-8')
 
 if __name__ == '__main__':
     pytest.main()
