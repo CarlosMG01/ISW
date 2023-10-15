@@ -10,25 +10,27 @@ def test_register_user():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
     db_manager.cursor.execute("DELETE FROM usuarios WHERE correo='test@example.com'")
 
-    assert db_manager.register_user('test@example.com', 'password123') == True
+    assert db_manager.register_user('test@example.com', 'password123',"password123") == True
 
 
 def test_register_user_missing_fields():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
 
-    response =db_manager.register_user("", "password123")
-    assert response == "Correo y contraseña son obligatorios"
+    response =db_manager.register_user("", "password123","password123")
+    assert response == ('Correo y contraseña son obligatorios', None)
 
     
-    response2 =db_manager.register_user("test@example.com", "")
-    assert response2 == "Correo y contraseña son obligatorios"
+    response2 =db_manager.register_user("test@example.com", "","password123") 
+    assert response2 == ('Correo y contraseña son obligatorios', None)
 
+    response3 =db_manager.register_user("test@example.com", "password123","") 
+    assert response3 == ('Correo y contraseña son obligatorios', None)
 
 def test_duplicate_email_registration():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
     
-    response = db_manager.register_user("test@example.com", "otracontrasena")
-    assert response == "Correo ya registrado, por favor use otro correo."
+    response = db_manager.register_user("test@example.com", "otracontrasena","otracontrasena")
+    assert response == ("Correo ya registrado, por favor use otro correo.",None)
 
 
 
@@ -58,14 +60,20 @@ def test_login_with_incorrect_password():
 def test_register_user_wrong_email():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
 
-    response = db_manager.register_user("hola", "password123")
-    assert response == "Formato de correo incorrecto"
+    response = db_manager.register_user("hola", "password123", "password123")
+    assert response == ("Formato de correo incorrecto",None)
 
 def test_register_user_wrong_email2():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
 
-    response = db_manager.register_user("hola@gmail", "password123")
-    assert response == "Formato de correo incorrecto"
+    response = db_manager.register_user("hola@gmail", "password123", "password123")
+    assert response == ("Formato de correo incorrecto",None)
 
+
+def test_register_different_password_and_confirm_password():
+    db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+
+    response = db_manager.register_user("hola@gmail.com", "password123", "password1234")
+    assert response == ("Las Contraseñas no coinciden",None)
 
 

@@ -72,16 +72,15 @@ class DatabaseManager:
     def register_user(self, correo, contrasena, confirmar_contrasena):
         error = None  
         success= None
-        if not correo or not contrasena:
+        
+        if not correo or not contrasena or not confirmar_contrasena:
             error = 'Correo y contraseña son obligatorios'
-            
+        
 
         elif not re.match(r'^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\.[a-zA-Z]+$', correo):
             error = 'Formato de correo incorrecto'
 
-        elif not correo or not contrasena:
-            error = 'Correo y contraseña son obligatorios'
-
+        
         else:
             try:
                 query = "SELECT id FROM usuarios WHERE correo = %s"

@@ -23,7 +23,6 @@ def registro():
         contrasena = request.form['contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
 
-        # Registrar el usuario en la base de datos
         error , success= db_manager.register_user(correo, contrasena, confirmar_contrasena)
 
     return render_template('registro.html', error=error, success = success)
