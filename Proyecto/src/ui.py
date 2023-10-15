@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from .bbdd import DatabaseManager
 from flask import Blueprint
+import re
 
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)

@@ -51,3 +51,12 @@ def test_login_with_incorrect_password():
     
     assert db_manager.login("test@example.com", "wrong_password") == False
 
+
+def test_register_user_wrong_email():
+    db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+
+    with pytest.raises(ValueError, match="Formato contraseña incorrecto"):
+        db_manager.register_user("hola", "password123")
+
+
+
