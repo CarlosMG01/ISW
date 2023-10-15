@@ -1,8 +1,19 @@
-{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
+
+    <title>OCR</title>
+    {% include 'header.html' %}
+</head>
+
 <body>
     <div class="container text-center mt-5">
-        <h1>Bienvenido a la OCR de Reconocimiento de Texto Manuscrito</h1>
-        <p>Transforma texto manuscrito en texto digital de manera sencilla.</p>
+        <h1 style="color: rgb(255, 255, 255)">Bienvenido a la OCR de Reconocimiento de Texto Manuscrito</h1>
+        <p style="color: aliceblue;">Transforma texto manuscrito en texto digital de manera sencilla.</p>
         <div class="row mt-4">
             <div class="col-md-6">
                 <a href="/registro" class="btn btn-primary btn-lg btn-block">Registro</a>

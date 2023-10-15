@@ -3,11 +3,12 @@ from .bbdd import DatabaseManager
 from flask import Blueprint
 
 auth_bp = Blueprint('auth', __name__)
+home_bp = Blueprint('home', __name__)
 
 
 db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
 
-@auth_bp.route('/')
+@home_bp.route('/home')
 def index():
     return render_template('home.html')
 
@@ -46,3 +47,5 @@ def inicio_sesion():
             return "Correo y contraseña son obligatorios"
     
     return render_template('inicio_sesion.html')
+
+

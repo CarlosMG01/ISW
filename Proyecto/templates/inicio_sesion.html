@@ -1,8 +1,9 @@
 {% include 'header.html' %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='registro.css') }}">
 
 <body>
     <div class="container mt-5">
-        <h1>Iniciar Sesión</h1>
+        <h1>Iniciar Sesion</h1>
         <form action="/inicio_sesion" method="post" class="mt-4">
             <div class="mb-3">
                 <label for="correo" class="form-label">Correo Electrónico</label>

@@ -1,0 +1,28 @@
+@font-face {
+    font-family: socake;
+    src: url(Socake.ttf);
+  }
+  
+  @font-face {
+    font-family: typo;
+    src: url(Typo.otf);
+  }
+  
+  
+  body {
+    font-family: "Poppins", sans-serif;
+    height: 100vh;
+    background-image: url('/static/fondo1.jpeg');
+    overflow-x: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    nav {
+      color: #ff0000;
+    }
+  }
+
+  h1,p,a {
+    font-family: typo;
+    color: aliceblue;
+  }
