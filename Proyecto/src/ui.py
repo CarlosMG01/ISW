@@ -16,6 +16,7 @@ def index():
 @auth_bp.route('/registro', methods=['GET', 'POST'])
 def registro():
     error = None
+    success = None
 
     if request.method == 'POST':
         correo = request.form['correo']
@@ -23,9 +24,9 @@ def registro():
         confirmar_contrasena = request.form['confirmar_contrasena']
 
         # Registrar el usuario en la base de datos
-        error= db_manager.register_user(correo, contrasena)
+        error , success= db_manager.register_user(correo, contrasena, confirmar_contrasena)
 
-    return render_template('registro.html', error=error)
+    return render_template('registro.html', error=error, success = success)
 
 
 @auth_bp.route('/inicio_sesion', methods=['GET', 'POST'])

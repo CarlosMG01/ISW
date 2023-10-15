@@ -69,8 +69,9 @@ class DatabaseManager:
         self.cursor.close()
         self.connection.close()
 
-    def register_user(self, correo, contrasena):
+    def register_user(self, correo, contrasena, confirmar_contrasena):
         error = None  
+        success= None
         if not correo or not contrasena:
             error = 'Correo y contraseña son obligatorios'
             
@@ -95,12 +96,12 @@ class DatabaseManager:
                     values = (correo, contrasena)
                     self.cursor.execute(query, values)
                     self.connection.commit()
-                    error='Correo de confirmación enviado'
+                    success='Correo de confirmación enviado'
 
             except mysql.connector.Error as err:
                 error = f'Error al registrar usuario: {err}'
 
-        return error
+        return error, success
      
      
 

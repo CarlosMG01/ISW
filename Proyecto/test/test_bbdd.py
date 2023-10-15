@@ -61,5 +61,11 @@ def test_register_user_wrong_email():
     response = db_manager.register_user("hola", "password123")
     assert response == "Formato de correo incorrecto"
 
+def test_register_user_wrong_email2():
+    db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+
+    response = db_manager.register_user("hola@gmail", "password123")
+    assert response == "Formato de correo incorrecto"
+
 
 
