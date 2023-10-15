@@ -10,42 +10,42 @@ def test_register_user():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
     db_manager.cursor.execute("DELETE FROM usuarios WHERE correo='test@example.com'")
 
-    assert db_manager.register_user('test@example.com', 'password123',"password123") == True
+    assert db_manager.register_user('test@example.com', 'Password123',"Password123") == True
 
 def test_register_user_missing_fields():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
 
-    response =db_manager.register_user("", "password123","password123")
+    response =db_manager.register_user("", "Password123","Password123")
     assert response == ('Correo y contraseña son obligatorios', None)
 
     
-    response2 =db_manager.register_user("test@example.com", "","password123") 
+    response2 =db_manager.register_user("test@example.com", "","Password123") 
     assert response2 == ('Correo y contraseña son obligatorios', None)
 
-    response3 =db_manager.register_user("test@example.com", "password123","") 
+    response3 =db_manager.register_user("test@example.com", "Password123","") 
     assert response3 == ('Correo y contraseña son obligatorios', None)
 
 
 def test_duplicate_email_registration():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    response = db_manager.register_user("test@example.com", "otracontrasena","otracontrasena")
+    response = db_manager.register_user("test@example.com", "Password123","Password123")
     assert response == ("Correo ya registrado, por favor use otro correo.",None)
 
 def test_login_successful():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
-    assert db_manager.login('test@example.com', 'password123')
+    assert db_manager.login('test@example.com', 'Password123')
 
 def test_login_missing_fields():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")  
     with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
-        db_manager.login("", "password123")
+        db_manager.login("", "Password123")
     
     with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
         db_manager.login("test@example.com", "")
 
 def test_login_with_incorrect_email():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    assert db_manager.login("nonexistent@example.com", "password123") == False
+    assert db_manager.login("nonexistent@example.com", "Password123") == False
 
 def test_login_with_incorrect_password():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
@@ -54,18 +54,18 @@ def test_login_with_incorrect_password():
 
 def test_register_user_wrong_email():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    response = db_manager.register_user("hola", "password123", "password123")
+    response = db_manager.register_user("hola", "Password123", "Password123")
     assert response == ("Formato de correo incorrecto",None)
 
 def test_register_user_wrong_email2():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    response = db_manager.register_user("hola@gmail", "password123", "password123")
+    response = db_manager.register_user("hola@gmail", "Password123", "Password123")
     assert response == ("Formato de correo incorrecto",None)
 
 
 def test_register_different_password_and_confirm_password():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    response = db_manager.register_user("hola@gmail.com", "password123", "password1234")
+    response = db_manager.register_user("hola@gmail.com", "Password123", "Password1234")
     assert response == ("Las Contraseñas no coinciden",None)
 
 def test_register_invalid_password():
