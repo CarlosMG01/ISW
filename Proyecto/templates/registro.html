@@ -1,23 +1,23 @@
 {% include 'header.html' %}
 
-<div class="d-flex justify-content-center align-items-center" style="height: 50vh;">
-    <form action="/registro" method="post">
-        <div class="mb-3">
-            <label for="correo" class="form-label">Email</label>
-            <input type="text" class="form-control" id="correo" name="correo" aria-describedby="emailHelp" required>
-            <div id="email-help" class="form-text">No compartiremos tu correo con nadie más.</div>
-        </div>
-        <div class="mb-3">
-            <label for="contrasena" class="form-label">Password</label>
-            <input type="password" class="form-control" id="contrasena" name="contrasena" required>
-        </div>
-        <div class="mb-3">
-            <label for="confirmar_contrasena" class="form-label">Confirmar Password</label>
-            <input type="password" class="form-control" id="confirmar_contrasena" name="confirmar_contrasena" required>
-        </div>        
-        <button type="submit"  class="btn btn-primary">Registrarse</button>
-    </form>
-    
-    
-  </div>
+<body>
+    <div class="container mt-5">
+        <h1>Registro</h1>
+        <form action="/registro" method="post" class="mt-4">
+            <div class="mb-3">
+                <label for="correo" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="correo" name="correo" required>
+            </div>
+            <div class="mb-3">
+                <label for="contrasena" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+            </div>
+            <div class="mb-3">
+                <label for="confirmar_contrasena" class="form-label">Confirmar Contraseña</label>
+                <input type="password" class="form-control" id="confirmar_contrasena" name="confirmar_contrasena" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrarse</button>
+        </form>
+    </div>
+</body>
   
