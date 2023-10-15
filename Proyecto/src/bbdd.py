@@ -114,13 +114,26 @@ class DatabaseManager:
 
 
     def login(self, correo, contrasena):
-        if not correo or not contrasena:
-            raise ValueError("Correo y contraseña son obligatorios")
-        query = "SELECT * FROM usuarios WHERE correo = %s AND contraseña = %s"
-        values = (correo, contrasena)
-        self.cursor.execute(query, values)
-        user = self.cursor.fetchone()
-        return user is not None
+        error = None
 
+        if not correo or not contrasena:
+            error = "Correo y contraseña son obligatorios"
+        else:
+            try:
+                query = "SELECT * FROM usuarios WHERE correo = %s AND contraseña = %s"
+                values = (correo, contrasena)
+                self.cursor.execute(query, values)
+                user = self.cursor.fetchone()
+                if user is not None:
+                    return True, None  # Éxito en el inicio de sesión, sin errores
+                else:
+                    error = "Credenciales incorrectas"
+            except mysql.connector.Error as err:
+                error = f"Error al realizar la consulta en la base de datos: {err}"
+
+        return False, error
+    
+
+    
 db = BaseDeDatosMariaDB()
 db.conectar()

@@ -30,18 +30,31 @@ def registro():
 
 @auth_bp.route('/inicio_sesion', methods=['GET', 'POST'])
 def inicio_sesion():
+    error = None
+
     if request.method == 'POST':
         correo = request.form['correo']
         contrasena = request.form['contrasena']
 
         if correo and contrasena:
-            if db_manager.login(correo, contrasena):
-                return "Inicio de sesión exitoso"
+            success, error_message = db_manager.login(correo, contrasena)
+            if success:
+                return redirect(url_for('auth.restricted'))
             else:
-                return "Credenciales incorrectas"
+                error = error_message or "Credenciales incorrectas"
         else:
-            return "Correo y contraseña son obligatorios"
-    
-    return render_template('inicio_sesion.html')
+            error = "Correo y contraseña son obligatorios"
+
+    return render_template('inicio_sesion.html', error=error)
+
+
+@auth_bp.route('/restricted', methods=['GET', 'POST'])
+def restricted():
+    return render_template('restricted.html')
+
+
+
+
+
 
 
