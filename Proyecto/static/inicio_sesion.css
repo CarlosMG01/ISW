@@ -46,17 +46,15 @@ h2 {
 }
 
 #formContent {
-    -webkit-border-radius: 50px 50px 50px 50px;
+    -webkit-border-radius: 10px 10px 10px 10px;
     border-radius: 50px 50px 50px 50px;
     background: #fff;
     padding: 30px;
     width: 90%;
-    height: 90%;
-    max-height: 900px;
     max-width: 1000px;
     position: relative;
     padding: 0px;
-    -webkit-box-shadow: 0 110px 110px 10000px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
     box-shadow: 0 110px 110px 10000px rgba(0, 0, 0, 0.3);
     text-align: center;
 }
@@ -75,14 +73,10 @@ h2 {
 /* TABS */
 
 a.inactive {
-    margin-top: 40px;
-    margin-right: 5px;
-    margin-bottom: 8px;
     color: #cccccc;
 }
 
-a.active {
-    margin-left: 5px;
+h2.active {
     color: #0d0d0d;
     border-bottom: 2px solid #5fbae9;
 }
@@ -271,17 +265,6 @@ input[type=text]:placeholder {
     -webkit-animation-delay: 1s;
     -moz-animation-delay: 1s;
     animation-delay: 1s;
-}
-.fadeIn.fifth {
-    -webkit-animation-delay: 1.2s;
-    -moz-animation-delay: 1.2s;
-    animation-delay: 1.2s;
-}
-
-.fadeIn.sixth {
-    -webkit-animation-delay: 1.4s;
-    -moz-animation-delay: 1.4s;
-    animation-delay: 1.4s;
 }
 
 /* Simple CSS3 Fade-in Animation */

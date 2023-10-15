@@ -1,24 +1,36 @@
 {% include 'header.html' %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='registro.css') }}">
 
-<body>
-    <div class="container mt-5">
-        <h1>Registro</h1>
-        <form action="/registro" method="post" class="mt-4">
-            <div class="mb-3">
-                <label for="correo" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="correo" name="correo" required>
-            </div>
-            <div class="mb-3">
-                <label for="contrasena" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="contrasena" name="contrasena" required>
-            </div>
-            <div class="mb-3">
-                <label for="confirmar_contrasena" class="form-label">Confirmar Contraseña</label>
-                <input type="password" class="form-control" id="confirmar_contrasena" name="confirmar_contrasena" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Registrarse</button>
-        </form>
-    </div>
-</body>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='registro.css') }}">
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Tabs Titles -->
+      <a class="inactive" href="/inicio_sesion"> INICIAR SESION</h2>
+      <a  class="active underlineHover"  href="/registro" >REGISTRARSE</a>
+
+      
+        <a></a>
   
+      <form action="/registro" method="post">
+        <input type="text" id="correo" class="fadeIn second" name="correo" placeholder="correo CEU">
+        <input type="text" id="contraseña" class="fadeIn third" name="contraseña" placeholder="contraseña">
+        <input type="text" id="nombre" class="fadeIn fourth" name="nombre" placeholder="Confirmar Contraseña">
+        <input type="submit" class="fadeIn fifth" value="Entrar">
+      </form>
+
+      {% if error %}
+      <p class="alert alert-danger" role="alert">{{ error }}</p>
+      {% endif %}
+  
+  
+      <!-- Remind Passowrd -->
+      <div id="formFooter">
+        <a class="underlineHover" href="/contrasena_olvidada">Contraseña olvidada?</a>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+
+</html>

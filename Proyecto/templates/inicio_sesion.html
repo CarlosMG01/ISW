@@ -1,19 +1,40 @@
 {% include 'header.html' %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='registro.css') }}">
 
-<body>
-    <div class="container mt-5">
-        <h1>Iniciar Sesion</h1>
-        <form action="/inicio_sesion" method="post" class="mt-4">
-            <div class="mb-3">
-                <label for="correo" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="correo" name="correo" required>
-            </div>
-            <div class="mb-3">
-                <label for="contrasena" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="contrasena" name="contrasena" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-        </form>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='inicio_sesion.css') }}">
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+    <h2 class="active"> Iniciar Sesión </h2>
+    <a class="inactive underlineHover" href="/registro">Registrarse</a>
+
+
+    
+
+    <!-- Login Form -->
+    <form action="/login" method="post">
+      <input type="text" id="login" class="fadeIn second" name="correo" placeholder="correo">
+      <input type="text" id="contraseña" class="fadeIn third" name="contrasena" placeholder="contraseña">
+      <input type="submit" class="fadeIn fourth" value="Entrar">
+    </form>
+    {% if error %}
+    <p class="alert alert-danger" role="alert">{{ error }}</p>
+    {% elif correo %}
+    <p class="alert alert-success" role="alert">Tu correo electrónico {{ correo }} ha sido verificado exitosamente.</p>
+    {% elif mensaje_confirmacion %}
+    <p class="alert alert-success" role="alert">{{mensaje_confirmacion}}</p>
+    {% endif %}
+
+    <!-- Remind Passowrd -->
+    <div id="formFooter">
+      <a class="underlineHover" href="/contrasena_olvidada">Contraseña olvidada?</a>
     </div>
+
+  </div>
+</div>
+
+
+
 </body>
+
+</html>
