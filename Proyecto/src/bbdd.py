@@ -72,9 +72,13 @@ class DatabaseManager:
     def register_user(self, correo, contrasena, confirmar_contrasena):
         error = None  
         success= None
-        
+
         if not correo or not contrasena or not confirmar_contrasena:
             error = 'Correo y contraseña son obligatorios'
+
+        elif contrasena != confirmar_contrasena:
+            error = "Las Contraseñas no coinciden"
+
         
 
         elif not re.match(r'^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\.[a-zA-Z]+$', correo):
