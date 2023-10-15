@@ -1,5 +1,5 @@
 import mysql.connector
-
+import re
 
 class BaseDeDatosMariaDB:
     def __init__(self):
@@ -70,27 +70,45 @@ class DatabaseManager:
         self.connection.close()
 
     def register_user(self, correo, contrasena):
-     if not correo or not contrasena:
-            raise ValueError("Correo y contraseña son obligatorios")
+        error = None  
+        if not correo or not contrasena:
+            error = 'Correo y contraseña son obligatorios'
+            
+
+        elif not re.match(r'^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\.[a-zA-Z]+$', correo):
+            error = 'Formato de correo incorrecto'
+
+        elif not correo or not contrasena:
+            error = 'Correo y contraseña son obligatorios'
+
+        else:
+            try:
+                query = "SELECT id FROM usuarios WHERE correo = %s"
+                self.cursor.execute(query, (correo,))
+                existing_user = self.cursor.fetchone()
+
+                if existing_user:
+                    error = 'Correo ya registrado, por favor use otro correo.'
+
+                else:
+                    query = "INSERT INTO usuarios (correo, contraseña) VALUES (%s, %s)"
+                    values = (correo, contrasena)
+                    self.cursor.execute(query, values)
+                    self.connection.commit()
+                    error='Correo de confirmación enviado'
+
+            except mysql.connector.Error as err:
+                error = f'Error al registrar usuario: {err}'
+
+        return error
      
-     try:
-            query = "SELECT id FROM usuarios WHERE correo = %s"
-            self.cursor.execute(query, (correo,))
-            existing_user = self.cursor.fetchone()
-
-            if existing_user:
-                raise ValueError("Correo ya registrado, por favor use otro correo.")
-
-
-            query = "INSERT INTO usuarios (correo, contraseña) VALUES (%s, %s)"
-            values = (correo, contrasena)
-            self.cursor.execute(query, values)
-            self.connection.commit()
-            return True
-     except mysql.connector.Error as err:
-            print(f"Error al registrar usuario: {err}")
-            return False
      
+
+
+
+
+
+
     def login(self, correo, contrasena):
         if not correo or not contrasena:
             raise ValueError("Correo y contraseña son obligatorios")

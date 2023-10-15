@@ -16,17 +16,20 @@ def test_register_user():
 def test_register_user_missing_fields():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
 
-    with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
-        db_manager.register_user("", "password123")
+    response =db_manager.register_user("", "password123")
+    assert response == "Correo y contraseña son obligatorios"
 
-    with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
-        db_manager.register_user("test@example.com", "")
+    
+    response2 =db_manager.register_user("test@example.com", "")
+    assert response2 == "Correo y contraseña son obligatorios"
 
 
 def test_duplicate_email_registration():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    with pytest.raises(ValueError):
-        db_manager.register_user("test@example.com", "otracontrasena")
+    
+    response = db_manager.register_user("test@example.com", "otracontrasena")
+    assert response == "Correo ya registrado, por favor use otro correo."
+
 
 
 def test_login_successful():
@@ -55,8 +58,8 @@ def test_login_with_incorrect_password():
 def test_register_user_wrong_email():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
 
-    with pytest.raises(ValueError, match="Formato contraseña incorrecto"):
-        db_manager.register_user("hola", "password123")
+    response = db_manager.register_user("hola", "password123")
+    assert response == "Formato de correo incorrecto"
 
 
 

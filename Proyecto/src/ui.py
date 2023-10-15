@@ -15,23 +15,18 @@ def index():
 
 @auth_bp.route('/registro', methods=['GET', 'POST'])
 def registro():
+    error = None
+
     if request.method == 'POST':
         correo = request.form['correo']
         contrasena = request.form['contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
 
-        if correo and contrasena and confirmar_contrasena:
-            if contrasena == confirmar_contrasena:
-                if db_manager.register_user(correo, contrasena):
-                    return "Registro exitoso"
-                else:
-                    return "Error en el registro"
-            else:
-                return "Las contraseñas no coinciden"
-        else:
-            return "Correo y contraseña son obligatorios"
-    
-    return render_template('registro.html')
+        # Registrar el usuario en la base de datos
+        error= db_manager.register_user(correo, contrasena)
+
+    return render_template('registro.html', error=error)
+
 
 @auth_bp.route('/inicio_sesion', methods=['GET', 'POST'])
 def inicio_sesion():
