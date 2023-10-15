@@ -19,7 +19,6 @@ class BaseDeDatosMariaDB:
             )
             print("Conexión a la base de datos exitosa.")
             self.crear_tablas()  # Llamar a la función para crear tablas
-            self.insertar_ejemplo()  # Llamar a la función para insertar ejemplos
         except mysql.connector.Error as err:
             print(f"Error de conexión: {err}")
 
@@ -54,26 +53,6 @@ class BaseDeDatosMariaDB:
             print("Tablas creadas correctamente.")
         except mysql.connector.Error as err:
             print(f"Error al crear las tablas: {err}")
-
-    def insertar_ejemplo(self):
-        try:
-            cursor = self.conexion.cursor()
-            # Insertar una fila de ejemplo en la tabla de usuarios
-            cursor.execute("""
-                INSERT INTO usuarios (correo, contraseña)
-                VALUES (%s, %s)
-            """, ("ejemplo@correo.com", "contraseña123"))
-
-            # Insertar una fila de ejemplo en la tabla de textos
-            cursor.execute("""
-                INSERT INTO textos (usuario_id, titulo, contenido)
-                VALUES (%s, %s, %s)
-            """, (1, "Título de ejemplo", "Contenido de ejemplo"))
-
-            self.conexion.commit()
-            print("Filas de ejemplo insertadas correctamente.")
-        except mysql.connector.Error as err:
-            print(f"Error al insertar filas de ejemplo: {err}")
 
 
 class DatabaseManager:
