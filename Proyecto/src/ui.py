@@ -1,3 +1,6 @@
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from .bbdd import DatabaseManager
 from flask import Blueprint
@@ -24,6 +27,11 @@ def registro():
         confirmar_contrasena = request.form['confirmar_contrasena']
 
         error , success= db_manager.register_user(correo, contrasena, confirmar_contrasena)
+
+        enlace_verificacion = "http://127.0.0.1/verificar?token=abcd1234" # Tendría que generarse token
+
+        enviar_correo_verificacion(correo, enlace_verificacion) # Tendría que registrarse al dar al enlace
+
 
     return render_template('registro.html', error=error, success = success)
 
@@ -57,4 +65,44 @@ def restricted():
 
 
 
+def enviar_correo_verificacion(correo, enlace_verificacion):
+    
+    servidor_smtp = "smtp.gmail.com"  
+    puerto = 587
+    usuario = "ocr.iswceu@gmail.com"
+    contraseña = "Practica_Ingenieria_Software"
 
+    mensaje = MIMEMultipart()
+    mensaje['From'] = usuario
+    mensaje['To'] = correo
+    mensaje['Subject'] = "Verificación de Correo Electrónico"
+
+    cuerpo = f"Para verificar tu correo electrónico, haz clic en el siguiente enlace: {enlace_verificacion}"
+    mensaje.attach(MIMEText(cuerpo, 'plain'))
+
+    try:
+        with smtplib.SMTP(servidor_smtp, puerto) as server:
+            server.starttls()
+            server.login(usuario, contraseña)
+            server.sendmail(usuario, correo, mensaje.as_string())
+
+            print("Correo enviado con éxito")
+    except smtplib.SMTPAuthenticationError as e:
+        print("Error de autenticación SMTP: Credenciales incorrectas.")
+    except smtplib.SMTPExeption as e:
+        print(f"Error SMTP general: {e}")
+
+# Función de ruta posterior. Primero centrarse en que se envía el correo
+'''
+@auth_bp.route('/verificar', methods=['GET'])
+def verificar():
+    token = request.args.get('token')
+
+    usuario = db_manager.buscar_usuario_por_token(token) # Crearlo en bbdd.py
+
+    if usuario:
+        db_manager.marcar_usuario_como_verificado(usuario['id'])
+        return "Correo verificado con éxito"
+    else:
+        return "Error: Token no válido o expirado"
+'''
