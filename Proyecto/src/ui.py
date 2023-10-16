@@ -3,7 +3,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from .bbdd import DatabaseManager
-from flask import Blueprint
 import re
 
 auth_bp = Blueprint('auth', __name__)
@@ -77,6 +76,10 @@ def cambio_contrasena():
 @auth_bp.route('/restricted', methods=['GET', 'POST'])
 def restricted():
     return render_template('restricted.html')
+
+@auth_bp.route('/perfil')
+def perfil():
+    return render_template('perfil.html')
 
 
 
