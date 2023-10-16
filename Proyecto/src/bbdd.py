@@ -99,7 +99,7 @@ class DatabaseManager:
 
     def register_user(self, correo, contrasena, confirmar_contrasena):
         error = None  
-        success= None
+        success = None
 
         if not correo or not contrasena or not confirmar_contrasena:
             error = 'Correo y contraseña son obligatorios'
@@ -114,9 +114,20 @@ class DatabaseManager:
             error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
 
         else:
-            success ='formulario completado'
-        
+            # Verificar si el correo ya está en uso
+            query = "SELECT id FROM usuarios WHERE correo = %s"
+            self.cursor.execute(query, (correo,))
+            existing_user = self.cursor.fetchone()
+
+            if existing_user:
+                error = 'Este correo electrónico ya está en uso. Por favor, elige otro.'
+            else:
+                # El correo no está en uso, proceder con el registro
+                success = 'formulario completado'
+                # Aquí puedes realizar la inserción en la base de datos si lo deseas
+            
         return error, success
+
      
 
 #Funciones para validar correo en el registro
