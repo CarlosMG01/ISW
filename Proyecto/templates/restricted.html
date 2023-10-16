@@ -8,11 +8,18 @@
 
     <title>OCR</title>
     {% include 'header1.html' %}
-    
+        
 </head>
 
 <body>
-    <p>hola</p>
+    <h1>Selecciona una imagen para extraer texto</h1>
+    <form>
+        <input type="file" name="file" accept="image/*" required>
+        <button type="submit" onclick="extractText()">Extraer Texto</button>
+    </form>
+    <h2>Texto Extraído:</h2>
+    <div id="texto_extraido"></div>
+
 
 
     
