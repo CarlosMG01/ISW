@@ -3,6 +3,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from .bbdd import DatabaseManager
+from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login
 import re
 
 auth_bp = Blueprint('auth', __name__)
@@ -25,14 +26,39 @@ def registro():
         contrasena = request.form['contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
 
-        error , success= db_manager.register_user(correo, contrasena, confirmar_contrasena)
+        error, success = db_manager.register_user(correo, contrasena, confirmar_contrasena)
+        print(success)
 
-        # enlace_verificacion = "http://127.0.0.1/verificar?token=abcd1234" # Tendría que generarse token
+        if success:            
+            enviar_correo_verificacion(correo, contrasena) 
+            print(contrasena)
+            
 
-        # enviar_correo_verificacion(correo, enlace_verificacion) # Tendría que registrarse al dar al enlace
+            success= 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico.'
+            session['correo_usuario'] = correo
+            return render_template('inicio_sesion.html', error=error, success=success)
+
+    return render_template('registro.html', error=error, success=success)
 
 
-    return render_template('registro.html', error=error, success = success)
+
+
+@auth_bp.route('/confirmar-correo/<token>')
+def confirmar_correo(token):
+    correo = obtener_correo_desde_token(token)
+    contrasena = request.args.get('contrasena')
+
+    if correo and contrasena :
+        cursor = db_manager.cursor
+        connection = db_manager.connection
+
+        confirmar_correo_en_bd(correo,contrasena, cursor, connection)
+        success = "Su correo se ha validado con éxito"
+        return render_template('inicio_sesion.html', correo=correo, success=success)
+    else:
+        return render_template('inicio_sesion.html', error='Token inválido o expirado')
+
+
 
 
 @auth_bp.route('/inicio_sesion', methods=['GET', 'POST'])
@@ -44,7 +70,7 @@ def inicio_sesion():
         contrasena = request.form['contrasena']
 
         if correo and contrasena:
-            success, error_message = db_manager.login(correo, contrasena)
+            success, error_message = login(correo, contrasena, db_manager.cursor)
             if success:
                 return redirect(url_for('auth.restricted'))
             else:

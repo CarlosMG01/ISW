@@ -1,5 +1,24 @@
 import mysql.connector
 import re
+from itsdangerous import URLSafeTimedSerializer
+from flask import url_for
+from flask_mail import Mail, Message
+from flask import Flask
+
+app = Flask(__name__)
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'practicaceu@gmail.com'
+app.config['MAIL_PASSWORD'] = 'lkytkgkbhirfyxlv'
+
+mail = Mail(app)
+
+
+
+secret_key = '1234' 
+
 
 class BaseDeDatosMariaDB:
     def __init__(self):
@@ -8,6 +27,7 @@ class BaseDeDatosMariaDB:
         self.contraseña = "root"
         self.base_de_datos = "prueba"
         self.conexion = None
+        
 
     def conectar(self):
         try:
@@ -21,6 +41,12 @@ class BaseDeDatosMariaDB:
             self.crear_tablas()  # Llamar a la función para crear tablas
         except mysql.connector.Error as err:
             print(f"Error de conexión: {err}")
+
+
+     # Conexión a la colección 'usuarios'
+    
+   
+
 
     def desconectar(self):
         if self.conexion is not None and self.conexion.is_connected():
@@ -56,6 +82,8 @@ class BaseDeDatosMariaDB:
 
 
 class DatabaseManager:
+
+
     def __init__(self, host, user, password, database):
         self.connection = mysql.connector.connect(
             host=host,
@@ -84,82 +112,105 @@ class DatabaseManager:
 
         elif not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', contrasena):
             error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
+
+        else:
+            success ='formulario completado'
         
-        else:
-            try:
-                query = "SELECT id FROM usuarios WHERE correo = %s"
-                self.cursor.execute(query, (correo,))
-                existing_user = self.cursor.fetchone()
-
-                if existing_user:
-                    error = 'Correo ya registrado, por favor use otro correo.'
-
-                else:
-                    query = "INSERT INTO usuarios (correo, contraseña) VALUES (%s, %s)"
-                    values = (correo, contrasena)
-                    self.cursor.execute(query, values)
-                    self.connection.commit()
-                    success='Correo de confirmación enviado'
-
-            except mysql.connector.Error as err:
-                error = f'Error al registrar usuario: {err}'
-
         return error, success
      
-     
+
+#Funciones para validar correo en el registro
+
+
+
+def generar_token(correo):
+    serializer = URLSafeTimedSerializer(secret_key)
+    token = serializer.dumps({'correo': correo}, salt='restablecer-contrasena')
+    return token
+
+def obtener_correo_desde_token(token):
+    serializer = URLSafeTimedSerializer(secret_key)
+    try:
+        data = serializer.loads(token, salt='restablecer-contrasena', max_age=3600)
+        correo = data['correo']
+        return correo
+    except:
+        return None
+
+def enviar_correo_verificacion(correo, contrasena):
+    token = generar_token(correo)
+    url_verificacion = url_for('auth.confirmar_correo', token=token,contrasena =contrasena, _external=True)
+
+    mensaje = Message('Verificación de correo electrónico', sender='ceupractica@gmail.com', recipients=[correo])
+    mensaje.body = f'Haz clic en el siguiente enlace para verificar tu correo electrónico: {url_verificacion}'
+
+    mail.send(mensaje)
+
+def confirmar_correo_en_bd(correo, contrasena, cursor, connection):
+    query = "INSERT INTO usuarios (correo, contraseña) VALUES (%s, %s)"
+    values = (correo, contrasena)
+    cursor.execute(query, values)
+    connection.commit()
+
+def verificar_credenciales_en_bd(correo, contrasena, cursor):
+    query = "SELECT id FROM usuarios WHERE correo = ? AND contraseña = ?"
+    cursor.execute(query, (correo, contrasena))
+    user_id = cursor.fetchone()
+    return user_id
+
+
+
+##################################################################################################################3
+
+
+def login(correo, contrasena, cursor):
+    error = None
+
+    if not correo or not contrasena:
+        error = "Correo y contraseña son obligatorios"
+    else:
+        try:
+            query = "SELECT * FROM usuarios WHERE correo = %s AND contraseña = %s"
+            values = (correo, contrasena)
+            cursor.execute(query, values)
+            user = cursor.fetchone()
+            if user is not None:
+                return True, None  # Éxito en el inicio de sesión, sin errores
+            else:
+                error = "Credenciales incorrectas"
+        except mysql.connector.Error as err:
+            error = f"Error al realizar la consulta en la base de datos: {err}"
+
+    return False, error
+
+
+def change_password(self, correo, contrasena_actual, nueva_contrasena):
+    error = None
+    success = None
+
+    if not correo or not contrasena_actual or not nueva_contrasena:
+        error = 'Correo y contraseñas son obligatorios'
+
+    else:
+        try:
+            query = "SELECT id FROM usuarios WHERE correo = %s AND contraseña = %s"
+            self.cursor.execute(query, (correo, contrasena_actual))
+            user_id = self.cursor.fetchone()
+
+            if user_id is not None:
+                query = "UPDATE usuarios SET contraseña = %s WHERE id = %s"
+                self.cursor.execute(query, (nueva_contrasena, user_id[0]))
+                self.connection.commit()
+                success = 'Contraseña actualizada exitosamente'
+            else:
+                error = 'Credenciales incorrectas'
+        except mysql.connector.Error as err:
+            error = f'Error al cambiar la contraseña: {err}'
+
+    return error, success
 
 
 
 
-
-
-    def login(self, correo, contrasena):
-        error = None
-
-        if not correo or not contrasena:
-            error = "Correo y contraseña son obligatorios"
-        else:
-            try:
-                query = "SELECT * FROM usuarios WHERE correo = %s AND contraseña = %s"
-                values = (correo, contrasena)
-                self.cursor.execute(query, values)
-                user = self.cursor.fetchone()
-                if user is not None:
-                    return True, None  # Éxito en el inicio de sesión, sin errores
-                else:
-                    error = "Credenciales incorrectas"
-            except mysql.connector.Error as err:
-                error = f"Error al realizar la consulta en la base de datos: {err}"
-
-        return False, error
-    
-    def change_password(self, correo, contrasena_actual, nueva_contrasena):
-        error = None
-        success = None
-
-        if not correo or not contrasena_actual or not nueva_contrasena:
-            error = 'Correo y contraseñas son obligatorios'
-
-        else:
-            try:
-                query = "SELECT id FROM usuarios WHERE correo = %s AND contraseña = %s"
-                self.cursor.execute(query, (correo, contrasena_actual))
-                user_id = self.cursor.fetchone()
-
-                if user_id is not None:
-                    query = "UPDATE usuarios SET contraseña = %s WHERE id = %s"
-                    self.cursor.execute(query, (nueva_contrasena, user_id[0]))
-                    self.connection.commit()
-                    success = 'Contraseña actualizada exitosamente'
-                else:
-                    error = 'Credenciales incorrectas'
-            except mysql.connector.Error as err:
-                error = f'Error al cambiar la contraseña: {err}'
-
-        return error, success
-
-    
-
-    
 db = BaseDeDatosMariaDB()
 db.conectar()
