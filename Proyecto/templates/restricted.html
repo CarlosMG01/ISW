@@ -7,16 +7,21 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
 
     <title>OCR</title>
-    {% include 'header.html' %}
+    {% include 'header1.html' %}
+        
 </head>
 
 <body>
-    <p>hola</p>
+    <h1>Selecciona una imagen para extraer texto</h1>
+    <form>
+        <input type="file" name="file" accept="image/*" required>
+        <button type="submit" onclick="extractText()">Extraer Texto</button>
+    </form>
+    <h2>Texto Extraído:</h2>
+    <div id="texto_extraido"></div>
 
-     <!-- Agregar un botón para cambiar la contraseña -->
-     <div class="col-md-6">
-        <a href="/cambio_contrasena" class="btn btn-primary btn-lg btn-block">Cambiar Contraseña</a>
-    </div>
+
+
     
 </body>
 
