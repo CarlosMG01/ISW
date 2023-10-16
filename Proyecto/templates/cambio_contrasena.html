@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='registro.css') }}">
+
+    <title>OCR - Cambiar Contraseña</title>
 {% include 'header.html' %}
 
 <div class="wrapper fadeInDown">
@@ -8,10 +17,9 @@
 
       <!-- Change Password Form -->
       <form action="/cambio_contrasena" method="post">
-        <input type="text" id="correo" class="fadeIn second" name="correo" placeholder="Correo">
-        <input type="password" id="contrasena_actual" class="fadeIn third" name="contrasena_actual" placeholder="Contraseña Actual">
+        <input type="password" id="contrasena_actual" class="fadeIn second" name="contrasena_actual" placeholder="Contraseña Actual">
         <input type="password" id="nueva_contrasena" class="fadeIn third" name="nueva_contrasena" placeholder="Nueva Contraseña">
-        <input type="password" id="confirmar_nueva_contrasena" class="fadeIn third" name="confirmar_nueva_contrasena" placeholder="Confirmar Nueva Contraseña">
+        <input type="password" id="confirmar_nueva_contrasena" class="fadeIn fourth" name="confirmar_nueva_contrasena" placeholder="Confirmar Nueva Contraseña">
         <input type="submit" class="fadeIn fourth" value="Cambiar Contraseña">
       </form>
       {% if error %}
