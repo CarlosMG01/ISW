@@ -6,6 +6,7 @@ from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login
 import re
 import pytesseract
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog
 
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
@@ -104,13 +105,11 @@ def cambio_contrasena():
 def restricted():
     resultado =""
 
-    if request.method == 'POST':
+    if request.method == 'POST': 
         file = request.files['file']
         if file:
-            #procesamiento del archivo
-            texto_extraido = file
-            #pytesseract.image_to_string(file)
-
+            # Utiliza pytesseract para extraer texto de la imagen
+            texto_extraido = pytesseract.image_to_string(file)
             # Imprime el texto extraído
             resultado = texto_extraido
 
