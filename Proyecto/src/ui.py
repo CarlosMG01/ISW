@@ -5,6 +5,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login
 import re
+import pytesseract
 
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
@@ -101,7 +102,19 @@ def cambio_contrasena():
 
 @auth_bp.route('/restricted', methods=['GET', 'POST'])
 def restricted():
-    return render_template('restricted.html')
+    resultado =""
+
+    if request.method == 'POST':
+        file = request.files['file']
+        if file:
+            #procesamiento del archivo
+            texto_extraido = file
+            #pytesseract.image_to_string(file)
+
+            # Imprime el texto extraído
+            resultado = texto_extraido
+
+    return render_template('restricted.html', resultado=resultado)
 
 @auth_bp.route('/perfil-usuario')
 def perfil():

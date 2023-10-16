@@ -13,15 +13,13 @@
 
 <body>
     <h1>Selecciona una imagen para extraer texto</h1>
-    <form>
+    <form method="POST" enctype="multipart/form-data">
         <input type="file" name="file" accept="image/*" required>
-        <button type="submit" onclick="extractText()">Extraer Texto</button>
+        <button type="submit">Subir y procesar archivo</button>
     </form>
-    <h2>Texto Extraído:</h2>
-    <div id="texto_extraido"></div>
-
-
-
+   <div id="texto_extraido"></div>
+   <h2>Texto extraído:</h2>
+   <p> {{ resultado }}</p>
     
 </body>
 
