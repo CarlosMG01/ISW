@@ -77,9 +77,9 @@ def cambio_contrasena():
 def restricted():
     return render_template('restricted.html')
 
-@auth_bp.route('/perfil')
+@auth_bp.route('/perfil-usuario')
 def perfil():
-    return render_template('perfil.html')
+    return render_template('perfil-usuario.html')
 
 
 
