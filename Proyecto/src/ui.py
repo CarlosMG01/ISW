@@ -12,7 +12,7 @@ home_bp = Blueprint('home', __name__)
 
 db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
 
-@home_bp.route('/home')
+@home_bp.route('/')
 def index():
     return render_template('home.html')
 
@@ -28,9 +28,9 @@ def registro():
 
         error , success= db_manager.register_user(correo, contrasena, confirmar_contrasena)
 
-        enlace_verificacion = "http://127.0.0.1/verificar?token=abcd1234" # Tendría que generarse token
+        # enlace_verificacion = "http://127.0.0.1/verificar?token=abcd1234" # Tendría que generarse token
 
-        enviar_correo_verificacion(correo, enlace_verificacion) # Tendría que registrarse al dar al enlace
+        # enviar_correo_verificacion(correo, enlace_verificacion) # Tendría que registrarse al dar al enlace
 
 
     return render_template('registro.html', error=error, success = success)
@@ -55,6 +55,24 @@ def inicio_sesion():
 
     return render_template('inicio_sesion.html', error=error)
 
+@auth_bp.route('/cambio_contrasena', methods=['GET', 'POST'])
+def cambio_contrasena():
+    error = None
+    success = None
+
+    if request.method == 'POST':
+        correo = request.form['correo']
+        contrasena_actual = request.form['contrasena_actual']
+        nueva_contrasena = request.form['nueva_contrasena']
+        confirmar_nueva_contrasena = request.form['confirmar_nueva_contrasena']
+
+        if nueva_contrasena != confirmar_nueva_contrasena:
+            error = "Las contraseñas nuevas no coinciden"
+        else:
+            error, success = db_manager.change_password(correo, contrasena_actual, nueva_contrasena)
+
+    return render_template('cambio_contrasena.html', error=error, success=success)
+
 
 @auth_bp.route('/restricted', methods=['GET', 'POST'])
 def restricted():
@@ -64,7 +82,7 @@ def restricted():
 
 
 
-
+'''
 def enviar_correo_verificacion(correo, enlace_verificacion):
     
     servidor_smtp = "smtp.gmail.com"  
@@ -92,6 +110,7 @@ def enviar_correo_verificacion(correo, enlace_verificacion):
     except smtplib.SMTPExeption as e:
         print(f"Error SMTP general: {e}")
 
+'''
 # Función de ruta posterior. Primero centrarse en que se envía el correo
 '''
 @auth_bp.route('/verificar', methods=['GET'])
