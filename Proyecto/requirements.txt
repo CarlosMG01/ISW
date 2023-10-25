@@ -1,0 +1,5 @@
+Flask==3.0.0
+itsdangerous==2.1.2
+mysql-connector-python==8.1.0
+Flask_mail==0.9.1
+pytesseract==0.3.10
