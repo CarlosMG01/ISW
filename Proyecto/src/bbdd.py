@@ -61,7 +61,8 @@ class BaseDeDatosMariaDB:
                 CREATE TABLE IF NOT EXISTS usuarios (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     correo VARCHAR(255) NOT NULL,
-                    contraseña VARCHAR(255) NOT NULL
+                    contraseña VARCHAR(255) NOT NULL,
+                    checkbox BOOLEAN
                 )
             """)
 
@@ -97,7 +98,7 @@ class DatabaseManager:
         self.cursor.close()
         self.connection.close()
 
-    def register_user(self, correo, contrasena, confirmar_contrasena):
+    def register_user(self, correo, contrasena, confirmar_contrasena,checkbox):
         error = None  
         success = None
 
@@ -109,7 +110,10 @@ class DatabaseManager:
 
         elif not re.match(r'^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\.[a-zA-Z]+$', correo):
             error = 'Formato de correo incorrecto'
-
+        
+        elif not checkbox:
+            error = "Es obligatorio aceptar los términos y condiciones"
+            
         elif not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', contrasena):
             error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
 

@@ -17,7 +17,11 @@
                 <input type="password" id="confirmar_contrasena" class="fadeIn fourth" name="confirmar_contrasena"
                     placeholder="Confirmar Contraseña(*)">
                 <input type="submit" class="fadeIn fifth" value="Entrar">
-            </form>
+           	<div id="formFooter">
+			<input type="checkbox" id="casillaVerificacion" name="casillaVerificacion" required>
+			<a class="underlineHover" href="./static/terminos_condiciones.pdf">Términos y condiciones</a>
+            	</div>
+	    </form>
 
             {% if error %}
             <p class="alert alert-danger" role="alert">{{ error }}</p>
@@ -25,12 +29,7 @@
             <p class="alert alert-success" role="alert">{{success}}</p>
             {% endif %}
 
-
-            <!-- Remind Passowrd -->
-            <div id="formFooter">
-                <a class="underlineHover" href="/contrasena_olvidada">Contraseña olvidada?</a>
-            </div>
-
+            
     </div>
 </div>
 

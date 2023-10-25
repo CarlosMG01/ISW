@@ -26,9 +26,8 @@ def registro():
         correo = request.form['correo']
         contrasena = request.form['contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
-
-        error, success = db_manager.register_user(correo, contrasena, confirmar_contrasena)
-        print(success)
+        checkbox = 'casillaVerificacion' in request.form
+        error, success = db_manager.register_user(correo, contrasena, confirmar_contrasena, checkbox)  
 
         if success:            
             enviar_correo_verificacion(correo, contrasena) 
