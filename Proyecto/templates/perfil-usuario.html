@@ -10,10 +10,16 @@
 <body>
     <div class="profile-container text-center mt-5">
             <div class="profile-image">
-            <img src="static/perfil.png" alt="Imagen de Perfil">
-        </div>
+	        <form method="POST" enctype="multipart/form-data">
+			<label for = "nueva_imagen" id ="imagen_label">	
+				<img src="{{ imagen_perfil }}" alt="Imagen" id="image">
+			</label>
+			<input type = "file" name = "nueva_imagen" id ="nueva_imagen" accept = "image/*" required style="display: none;" onchange="submitForm()">
+			<button type="submit" id = boton_submit style="display: none;"></button>
+	   	</form>
+	    </div>
             <h1 class="profile-username">Nombre de Usuario</h1>
-            <p>Correo electrónico</p>
+	    <p>Correo electrónico: {{ correo }}</p>
             <p>Nombre y apellidos</p>
             <p>cambiar de cuenta</p>
 	    <div class="col-md-6">
@@ -25,5 +31,9 @@
         </div>
     </div>
 </body>
-
+<script>
+function submitForm() {
+  document.getElementById("boton_submit").click();
+}
+</script>
 </html>

@@ -12,6 +12,8 @@ home_bp = Blueprint('home', __name__)
 
 
 db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
+correo_electronico=""
+imagen_perfil= "/static/perfil.png"
 
 @home_bp.route('/')
 def index():
@@ -72,6 +74,7 @@ def inicio_sesion():
         if correo and contrasena:
             success, error_message = login(correo, contrasena, db_manager.cursor)
             if success:
+                guardar_valores(correo)
                 return redirect(url_for('auth.restricted'))
             else:
                 error = error_message or "Credenciales incorrectas"
@@ -113,14 +116,25 @@ def restricted():
 
     return render_template('restricted.html', resultado=resultado)
 
-@auth_bp.route('/perfil-usuario')
+@auth_bp.route('/perfil-usuario', methods =['GET','POST'])
 def perfil():
-    return render_template('perfil-usuario.html')
+    correo = guardar_valores()
+    global imagen_perfil
+    if  request.method =='POST':
+        nueva_imagen_perfil = request.files['nueva_imagen']
+        if nueva_imagen_perfil:
+            filename = os.path.join('static', nueva_imagen_perfil.filename)
+            nueva_imagen_perfil.save(filename)
+            imagen_perfil= filename 
+    return render_template('perfil-usuario.html',imagen_perfil=imagen_perfil, correo=correo)
 
-
-
-
-
+def guardar_valores(correo=None):
+    global correo_electronico
+    if correo is None:
+        return correo_electronico
+    else:
+        correo_electronico = correo
+        return True
 '''
 def enviar_correo_verificacion(correo, enlace_verificacion):
     

@@ -28,6 +28,22 @@ body {
   border: 2px solid #ffffff; /* Borde opcional alrededor de la imagen de perfil */
 }
 
+#imagenPerfil:hover {
+            cursor: pointer;
+}
+
+#imagenPerfil:hover::after {
+            content: "Haga clic para cambiar la imagen";
+            display: block;
+            position: relative;
+            top: -20px;
+            left: 10px;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 5px;
+}
+
 /* Estilo para el nombre de usuario */
 .profile-username {
   font-size: 24px;

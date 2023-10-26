@@ -62,7 +62,8 @@ class BaseDeDatosMariaDB:
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     correo VARCHAR(255) NOT NULL,
                     contraseña VARCHAR(255) NOT NULL,
-                    checkbox BOOLEAN
+                    checkbox BOOLEAN NOT NULL,
+                    imagen_perfil BLOB
                 )
             """)
 
