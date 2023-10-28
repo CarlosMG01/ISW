@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
+    
+   
+
+    <title>OCR</title>
+    {% include 'header1.html' %} 
+</head>
+<body>
+    <header>
+        <h1>Pagina de Ayuda</h1>
+        
+    </header>
+        
+    <main>
+        <h2>Preguntas Frecuentes</h2>
+        <p>Aqui puedes encontrar respuestas a algunas preguntas frecuentes.</p>
+        <ul>
+            <li><strong>Pregunta 1:¿Cómo cambio mi contraseña? </strong></li>
+            <p>Para cambiar tu contraseña, ve a la página de perfil, presione el botón cambiar mi contraseña e introducir los datos requeridos.</p>
+            <li><strong>Pregunta 2: ¿Cómo puedo ver los Términos y condiciones aceptados? </strong></li>
+            <p>Para ver los términos y condiciones deberá dirigirse a su perfil y pulsar el botón de Términos y condiciones</p>
+            <li><strong>Pregunta 3: ¿Cómo puedo ponerme una imagen de perfil? </strong></li>
+            <p>Para introducir una imagen de perfil, deberá accede a su perfil y pulsar sobre la imagen, para elegir la imagen a introducir</p>
+            <li><strong>Pregunta 3: ¿Cómo usar la aplicación?</strong></li>
+            <p>En la página principal introducir una iamgen del texto y pulsar el botón de Subir y procesar archivo</p>
+        </ul>
+
+        <h2>Contacto</h2>
+        <p>Si necesitas ayuda adicional, no dudes en contactarnos:</p>
+        <address>
+            <strong> Correo Electrónico: </strong><a href="ocrsupport@gmail.com">ocrsupport</a><br>
+            <strong>Teléfono: </strong> + 609 409 216
+        </address>
+    </main>
+
+    <footer>
+        <p>Derechos de autor © 2023 OCRteam. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
