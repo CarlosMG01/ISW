@@ -10,27 +10,31 @@
 <body>
     <div class="profile-container text-center mt-5">
             <div class="profile-image">
-	        <form method="POST" enctype="multipart/form-data">
-			<label for = "nueva_imagen" id ="imagen_label">	
-				<img src="{{ imagen_perfil }}" alt="Imagen" id="image">
-			</label>
-			<input type = "file" name = "nueva_imagen" id ="nueva_imagen" accept = "image/*" required style="display: none;" onchange="submitForm()">
-			<button type="submit" id = boton_submit style="display: none;"></button>
-	   	</form>
-	    </div>
-            <h1 class="profile-username">Perfil de Usuario</h1>
+	        	<form method="POST" enctype="multipart/form-data">
+					<label for = "nueva_imagen" id ="imagen_label">	
+						<img src="{{ imagen_perfil }}" alt="Imagen" id="image">
+					</label>
+					<input type = "file" name = "nueva_imagen" id ="nueva_imagen" accept = "image/*" required style="display: none;" onchange="submitForm()">
+					<button type="submit" id = boton_submit style="display: none;"></button>
+	   			</form>
+			</div>
+        <h1 class="profile-username">Perfil de Usuario</h1>
+		<p><a href="/restricted" class="button">Volver al home</a></p>
 	    <p><strong>Correo electrónico: </strong> {{ correo }} </p>
             
-		<p><strong>Nombre de usuario: </strong> {{ correo.split('@')[0] }} </p>
-			
-            <p>Cambiar de cuenta</p>
-	    <div class="col-md-6">
+		<p><strong>Nombre de usuario: </strong> {{ correo.split('@')[0] }}</p>
+		<div class="col-md-6">
 		    <a href="/cambio_contrasena" class="btn btn-primary btn-lg btn-block">Cambiar Contraseña</a>
 	    </div>
-            <p>Ayuda</p>
-	    <a href="./static/terminos_condiciones.pdf">Términos y condiciones</a>
-	    <p>Cerrar sesión</p>
+		<p><strong>Otras utilidades: </strong></p>
+		<p><a href="/inicio_sesion" class="button">Cambiar de cuenta</a></p>
+		<p><a href="/" class="button">Cerrar sesión</a></p>
+		<p><a href="/ayuda" class="btn btn-primary btn-lg btn-block">Ayuda</a></p>
+	    <p><a href="./static/terminos_condiciones.pdf">Términos y condiciones</a></p>
+	   
+		
         </div>
+		
     </div>
 </body>
 <script>

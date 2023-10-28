@@ -135,6 +135,11 @@ def guardar_valores(correo=None):
     else:
         correo_electronico = correo
         return True
+    
+@auth_bp.route('/ayuda')
+def ayuda():
+    return render_template('ayuda.html')
+
 '''
 def enviar_correo_verificacion(correo, enlace_verificacion):
     
