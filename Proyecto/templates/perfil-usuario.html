@@ -18,10 +18,12 @@
 			<button type="submit" id = boton_submit style="display: none;"></button>
 	   	</form>
 	    </div>
-            <h1 class="profile-username">Nombre de Usuario</h1>
+            <h1 class="profile-username">Perfil de Usuario</h1>
 	    <p>Correo electrónico: {{ correo }}</p>
-            <p>Nombre y apellidos</p>
-            <p>cambiar de cuenta</p>
+            
+		<p>Nombre de usuario: {{ correo.split('@')[0] }} </p>
+			
+            <p>Cambiar de cuenta</p>
 	    <div class="col-md-6">
 		    <a href="/cambio_contrasena" class="btn btn-primary btn-lg btn-block">Cambiar Contraseña</a>
 	    </div>
