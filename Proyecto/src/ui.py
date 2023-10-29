@@ -8,6 +8,7 @@ from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_co
 import re
 import pytesseract
 import os
+
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
 
@@ -129,6 +130,11 @@ def perfil():
             imagen_perfil= filename 
     return render_template('perfil-usuario.html',imagen_perfil=imagen_perfil, correo=correo)
 
+@auth_bp.route('/chat', methods =['GET','POST'])
+def chat():
+    correo = guardar_valores()
+    return render_template('chat.html',correo=correo)
+
 def guardar_valores(correo=None):
     global correo_electronico
     if correo is None:
@@ -142,9 +148,8 @@ def ayuda():
     return render_template('ayuda.html')
 
 
-@auth_bp.route('/chat')
-def index():
-    return render_template('chat.html')
+
+
 
 
 
