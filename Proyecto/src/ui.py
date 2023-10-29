@@ -91,7 +91,6 @@ def cambio_contrasena():
     success = None
 
     if request.method == 'POST':
-        correo = request.form['correo']
         contrasena_actual = request.form['contrasena_actual']
         nueva_contrasena = request.form['nueva_contrasena']
         confirmar_nueva_contrasena = request.form['confirmar_nueva_contrasena']
@@ -99,6 +98,7 @@ def cambio_contrasena():
         if nueva_contrasena != confirmar_nueva_contrasena:
             error = "Las contraseñas nuevas no coinciden"
         else:
+            correo = session.get('correo_usuario')
             error, success = db_manager.change_password(correo, contrasena_actual, nueva_contrasena)
 
     return render_template('cambio_contrasena.html', error=error, success=success)

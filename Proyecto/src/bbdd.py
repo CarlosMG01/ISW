@@ -154,6 +154,31 @@ class DatabaseManager:
         except mysql.connector.Error as err:
             print(f"Error al obtener la imagen de perfil: {err}")
             return None
+        
+    def change_password(self, correo, contrasena_actual, nueva_contrasena):
+        error = None
+        success = None
+
+        if not contrasena_actual or not nueva_contrasena:
+            error = 'Contraseñas son obligatorios'
+
+        else:
+            try:
+                query = "SELECT id FROM usuarios WHERE correo = %s AND contraseña = %s"
+                self.cursor.execute(query, (correo, contrasena_actual))
+                user_id = self.cursor.fetchone()
+
+                if user_id is not None:
+                    query = "UPDATE usuarios SET contraseña = %s WHERE id = %s"
+                    self.cursor.execute(query, (nueva_contrasena, user_id[0]))
+                    self.connection.commit()
+                    success = 'Contraseña actualizada exitosamente'
+                else:
+                    error = 'Credenciales incorrectas'
+            except mysql.connector.Error as err:
+                error = f'Error al cambiar la contraseña: {err}'
+
+        return error, success
 
 
      
@@ -221,34 +246,6 @@ def login(correo, contrasena, cursor):
             error = f"Error al realizar la consulta en la base de datos: {err}"
 
     return False, error
-
-
-def change_password(self, correo, contrasena_actual, nueva_contrasena):
-    error = None
-    success = None
-
-    if not correo or not contrasena_actual or not nueva_contrasena:
-        error = 'Correo y contraseñas son obligatorios'
-
-    else:
-        try:
-            query = "SELECT id FROM usuarios WHERE correo = %s AND contraseña = %s"
-            self.cursor.execute(query, (correo, contrasena_actual))
-            user_id = self.cursor.fetchone()
-
-            if user_id is not None:
-                query = "UPDATE usuarios SET contraseña = %s WHERE id = %s"
-                self.cursor.execute(query, (nueva_contrasena, user_id[0]))
-                self.connection.commit()
-                success = 'Contraseña actualizada exitosamente'
-            else:
-                error = 'Credenciales incorrectas'
-        except mysql.connector.Error as err:
-            error = f'Error al cambiar la contraseña: {err}'
-
-    return error, success
-
-
 
 
 db = BaseDeDatosMariaDB()
