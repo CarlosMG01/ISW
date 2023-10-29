@@ -62,8 +62,7 @@ class BaseDeDatosMariaDB:
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     correo VARCHAR(255) NOT NULL,
                     contraseña VARCHAR(255) NOT NULL,
-                    checkbox BOOLEAN NOT NULL,
-                    imagen_perfil BLOB
+                    imagen_perfil VARCHAR(255)
                 )
             """)
 
@@ -99,7 +98,7 @@ class DatabaseManager:
         self.cursor.close()
         self.connection.close()
 
-    def register_user(self, correo, contrasena, confirmar_contrasena,checkbox):
+    def register_user(self, correo, contrasena, confirmar_contrasena):
         error = None  
         success = None
 
@@ -112,8 +111,8 @@ class DatabaseManager:
         elif not re.match(r'^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\.[a-zA-Z]+$', correo):
             error = 'Formato de correo incorrecto'
         
-        elif not checkbox:
-            error = "Es obligatorio aceptar los términos y condiciones"
+       # elif not checkbox:
+        #    error = "Es obligatorio aceptar los términos y condiciones"
             
         elif not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', contrasena):
             error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
@@ -132,6 +131,16 @@ class DatabaseManager:
                 # Aquí puedes realizar la inserción en la base de datos si lo deseas
             
         return error, success
+    
+    def guardar_imagen_perfil(self, correo, imagen_path):
+        try:
+            query = "UPDATE usuarios SET imagen_perfil = %s WHERE correo = %s"
+            self.cursor.execute(query, (imagen_path, correo))
+            self.connection.commit()
+            return "Imagen de perfil actualizada exitosamente."
+        except mysql.connector.Error as err:
+            return f"Error al actualizar la imagen de perfil: {err}"
+
 
      
 

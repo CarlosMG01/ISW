@@ -8,6 +8,7 @@ from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_co
 import re
 import pytesseract
 import os
+from werkzeug.utils import secure_filename
 
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
@@ -30,8 +31,7 @@ def registro():
         correo = request.form['correo']
         contrasena = request.form['contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
-        checkbox = 'casillaVerificacion' in request.form
-        error, success = db_manager.register_user(correo, contrasena, confirmar_contrasena, checkbox)  
+        error, success = db_manager.register_user(correo, contrasena, confirmar_contrasena)  
 
         if success:            
             enviar_correo_verificacion(correo, contrasena) 
@@ -125,10 +125,23 @@ def perfil():
     if  request.method =='POST':
         nueva_imagen_perfil = request.files['nueva_imagen']
         if nueva_imagen_perfil:
-            filename = os.path.join('static', nueva_imagen_perfil.filename)
-            nueva_imagen_perfil.save(filename)
-            imagen_perfil= filename 
-    return render_template('perfil-usuario.html',imagen_perfil=imagen_perfil, correo=correo)
+            # Verifica que la extensión del archivo sea válida (puedes personalizar esto)
+            if nueva_imagen_perfil.filename != '' and nueva_imagen_perfil.filename.endswith(('.jpg', '.png', '.jpeg', '.gif', '.bmp')):
+                filename = secure_filename(nueva_imagen_perfil.filename)
+                nueva_imagen_path = os.path.join('static', filename)
+                if not os.path.exists('static'):
+                    os.makedirs('static')
+
+                nueva_imagen_perfil.save(nueva_imagen_path)
+                imagen_perfil = nueva_imagen_path
+                # Actualiza la imagen de perfil en la base de datos
+                result = db_manager.guardar_imagen_perfil(correo, nueva_imagen_path)
+                if result:
+                    return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo, success=result)
+            else:
+                error = "Formato de imagen no válido. Por favor, utiliza archivos de imagen (.jpg, .png, .jpeg, .gif, .bmp)."
+
+    return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo)
 
 @auth_bp.route('/chat', methods =['GET','POST'])
 def chat():
@@ -146,53 +159,3 @@ def guardar_valores(correo=None):
 @auth_bp.route('/ayuda')
 def ayuda():
     return render_template('ayuda.html')
-
-
-
-
-
-
-
-'''
-def enviar_correo_verificacion(correo, enlace_verificacion):
-    
-    servidor_smtp = "smtp.gmail.com"  
-    puerto = 587
-    usuario = "ocr.iswceu@gmail.com"
-    contraseña = "Practica_Ingenieria_Software"
-
-    mensaje = MIMEMultipart()
-    mensaje['From'] = usuario
-    mensaje['To'] = correo
-    mensaje['Subject'] = "Verificación de Correo Electrónico"
-
-    cuerpo = f"Para verificar tu correo electrónico, haz clic en el siguiente enlace: {enlace_verificacion}"
-    mensaje.attach(MIMEText(cuerpo, 'plain'))
-
-    try:
-        with smtplib.SMTP(servidor_smtp, puerto) as server:
-            server.starttls()
-            server.login(usuario, contraseña)
-            server.sendmail(usuario, correo, mensaje.as_string())
-
-            print("Correo enviado con éxito")
-    except smtplib.SMTPAuthenticationError as e:
-        print("Error de autenticación SMTP: Credenciales incorrectas.")
-    except smtplib.SMTPExeption as e:
-        print(f"Error SMTP general: {e}")
-
-'''
-# Función de ruta posterior. Primero centrarse en que se envía el correo
-'''
-@auth_bp.route('/verificar', methods=['GET'])
-def verificar():
-    token = request.args.get('token')
-
-    usuario = db_manager.buscar_usuario_por_token(token) # Crearlo en bbdd.py
-
-    if usuario:
-        db_manager.marcar_usuario_como_verificado(usuario['id'])
-        return "Correo verificado con éxito"
-    else:
-        return "Error: Token no válido o expirado"
-'''
