@@ -140,6 +140,20 @@ class DatabaseManager:
             return "Imagen de perfil actualizada exitosamente."
         except mysql.connector.Error as err:
             return f"Error al actualizar la imagen de perfil: {err}"
+        
+    def obtener_imagen_perfil(self, correo):
+        try:
+            query = "SELECT imagen_perfil FROM usuarios WHERE correo = %s"
+            self.cursor.execute(query, (correo,))
+            imagen_perfil = self.cursor.fetchone()
+
+            if imagen_perfil:
+                return imagen_perfil[0]  # Devuelve la ruta de la imagen de perfil
+            else:
+                return None  # Si no se encontró una imagen de perfil, devuelve None
+        except mysql.connector.Error as err:
+            print(f"Error al obtener la imagen de perfil: {err}")
+            return None
 
 
      

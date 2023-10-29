@@ -121,7 +121,9 @@ def restricted():
 @auth_bp.route('/perfil-usuario', methods =['GET','POST'])
 def perfil():
     correo = guardar_valores()
-    global imagen_perfil
+    imagen_perfil = db_manager.obtener_imagen_perfil(correo)
+    imagen_predeterminada = "/static/perfil.png"
+
     if  request.method =='POST':
         nueva_imagen_perfil = request.files['nueva_imagen']
         if nueva_imagen_perfil:
@@ -140,6 +142,8 @@ def perfil():
                     return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo, success=result)
             else:
                 error = "Formato de imagen no válido. Por favor, utiliza archivos de imagen (.jpg, .png, .jpeg, .gif, .bmp)."
+    if imagen_perfil is None:
+        imagen_perfil = imagen_predeterminada
 
     return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo)
 
