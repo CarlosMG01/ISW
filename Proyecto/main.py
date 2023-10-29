@@ -26,4 +26,4 @@ if __name__ == '__main__':
 
     webbrowser.open(url)
 
-    app.run(debug=True)
+    app.run(debug=False)
