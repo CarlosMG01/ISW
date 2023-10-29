@@ -7,6 +7,10 @@
     font-family: typo;
     src: url(Typo.otf);
   }
+ .faq-item {
+                color: white; /* Cambia el color del texto a blanco */
+ }
+    
   
   
   body {
