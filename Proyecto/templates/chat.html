@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chat.css') }}">
+    
+   
+
+    <title>Chat con Support</title>
+    {% include 'header1.html' %} 
+    
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Chat con Support</h1>
+        <div class="chat-log" id="chat-log">
+            <p>Bienvenido al chat con el Support.</p>
+        </div>
+        <input type="text" id="user-input" class="user-input" placeholder="Escribe tu mensaje...">
+    </div>
+
+    <script>
+        const chatLog = document.getElementById('chat-log');
+        const userInput = document.getElementById('user-input');
+
+        function appendBotResponse(message) {
+            const botResponse = document.createElement('p');
+            botResponse.innerText = message;
+            chatLog.appendChild(botResponse);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+    
+        
+
+        userInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const userMessage = userInput.value;
+                appendBotResponse(`Tú: ${userMessage}`);
+                userInput.value = '';
+
+                // Aquí debes implementar la lógica para enviar el mensaje del usuario al bot y recibir una respuesta.
+                
+                
+                
+                setTimeout(() => {
+                     appendBotResponse(`Support escribiendo...`);
+                }, 1000);
+            }
+        });
+    </script>
+    
+</body>
+</html>

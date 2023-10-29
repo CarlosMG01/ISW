@@ -2,6 +2,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login
 import re
@@ -139,6 +140,13 @@ def guardar_valores(correo=None):
 @auth_bp.route('/ayuda')
 def ayuda():
     return render_template('ayuda.html')
+
+
+@auth_bp.route('/chat')
+def index():
+    return render_template('chat.html')
+
+
 
 '''
 def enviar_correo_verificacion(correo, enlace_verificacion):
