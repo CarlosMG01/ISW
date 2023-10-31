@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from flask import Flask, render_template, request, jsonify
 from .bbdd import DatabaseManager
-from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
+from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer, restablecer_contrasena
 import re
 import pytesseract
 import os
@@ -182,4 +182,22 @@ def olvide_contrasena():
         else:
             flash('Por favor, proporciona una dirección de correo electrónico válida.', 'error')
 
-    return render_template('olvido_contrasena.html') 
+    return render_template('olvido_contrasena.html')
+
+@auth_bp.route('/restablecer_contrasena/<token>', methods=['GET', 'POST'])
+def restablecer_contrasena(token):
+    error = None
+    success = None
+
+    correo = obtener_correo_desde_token(token)
+    if request.method == 'POST':
+        nueva_contrasena = request.form['nueva_contrasena']
+        confirmar_contrasena = request.form['confirmar_contrasena']
+
+    if nueva_contrasena != confirmar_contrasena:
+            error = "Las contraseñas nuevas no coinciden"
+    else:
+            correo = session.get('correo_usuario')
+            error, success = restablecer_contrasena(correo, nueva_contrasena)
+
+    return render_template('restablecer_contrasena.html', error=error, success=success)

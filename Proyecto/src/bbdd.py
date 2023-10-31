@@ -216,6 +216,7 @@ def confirmar_correo_en_bd(correo, contrasena, cursor, connection):
     cursor.execute(query, values)
     connection.commit()
 
+# Parece ser que esta no se usa en ningún momento
 def verificar_credenciales_en_bd(correo, contrasena, cursor):
     query = "SELECT id FROM usuarios WHERE correo = ? AND contraseña = ?"
     cursor.execute(query, (correo, contrasena))
@@ -230,6 +231,30 @@ def enviar_correo_restablecer(correo):
     mensaje.body = f'Haz click en el siguiente enlace para restablecer tu contraseña: ´{url_restablecer}'
 
     mail.send(mensaje)
+
+def restablecer_contrasena(self, correo, nueva_contrasena, confirmar_contrasena, cursor):
+    error = None
+    success = None
+
+    if not nueva_contrasena or not confirmar_contrasena:
+        error = 'Contraseñas son obligatorios'
+
+    else:
+        try:
+            query = "SELECT id FROM usuarios WHERE correo = %s"
+            self.cursor.execute(query, (correo))
+            user_id = self.cursor.fetchone()
+            if user_id is not None:
+                query = "UPDATE usuarios SET contraseña = %s WHERE id = %s"
+                self.cursor.execute(query, (nueva_contrasena, user_id[0]))
+                self.connection.commit()
+                success = 'Contraseña actualizada exitosamente'
+            else:
+                error = 'Credenciales incorrectas'
+        except mysql.connector.Error as err:
+            error = f'Error al cambiar la contraseña: {err}'
+
+    return error, success
 
 ##################################################################################################################3
 
