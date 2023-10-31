@@ -111,8 +111,8 @@ def restricted():
         file = request.files['file']
         if file:
             # Utiliza pytesseract para extraer texto de la imagen
-            file.save(os.path.join('uploads', file.filename))
-            texto_extraido = pytesseract.image_to_string(os.path.join('uploads',file.filename))
+            file.save(os.path.join('static', file.filename))
+            texto_extraido = pytesseract.image_to_string(os.path.join('static',file.filename))
             # Imprime el texto extraído
             resultado = texto_extraido
 
