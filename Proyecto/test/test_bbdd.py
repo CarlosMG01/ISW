@@ -31,8 +31,11 @@ def test_register_user_missing_fields():
 
 def test_duplicate_email_registration():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    response = db_manager.register_user("test@example.com", "Password123","Password123")
-    assert response == ("Correo ya registrado, por favor use otro correo.",None)
+
+    # Intenta registrar un usuario con un correo duplicado
+    error, success = db_manager.register_user('pruebapracticasw@gmail.com', 'Password123', 'Password123')
+    assert error == 'Este correo electrónico ya está en uso. Por favor, elige otro.'
+    assert success is None
 
 def test_login_successful():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
