@@ -1,7 +1,7 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from flask import Flask, render_template, request, jsonify
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login
@@ -163,3 +163,22 @@ def guardar_valores(correo=None):
 @auth_bp.route('/ayuda')
 def ayuda():
     return render_template('ayuda.html')
+
+def ayuda():
+    return render_template('ayuda.html')
+
+
+@auth_bp.route('/olvido_contrasena', methods=['GET', 'POST'])
+def olvide_contrasena():
+    if request.method == 'POST':
+        correo = request.form['correo']
+
+        if correo:
+            # Generar el token y enviar el correo.
+
+            flash('Se ha enviado un enlace de restablecimiento de contraseña a tu dirección de correo electrónico.', 'success')
+            return redirect(url_for('auth.inicio_sesion'))
+        else:
+            flash('Por favor, proporciona una dirección de correo electrónico válida.', 'error')
+
+    return render_template('olvido_contrasena.html') 
