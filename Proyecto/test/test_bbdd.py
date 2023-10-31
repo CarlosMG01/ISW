@@ -44,20 +44,24 @@ def test_login_successful():
     assert login('pruebapracticasw@gmail.com', 'Prueba12345', cursor)
 
 def test_login_missing_fields():
-    db_manager = DatabaseManager("localhost", "root", "root", "prueba")  
+    db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+    cursor = db_manager.cursor  
     with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
-        db_manager.login("", "Password123")
+        login("", "Password123", cursor)
     
     with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
-        db_manager.login("test@example.com", "")
+        login("test@example.com", "", cursor)
 
 def test_login_with_incorrect_email():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    assert db_manager.login("nonexistent@example.com", "Password123") == False
+    with pytest.raises(ValueError, match="Credenciales incorrectas"):
+        cursor = db_manager.cursor
+        login("nonexistent@example.com", "Password123", cursor)
 
 def test_login_with_incorrect_password():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    assert db_manager.login("test@example.com", "wrong_password") == False
+    cursor = db_manager.cursor 
+    assert login("test@example.com", "wrong_password", cursor) == False
 
 
 def test_register_user_wrong_email():
