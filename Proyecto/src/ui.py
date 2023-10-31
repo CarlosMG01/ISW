@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from flask import Flask, render_template, request, jsonify
 from .bbdd import DatabaseManager
-from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login
+from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
 import re
 import pytesseract
 import os
@@ -175,6 +175,7 @@ def olvide_contrasena():
 
         if correo:
             # Generar el token y enviar el correo.
+            enviar_correo_restablecer(correo)
 
             flash('Se ha enviado un enlace de restablecimiento de contraseña a tu dirección de correo electrónico.', 'success')
             return redirect(url_for('auth.inicio_sesion'))

@@ -222,7 +222,14 @@ def verificar_credenciales_en_bd(correo, contrasena, cursor):
     user_id = cursor.fetchone()
     return user_id
 
+def enviar_correo_restablecer(correo):
+    token = generar_token(correo)
+    url_restablecer = url_for('auth.olvide_contrasena', token=token, _external=True)
 
+    mensaje = Message('Restablecimiento de contraseña', sender='ceupractica@gmail.com', recipients=[correo])
+    mensaje.body = f'Haz click en el siguiente enlace para restablecer tu contraseña: ´{url_restablecer}'
+
+    mail.send(mensaje)
 
 ##################################################################################################################3
 
