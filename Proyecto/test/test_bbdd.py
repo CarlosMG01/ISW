@@ -4,6 +4,7 @@ import mysql.connector
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.bbdd import DatabaseManager
+from src.bbdd import login
 
 
 def test_register_user():
@@ -39,7 +40,8 @@ def test_duplicate_email_registration():
 
 def test_login_successful():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
-    assert db_manager.login('test@example.com', 'Password123')
+    cursor = db_manager.cursor
+    assert login('pruebapracticasw@gmail.com', 'Prueba12345', cursor)
 
 def test_login_missing_fields():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")  
