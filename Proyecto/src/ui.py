@@ -112,6 +112,7 @@ def restricted():
         if file:
             # Utiliza pytesseract para extraer texto de la imagen
             file.save(os.path.join('static', file.filename))
+            # static es donde se guardan las iamgenes
             texto_extraido = pytesseract.image_to_string(os.path.join('static',file.filename))
             # Imprime el texto extraído
             resultado = texto_extraido
