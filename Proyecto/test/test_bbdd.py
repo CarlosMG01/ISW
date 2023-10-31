@@ -4,13 +4,17 @@ import mysql.connector
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.bbdd import DatabaseManager
+from src.bbdd import login
 
 
 def test_register_user():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
     db_manager.cursor.execute("DELETE FROM usuarios WHERE correo='test@example.com'")
-
-    assert db_manager.register_user('test@example.com', 'Password123',"Password123") == True
+    
+    # Realiza el registro y verifica el resultado
+    error, success = db_manager.register_user('test@example.com', 'Password123', 'Password123')
+    assert success == 'formulario completado'
+    assert error is None
 
 def test_register_user_missing_fields():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
@@ -28,12 +32,16 @@ def test_register_user_missing_fields():
 
 def test_duplicate_email_registration():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    response = db_manager.register_user("test@example.com", "Password123","Password123")
-    assert response == ("Correo ya registrado, por favor use otro correo.",None)
+
+    # Intenta registrar un usuario con un correo duplicado
+    error, success = db_manager.register_user('pruebapracticasw@gmail.com', 'Password123', 'Password123')
+    assert error == 'Este correo electrónico ya está en uso. Por favor, elige otro.'
+    assert success is None
 
 def test_login_successful():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
-    assert db_manager.login('test@example.com', 'Password123')
+    cursor = db_manager.cursor
+    assert login('pruebapracticasw@gmail.com', 'Prueba12345', cursor)
 
 def test_login_missing_fields():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")  
