@@ -19,9 +19,43 @@
                 <input type="submit" class="fadeIn fifth" value="Entrar">
            	<div id="formFooter">
 			<input type="checkbox" id="casillaVerificacion" name="casillaVerificacion" required>
-			<a class="underlineHover" href="./static/terminos_condiciones.pdf">Términos y condiciones</a>
-            	</div>
+			<a class="underlineHover" href="javascript:void(0);" onclick="mostrarVentanaEmergente()">Términos y Condiciones</a>
+            <div id="popup-container">
+                <div id="popup-box">
+                    <h2>Términos y Condiciones</h2>
+                        <p>Aquí se encuentran los términos y condiciones que debes aceptar para continuar.</p>
+                        Términos y Condiciones de Usuario
+                        Última actualización: [2023]
+                        <h3>1. Aceptación de los Términos </h3>
+                        <p> Al acceder o utilizar nuestro OCR, usted acepta y se compromete a cumplir con estos términos y condiciones de uso. Si no está de acuerdo con alguno de los términos, no utilice este sitio.</p>
+                        <h3>2. Modificaciones </h3>
+                        <p>Nos reservamos el derecho de modificar o revisar estos términos y condiciones en cualquier momento. Cualquier modificación será efectiva inmediatamente después de la publicación en el sitio. Su uso continuo del sitio después de la publicación de los cambios constituye su aceptación de dichos cambios.</p>
+                        <h3>3. Privacidad</h3>
+                        <p>Su privacidad es importante para nosotros. Consulte nuestra Política de Privacidad para comprender cómo recopilamos, utilizamos y protegemos su información.</p>
+                        <h3>4. Derechos de Propiedad Intelectual</h3>
+                        <p>Todos los contenidos, logotipos, gráficos y marcas registradas en este sitio son propiedad de OCR. No se permite la reproducción o distribución sin permiso.</p>
+                        <h3>5. Uso Apropiado</h3>
+                        <p>No está permitido utilizar este sitio de ninguna manera que sea ilegal o que viole estos términos y condiciones. Esto incluye la publicación de contenido ofensivo, la distribución de malware o el intento de acceder a áreas protegidas sin autorización.</p>
+                        <h3>6. Exención de Responsabilidad</h3>
+                        <p>Este sitio se proporciona "tal cual" y no ofrecemos garantías de ningún tipo. No somos responsables de ningún daño o pérdida que pueda resultar del uso de este sitio.</p>
+                        <h3>7. Ley Aplicable</h3>
+                        <p>Estos términos y condiciones se rigen por las leyes de España y cualquier disputa se someterá a la jurisdicción exclusiva de los tribunales en Madrid, España.</p>
+               
+                        <button onclick="cerrarVentanaEmergente()">Cerrar</button>
+                       </div>
+                </div>
+            </p>
+            <script>
+                function mostrarVentanaEmergente() {
+                    document.getElementById("popup-container").style.display = "block";
+                }
+                function cerrarVentanaEmergente() {
+                    document.getElementById("popup-container").style.display = "none";
+                }
+            </script>
+        </div>
 	    </form>
+
 
             {% if error %}
             <p class="alert alert-danger" role="alert">{{ error }}</p>
