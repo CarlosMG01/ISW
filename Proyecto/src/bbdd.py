@@ -179,6 +179,30 @@ class DatabaseManager:
                 error = f'Error al cambiar la contraseña: {err}'
 
         return error, success
+    
+    def verificar_usuario_por_correo(self, correo):
+        query = "SELECT id FROM usuarios WHERE correo = %s"
+        self.cursor.execute(query, (correo,))
+        user_id = self.cursor.fetchone()
+        return user_id
+    
+    def restablecer_contrasena(self, correo, nueva_contrasena):
+        error = None
+        success = None
+
+        if not nueva_contrasena:
+            error = 'Contraseñas son obligatorios'
+
+        else:
+            query = "UPDATE usuarios SET contraseña = %s WHERE correo = %s"
+            try:
+                self.cursor.execute(query, (nueva_contrasena, correo))
+                self.connection.commit()
+                success = "Contraseña restablecida correctamente"
+            except mysql.connector.Error as err:
+                error = f'Error al cambiar la contraseña: {err}'
+
+        return error, success
 
 
      
@@ -225,36 +249,14 @@ def verificar_credenciales_en_bd(correo, contrasena, cursor):
 
 def enviar_correo_restablecer(correo):
     token = generar_token(correo)
-    url_restablecer = url_for('auth.olvide_contrasena', token=token, _external=True)
+    url_restablecer = url_for('auth.restablecer_contrasena', token=token, _external=True)
 
     mensaje = Message('Restablecimiento de contraseña', sender='ceupractica@gmail.com', recipients=[correo])
     mensaje.body = f'Haz click en el siguiente enlace para restablecer tu contraseña: ´{url_restablecer}'
 
     mail.send(mensaje)
 
-def restablecer_contrasena(self, correo, nueva_contrasena, confirmar_contrasena, cursor):
-    error = None
-    success = None
 
-    if not nueva_contrasena or not confirmar_contrasena:
-        error = 'Contraseñas son obligatorios'
-
-    else:
-        try:
-            query = "SELECT id FROM usuarios WHERE correo = %s"
-            self.cursor.execute(query, (correo))
-            user_id = self.cursor.fetchone()
-            if user_id is not None:
-                query = "UPDATE usuarios SET contraseña = %s WHERE id = %s"
-                self.cursor.execute(query, (nueva_contrasena, user_id[0]))
-                self.connection.commit()
-                success = 'Contraseña actualizada exitosamente'
-            else:
-                error = 'Credenciales incorrectas'
-        except mysql.connector.Error as err:
-            error = f'Error al cambiar la contraseña: {err}'
-
-    return error, success
 
 ##################################################################################################################3
 
