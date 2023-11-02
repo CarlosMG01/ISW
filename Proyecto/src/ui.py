@@ -204,4 +204,4 @@ def restablecer_contrasena(token):
         else:
             error, success = db_manager.restablecer_contrasena(correo, nueva_contrasena)
 
-    return render_template('restablecer_contrasena.html', error=error, success=success)
+    return render_template('restablecer_contrasena.html', error=error, success=success, token=token)
