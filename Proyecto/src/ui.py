@@ -14,7 +14,7 @@ auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
 
 
-db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
+db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
 correo_electronico=""
 imagen_perfil= "/static/perfil.png"
 
