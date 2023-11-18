@@ -16,7 +16,6 @@ home_bp = Blueprint('home', __name__)
 
 db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
 correo_electronico=""
-imagen_perfil= "/static/perfil.png"
 
 @home_bp.route('/')
 def index():
@@ -123,29 +122,18 @@ def restricted():
 def perfil():
     correo = guardar_valores()
     imagen_perfil = db_manager.obtener_imagen_perfil(correo)
-    imagen_predeterminada = "/static/perfil.png"
-
     if  request.method =='POST':
         nueva_imagen_perfil = request.files['nueva_imagen']
         if nueva_imagen_perfil:
             # Verifica que la extensión del archivo sea válida (puedes personalizar esto)
             if nueva_imagen_perfil.filename != '' and nueva_imagen_perfil.filename.endswith(('.jpg', '.png', '.jpeg', '.gif', '.bmp')):
-                filename = secure_filename(nueva_imagen_perfil.filename)
-                nueva_imagen_path = os.path.join('static', filename)
-                if not os.path.exists('static'):
-                    os.makedirs('static')
-
-                nueva_imagen_perfil.save(nueva_imagen_path)
-                imagen_perfil = nueva_imagen_path
                 # Actualiza la imagen de perfil en la base de datos
-                result = db_manager.guardar_imagen_perfil(correo, nueva_imagen_path)
+                result = db_manager.guardar_imagen_perfil(correo, nueva_imagen_perfil)
+                imagen_perfil = db_manager.obtener_imagen_perfil(correo)
                 if result:
                     return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo, success=result)
             else:
                 error = "Formato de imagen no válido. Por favor, utiliza archivos de imagen (.jpg, .png, .jpeg, .gif, .bmp)."
-    if imagen_perfil is None:
-        imagen_perfil = imagen_predeterminada
-
     return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo)
 
 @auth_bp.route('/chat', methods =['GET','POST'])

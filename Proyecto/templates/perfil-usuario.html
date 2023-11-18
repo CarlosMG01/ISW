@@ -12,7 +12,7 @@
             <div class="profile-image">
 	        	<form method="POST" enctype="multipart/form-data">
 					<label for="nueva_imagen" id="imagen_label">
-						<img src="{{ imagen_perfil }}" alt="Imagen" id="image">
+						<img src="data:image/jpeg;base64,{{imagen_perfil}}" alt="Imagen" id="image">
 					</label>
 					<input type="file" name="nueva_imagen" id="nueva_imagen" accept="image/*" required style="display: none;" onchange="submitForm()">
 					<button type="submit" id="boton_submit" style="display: none;"></button>
