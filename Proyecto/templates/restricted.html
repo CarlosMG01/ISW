@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='registro.css') }}">
 
     <title>OCR</title>
     {% include 'header.html' %}
@@ -12,15 +12,25 @@
 </head>
 
 <body>
-    <h1>Selecciona una imagen para extraer texto</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required>
-        <button type="submit">Subir y procesar archivo</button>
-    </form>
-   <div id="texto_extraido"></div>
-   <h2>Texto extraído:</h2>
-   <p style ="color:black"> {{ resultado }}</p>
-    
+	<div class="container p-5 my-5 bg-dark text-white">
+		<h1>Seleccione una imagen para extraer texto</h1>
+		<div class="container bg-light py-3 my-3">
+			<form method="POST" enctype="multipart/form-data">
+				<label for="file" >
+					<img src="static/fondo4.jpeg"  style="margin-right: 10px;" >
+				</label>
+				<input type="file" name="file" id="file" accept="image/*" required style="display: none;" onchange="submitForm()">
+				<button type="submit" id="boton_submit" style="display: none;"></button>
+			</form>
+		</div>
+			<div id="texto_extraido"></div>
+			<h2>Texto extraído:</h2>
+			<p style ="color:black"> {{ resultado }}</p>
+		</div>
 </body>
-
+<script>
+	function submitForm() {
+		document.getElementById("boton_submit").click();
+	}
+</script>
 </html>
