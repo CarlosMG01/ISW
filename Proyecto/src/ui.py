@@ -20,12 +20,12 @@ correo_electronico=""
 @home_bp.route('/')
 def index():
     session.clear()
-    return render_template('home.html')
+    return redirect(url_for('auth.restricted'))
 
 @auth_bp.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    return redirect(url_for('auth.inicio_sesion'))
+    return redirect(url_for('auth.restricted'))
 
 @auth_bp.route('/registro', methods=['GET', 'POST'])
 def registro():
@@ -114,8 +114,6 @@ def cambio_contrasena():
 
 @auth_bp.route('/restricted', methods=['GET', 'POST'])
 def restricted():
-    if not session.get('logged_in'):
-        return redirect(url_for('auth.inicio_sesion'))
     resultado =""
     if request.method == 'POST': 
         file = request.files['file']

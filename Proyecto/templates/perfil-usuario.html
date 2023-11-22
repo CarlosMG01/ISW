@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='perfil-usuario.css') }}">
-    <title>OCR</title>
-</head>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='registro.css') }}">
+		<title>OCR</title>
+	</head>
 
-<body>
-    <div class="profile-container text-center mt-5">
-            <div class="profile-image">
-	        	<form method="POST" enctype="multipart/form-data">
+	<body>
+		<div class="profile-container text-center mt-5">
+			<div class="profile-image">
+				<form method="POST" enctype="multipart/form-data">
 					<label for="nueva_imagen" id="imagen_label">
 						<img src="data:image/jpeg;base64,{{imagen_perfil}}" alt="Imagen" id="image">
 					</label>
@@ -18,26 +18,26 @@
 					<button type="submit" id="boton_submit" style="display: none;"></button>
 				</form>
 			</div>
-        <h1 class="profile-username">Perfil de Usuario</h1>
-		<p><a href="/restricted" class="button">Volver al home</a></p>
-	    <p><strong>Correo electrónico: </strong> {{ correo }} </p>
-            
-		<p><strong>Nombre de usuario: </strong> {{ correo.split('@')[0] }}</p>
-		<div class="col-md-6">
-		    <a href="/cambio_contrasena" class="btn btn-primary btn-lg btn-block">Cambiar Contraseña</a>
-	    </div>
-		<p><strong>Otras utilidades: </strong></p>
-		<p><a href="/inicio_sesion" class="button">Cambiar de cuenta</a></p>
-		<p><a href="/logout" class="button">Cerrar sesión</a></p>
-		<p><a href="/ayuda" class="btn btn-primary btn-lg btn-block">Ayuda</a></p>
+			<h1 class="profile-username">Perfil de Usuario</h1>
+			<p><a href="/restricted" class="button">Volver al home</a></p>
+			<p><strong>Correo electrónico: </strong> {{ correo }} </p>
+
+			<p><strong>Nombre de usuario: </strong> {{ correo.split('@')[0] }}</p>
+			<div class="col-md-6">
+				<a href="/cambio_contrasena" class="btn btn-primary btn-lg btn-block">Cambiar Contraseña</a>
+			</div>
+			<p><strong>Otras utilidades: </strong></p>
+			<p><a href="/inicio_sesion" class="button">Cambiar de cuenta</a></p>
+			<p><a href="/logout" class="button">Cerrar sesión</a></p>
+			<p><a href="/ayuda" class="btn btn-primary btn-lg btn-block">Ayuda</a></p>
 
 
-	    <p><button onclick="mostrarVentanaEmergente()">Mostrar Términos y Condiciones</button>
-		
-    	<div id="popup-container">
-        	<div id="popup-box">
-            	<h2>Términos y Condiciones</h2>
-            		<p>Aquí se encuentran los términos y condiciones que debes aceptar para continuar.</p>
+			<p><button onclick="mostrarVentanaEmergente()">Mostrar Términos y Condiciones</button>
+
+			<div id="popup-container">
+				<div id="popup-box">
+					<h2>Términos y Condiciones</h2>
+					<p>Aquí se encuentran los términos y condiciones que debes aceptar para continuar.</p>
 					Términos y Condiciones de Usuario
 					Última actualización: [2023]
 					<h3>1. Aceptación de los Términos </h3>
@@ -54,28 +54,28 @@
 					<p>Este sitio se proporciona "tal cual" y no ofrecemos garantías de ningún tipo. No somos responsables de ningún daño o pérdida que pueda resultar del uso de este sitio.</p>
 					<h3>7. Ley Aplicable</h3>
 					<p>Estos términos y condiciones se rigen por las leyes de España y cualquier disputa se someterá a la jurisdicción exclusiva de los tribunales en Madrid, España.</p>
-           
-            		<button onclick="cerrarVentanaEmergente()">Cerrar</button>
-       			</div>
-    		</div>
-		</p>
-		<script>
-			function mostrarVentanaEmergente() {
-				document.getElementById("popup-container").style.display = "block";
-			}
-			function cerrarVentanaEmergente() {
-				document.getElementById("popup-container").style.display = "none";
-			}
-		</script>
-	   
-		
-        </div>
-		
-    </div>
-</body>
-<script>
-function submitForm() {
-  document.getElementById("boton_submit").click();
-}
-</script>
+
+					<button onclick="cerrarVentanaEmergente()">Cerrar</button>
+				</div>
+			</div>
+			</p>
+			<script>
+				function mostrarVentanaEmergente() {
+					document.getElementById("popup-container").style.display = "block";
+				}
+				function cerrarVentanaEmergente() {
+					document.getElementById("popup-container").style.display = "none";
+				}
+			</script>
+
+
+		</div>
+
+		</div>
+	</body>
+	<script>
+		function submitForm() {
+			document.getElementById("boton_submit").click();
+		}
+	</script>
 </html>
