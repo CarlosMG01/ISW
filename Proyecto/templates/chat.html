@@ -1,100 +1,79 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='registro.css') }}">
+{% include 'header.html' %} 
 
-
-
-		<title>Chat con Support</title>
-		{% include 'header.html' %} 
-
-	</head>
-	<body>
-		<div class="chat-container">
-			<h1>Chat con Support</h1>
-			<div class="chat-log" id="chat-log">
-				<p>Bienvenido al chat con el Support</p>
-			</div>
-			<input type="text" id="user-input" class="user-input" placeholder="Escribe tu mensaje...">
-		</div>
-		<button id="contact-button" style="display: none;">Contactar al Staff</button>
+<div class="chat-container">
+	<h1>Chat con Support</h1>
+	<div class="chat-log" id="chat-log">
+		<p>Bienvenido al chat con el Support</p>
+	</div>
+	<input type="text" id="user-input" class="user-input" placeholder="Escribe tu mensaje...">
+</div>
+<button id="contact-button" style="display: none;">Contactar al Staff</button>
 
 
 
 
 
-		<script>
-			const chatLog = document.getElementById('chat-log');
-			const userInput = document.getElementById('user-input');
+<script>
+	const chatLog = document.getElementById('chat-log');
+	const userInput = document.getElementById('user-input');
 
-			function appendBotResponse(message) {
-				const botResponse = document.createElement('p');
-				botResponse.innerText = message;
-				chatLog.appendChild(botResponse);
-				chatLog.scrollTop = chatLog.scrollHeight;
+	function appendBotResponse(message) {
+		const botResponse = document.createElement('p');
+		botResponse.innerText = message;
+		chatLog.appendChild(botResponse);
+		chatLog.scrollTop = chatLog.scrollHeight;
+	}
+
+	function removeTypingMessage() {
+		const chatLog = document.getElementById('chat-log');
+		if (chatLog.lastChild) {
+			chatLog.removeChild(chatLog.lastChild);
+		}
+	}
+	function showFAQ() {
+		appendBotResponse("Preguntas frecuentes:");
+		appendBotResponse("1. ¿Cómo cambio mi contraseña?Para cambiar tu contraseña, ve a la página de perfil, presione el botón cambiar mi contraseña e introducir los datos requeridos.");
+		appendBotResponse("2. ¿Cómo puedo ver los Términos y condiciones aceptados? Para ver los términos y condiciones deberá dirigirse a su perfil y pulsar el botón de Términos y condiciones");
+		appendBotResponse("3. ¿Cómo puedo ponerme una imagen de perfil? Para introducir una imagen de perfil, deberá accede a su perfil y pulsar sobre la imagen, para elegir la imagen a introducir");
+		appendBotResponse("4. ¿Cómo usar la aplicación? En la página principal introducir una iamgen del texto y pulsar el botón de Subir y procesar archivo");
+		appendBotResponse("5: ¿Cómo contactar con ocrsupport? Al final de la página de ayuda podemos observar los diferentes métodos de contacto con nuestro equipo");
+		appendBotResponse("6: ¿Cómo puedo cambiar de cuenta? Para cambiar de cuenta deberá dirigirse a su perfil y pulsar el botón Cambiar de cuenta");
+		appendBotResponse("7: ¿Cómo puedo cerrar sesión? Para cerrar sesión deberá dirigirse a su perfil y pulsar el botón Cerrar sesión");
+		appendBotResponse("Pregunta 8: ¿Otros errores? Otros errores");       
+		appendBotResponse("Espero que le haya resultado útil");
+	}
+	function openContactPopup() {
+		const contactButton = document.getElementById('contact-button');
+		contactButton.style.display = 'block';
+		contactButton.addEventListener('click', function () {
+			const userMessage = prompt("Escribe tu mensaje al personal:");
+			if (userMessage) {
+				appendBotResponse(`Tú: ${userMessage}`);
 			}
+		});
+	}
 
-			function removeTypingMessage() {
-				const chatLog = document.getElementById('chat-log');
-				if (chatLog.lastChild) {
-					chatLog.removeChild(chatLog.lastChild);
-				}
-			}
-			function showFAQ() {
-				appendBotResponse("Preguntas frecuentes:");
-				appendBotResponse("1. ¿Cómo cambio mi contraseña?Para cambiar tu contraseña, ve a la página de perfil, presione el botón cambiar mi contraseña e introducir los datos requeridos.");
-				appendBotResponse("2. ¿Cómo puedo ver los Términos y condiciones aceptados? Para ver los términos y condiciones deberá dirigirse a su perfil y pulsar el botón de Términos y condiciones");
-				appendBotResponse("3. ¿Cómo puedo ponerme una imagen de perfil? Para introducir una imagen de perfil, deberá accede a su perfil y pulsar sobre la imagen, para elegir la imagen a introducir");
-				appendBotResponse("4. ¿Cómo usar la aplicación? En la página principal introducir una iamgen del texto y pulsar el botón de Subir y procesar archivo");
-				appendBotResponse("5: ¿Cómo contactar con ocrsupport? Al final de la página de ayuda podemos observar los diferentes métodos de contacto con nuestro equipo");
-				appendBotResponse("6: ¿Cómo puedo cambiar de cuenta? Para cambiar de cuenta deberá dirigirse a su perfil y pulsar el botón Cambiar de cuenta");
-				appendBotResponse("7: ¿Cómo puedo cerrar sesión? Para cerrar sesión deberá dirigirse a su perfil y pulsar el botón Cerrar sesión");
-				appendBotResponse("Pregunta 8: ¿Otros errores? Otros errores");       
-				appendBotResponse("Espero que le haya resultado útil");
-			}
-			function openContactPopup() {
-				const contactButton = document.getElementById('contact-button');
-				contactButton.style.display = 'block';
-				contactButton.addEventListener('click', function () {
-					const userMessage = prompt("Escribe tu mensaje al personal:");
-					if (userMessage) {
-						appendBotResponse(`Tú: ${userMessage}`);
-					}
-				});
-			}
+	function showWelcomeMessage() {
+		appendBotResponse("Hola, bienvenido al chat con el Support \n1: Preguntas frecuentes \n2: Contactar con el staff");
+	}
 
-			function showWelcomeMessage() {
-				appendBotResponse("Hola, bienvenido al chat con el Support \n1: Preguntas frecuentes \n2: Contactar con el staff");
-			}
+	userInput.addEventListener('keypress', function (e) {
+		if (e.key === 'Enter') {
+			const userMessage = userInput.value;
+			userInput.value = '';
+			appendBotResponse("Support está escribiendo...");
+			setTimeout(removeTypingMessage, 1000);      
+			setTimeout(showWelcomeMessage, 1000);
+			if (userMessage === '1') {
 
-			userInput.addEventListener('keypress', function (e) {
-				if (e.key === 'Enter') {
-					const userMessage = userInput.value;
-					userInput.value = '';
-					appendBotResponse("Support está escribiendo...");
-					setTimeout(removeTypingMessage, 1000);      
-					setTimeout(showWelcomeMessage, 1000);
-					if (userMessage === '1') {
+				showFAQ();
+			} else if (userMessage === '2') {
 
-						showFAQ();
-					} else if (userMessage === '2') {
-
-						openContactPopup();
+				openContactPopup();
 
 
-					} 
-				}
-			});
-
-
-
-
-
-
-
-
-		</script>
-	</body>
-</html>
+			} 
+		}
+	});
+</script>
+{% include 'footer.html' %} 
