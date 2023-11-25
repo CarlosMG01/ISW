@@ -1,30 +1,22 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
-
-    <title>OCR -  Restableceer Contraseña</title>
 {% include 'header.html' %}
 
 <div class="wrapper fadeInDown">
-    <div id="formContent">
-      <!-- Tabs Titles -->
-      <h2 class="active">Restablecer Contraseña</h2>
-      <a class="inactive underlineHover" href="/inicio_sesion">Iniciar Sesión</a>
+	<div id="formContent">
+		<!-- Tabs Titles -->
+		<h2 class="active">Restablecer Contraseña</h2>
+		<a class="inactive underlineHover" href="/inicio_sesion">Iniciar Sesión</a>
 
-      <!-- Change Password Form -->
-      <form action="{{ url_for('auth.restablecer_contrasena', token=token) }}" method="post">
-        <input type="password" id="nueva_contrasena" class="fadeIn third" name="nueva_contrasena" placeholder="Nueva Contraseña" required>
-        <input type="password" id="confirmar_nueva_contrasena" class="fadeIn third" name="confirmar_nueva_contrasena" placeholder="Confirmar Nueva Contraseña" required>
-        <input type="submit" class="fadeIn fourth" value="Cambiar Contraseña">
-    </form>
-      {% if error %}
-      <p class="alert alert-danger" role="alert">{{ error }}</p>
-      {% elif success %}
-      <p class="alert alert-success" role="alert">{{ success }}</p>
-      {% endif %}
-    </div>
-  </div>
+		<!-- Change Password Form -->
+		<form action="{{ url_for('auth.restablecer_contrasena', token=token) }}" method="post">
+			<input type="password" id="nueva_contrasena" class="fadeIn third" name="nueva_contrasena" placeholder="Nueva Contraseña" required>
+			<input type="password" id="confirmar_nueva_contrasena" class="fadeIn third" name="confirmar_nueva_contrasena" placeholder="Confirmar Nueva Contraseña" required>
+			<input type="submit" class="fadeIn fourth" value="Cambiar Contraseña">
+		</form>
+		{% if error %}
+		<p class="alert alert-danger" role="alert">{{ error }}</p>
+		{% elif success %}
+		<p class="alert alert-success" role="alert">{{ success }}</p>
+		{% endif %}
+	</div>
+</div>
+{% include 'footer.html' %} 

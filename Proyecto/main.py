@@ -19,14 +19,13 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'practicaceu@gmail.com'
 app.config['MAIL_PASSWORD'] = 'lkytkgkbhirfyxlv'
-
 mail = Mail(app)
 
 app.secret_key = '12345'
 
 if __name__ == '__main__':
     url = "http://127.0.0.1:5000"
-
+   
     webbrowser.open(url)
 
     app.run(debug=False)

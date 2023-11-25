@@ -1,28 +1,19 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
-    <title>Olvidé mi contraseña</title>
-</head>
-<body>
-    <h1>Olvidé mi contraseña</h1>
-    <p>Ingresa tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
+{% include 'header.html' %}
+<h1>Olvidé mi contraseña</h1>
+<p>Ingresa tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
 
-    <form method="post">
-        <input type="email" name="correo" placeholder="Correo electrónico" required>
-        <button type="submit">Enviar enlace de restablecimiento de contraseña</button>
-    </form>
+<form method="post">
+	<input type="email" name="correo" placeholder="Correo electrónico" required>
+	<button type="submit">Enviar enlace de restablecimiento de contraseña</button>
+</form>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li class="{{ message[1] }}">{{ message[0] }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-</body>
-</html>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+	{% for message in messages %}
+	<li class="{{ message[1] }}">{{ message[0] }}</li>
+	{% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+{% include 'footer.html' %} 

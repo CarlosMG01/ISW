@@ -14,13 +14,18 @@ auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
 
 
-db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
+db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
 correo_electronico=""
-imagen_perfil= "/static/perfil.png"
 
 @home_bp.route('/')
 def index():
-    return render_template('home.html')
+    session.clear()
+    return redirect(url_for('auth.restricted'))
+
+@auth_bp.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('auth.restricted'))
 
 @auth_bp.route('/registro', methods=['GET', 'POST'])
 def registro():
@@ -77,6 +82,7 @@ def inicio_sesion():
             success, error_message = login(correo, contrasena, db_manager.cursor)
             if success:
                 guardar_valores(correo)
+                session['logged_in'] = True
                 return redirect(url_for('auth.restricted'))
             else:
                 error = error_message or "Credenciales incorrectas"
@@ -87,6 +93,8 @@ def inicio_sesion():
 
 @auth_bp.route('/cambio_contrasena', methods=['GET', 'POST'])
 def cambio_contrasena():
+    if not session.get('logged_in'):
+        return redirect(url_for('auth.inicio_sesion'))
     error = None
     success = None
 
@@ -121,35 +129,29 @@ def restricted():
 
 @auth_bp.route('/perfil-usuario', methods =['GET','POST'])
 def perfil():
-    correo = guardar_valores()
-    imagen_perfil = db_manager.obtener_imagen_perfil(correo)
-    imagen_predeterminada = "/static/perfil.png"
-
-    if  request.method =='POST':
-        nueva_imagen_perfil = request.files['nueva_imagen']
-        if nueva_imagen_perfil:
-            # Verifica que la extensión del archivo sea válida (puedes personalizar esto)
-            if nueva_imagen_perfil.filename != '' and nueva_imagen_perfil.filename.endswith(('.jpg', '.png', '.jpeg', '.gif', '.bmp')):
-                filename = secure_filename(nueva_imagen_perfil.filename)
-                nueva_imagen_path = os.path.join('static', filename)
-                if not os.path.exists('static'):
-                    os.makedirs('static')
-
-                nueva_imagen_perfil.save(nueva_imagen_path)
-                imagen_perfil = nueva_imagen_path
-                # Actualiza la imagen de perfil en la base de datos
-                result = db_manager.guardar_imagen_perfil(correo, nueva_imagen_path)
-                if result:
-                    return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo, success=result)
-            else:
-                error = "Formato de imagen no válido. Por favor, utiliza archivos de imagen (.jpg, .png, .jpeg, .gif, .bmp)."
-    if imagen_perfil is None:
-        imagen_perfil = imagen_predeterminada
-
-    return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo)
+    if not session.get('logged_in'):
+        return redirect(url_for('auth.inicio_sesion'))
+    else:
+        correo = guardar_valores()
+        imagen_perfil = db_manager.obtener_imagen_perfil(correo)
+        if  request.method =='POST':
+            nueva_imagen_perfil = request.files['nueva_imagen']
+            if nueva_imagen_perfil:
+                # Verifica que la extensión del archivo sea válida (puedes personalizar esto)
+                if nueva_imagen_perfil.filename != '' and nueva_imagen_perfil.filename.endswith(('.jpg', '.png', '.jpeg', '.gif', '.bmp')):
+                    # Actualiza la imagen de perfil en la base de datos
+                    result = db_manager.guardar_imagen_perfil(correo, nueva_imagen_perfil)
+                    imagen_perfil = db_manager.obtener_imagen_perfil(correo)
+                    if result:
+                        return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo, success=result)
+                else:
+                    error = "Formato de imagen no válido. Por favor, utiliza archivos de imagen (.jpg, .png, .jpeg, .gif, .bmp)."
+        return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo)
 
 @auth_bp.route('/chat', methods =['GET','POST'])
 def chat():
+    if not session.get('logged_in'):
+        return redirect(url_for('auth.inicio_sesion'))
     correo = guardar_valores()
     return render_template('chat.html',correo=correo)
 
@@ -163,14 +165,12 @@ def guardar_valores(correo=None):
     
 @auth_bp.route('/ayuda')
 def ayuda():
+    if not session.get('logged_in'):
+        return redirect(url_for('auth.inicio_sesion'))
     return render_template('ayuda.html')
-
-def ayuda():
-    return render_template('ayuda.html')
-
 
 @auth_bp.route('/olvido_contrasena', methods=['GET', 'POST'])
-def olvide_contrasena():
+def olvide_contrasena(): 
     if request.method == 'POST':
         correo = request.form['correo']
 

@@ -4,6 +4,9 @@ from itsdangerous import URLSafeTimedSerializer
 from flask import url_for
 from flask_mail import Mail, Message
 from flask import Flask
+from PIL import Image
+import io
+import base64
 
 app = Flask(__name__)
 
@@ -16,6 +19,7 @@ app.config['MAIL_PASSWORD'] = 'lkytkgkbhirfyxlv'
 mail = Mail(app)
 
 
+# Cargar la imagen desde el disco
 
 secret_key = '1234' 
 
@@ -23,7 +27,7 @@ secret_key = '1234'
 class BaseDeDatosMariaDB:
     def __init__(self):
         self.host = "localhost"
-        self.usuario = "root"
+        self.usuario = "carlos"
         self.contraseña = "root"
         self.base_de_datos = "prueba"
         self.conexion = None
@@ -57,14 +61,13 @@ class BaseDeDatosMariaDB:
         try:
             cursor = self.conexion.cursor()
             # Crear la tabla de usuarios
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS usuarios (
+            query = """CREATE TABLE IF NOT EXISTS usuarios (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     correo VARCHAR(255) NOT NULL,
                     contraseña VARCHAR(255) NOT NULL,
-                    imagen_perfil VARCHAR(255)
-                )
-            """)
+                    imagen_perfil LONGBLOB  
+                )"""
+            cursor.execute(query)
 
             # Crear la tabla de textos
             cursor.execute("""
@@ -134,8 +137,14 @@ class DatabaseManager:
     
     def guardar_imagen_perfil(self, correo, imagen_path):
         try:
+            # Cargar la imagen desde el disco
+            with Image.open(imagen_path) as imagen:
+                # Obtener los datos binarios de la imagen
+                with io.BytesIO() as output:
+                    imagen.save(output, format=imagen.format)  # Guardar en el mismo formato original
+                    datos_binarios = output.getvalue()
             query = "UPDATE usuarios SET imagen_perfil = %s WHERE correo = %s"
-            self.cursor.execute(query, (imagen_path, correo))
+            self.cursor.execute(query, (datos_binarios,correo))
             self.connection.commit()
             return "Imagen de perfil actualizada exitosamente."
         except mysql.connector.Error as err:
@@ -147,10 +156,19 @@ class DatabaseManager:
             self.cursor.execute(query, (correo,))
             imagen_perfil = self.cursor.fetchone()
 
-            if imagen_perfil:
-                return imagen_perfil[0]  # Devuelve la ruta de la imagen de perfil
+            if imagen_perfil[0] is not None:
+                imagen = imagen_perfil[0]
+                datos_binarios_procesados = base64.b64encode(imagen).decode('utf-8')
+                return datos_binarios_procesados
+
             else:
-                return None  # Si no se encontró una imagen de perfil, devuelve None
+                with Image.open("static/perfil.png") as imagen:
+                        # Obtener los datos binarios de la imagen
+                    with io.BytesIO() as output:
+                        imagen.save(output, format=imagen.format)  # Guardar en el mismo formato original
+                        datos_binarios = output.getvalue()
+                        datos_binarios_procesados = base64.b64encode(datos_binarios).decode('utf-8')
+                return datos_binarios_procesados
         except mysql.connector.Error as err:
             print(f"Error al obtener la imagen de perfil: {err}")
             return None
