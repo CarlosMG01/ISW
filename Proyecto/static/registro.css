@@ -467,3 +467,18 @@ input[type=text]:placeholder {
 	padding: 10px 20px;
 	border-radius: 5px;
 }
+
+
+.btn-profile {
+    background-color: #007BFF;
+    color: #fff; 
+}
+
+.btn-profile:hover {
+    background-color: #0056b3;
+}
+
+
+.btn-profile:hover i {
+    color: #fff;
+}
