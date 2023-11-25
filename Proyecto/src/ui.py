@@ -15,7 +15,6 @@ home_bp = Blueprint('home', __name__)
 
 
 db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
-correo_electronico=""
 
 @home_bp.route('/')
 def index():
@@ -24,7 +23,7 @@ def index():
 
 @auth_bp.route('/logout')
 def logout():
-    session.pop('logged_in', None)
+    session.clear()
     return redirect(url_for('auth.restricted'))
 
 @auth_bp.route('/registro', methods=['GET', 'POST'])
@@ -49,9 +48,6 @@ def registro():
 
     return render_template('registro.html', error=error, success=success)
 
-
-
-
 @auth_bp.route('/confirmar-correo/<token>')
 def confirmar_correo(token):
     correo = obtener_correo_desde_token(token)
@@ -67,9 +63,6 @@ def confirmar_correo(token):
     else:
         return render_template('inicio_sesion.html', error='Token inválido o expirado')
 
-
-
-
 @auth_bp.route('/inicio_sesion', methods=['GET', 'POST'])
 def inicio_sesion():
     error = None
@@ -81,7 +74,7 @@ def inicio_sesion():
         if correo and contrasena:
             success, error_message = login(correo, contrasena, db_manager.cursor)
             if success:
-                guardar_valores(correo)
+                session['correo_usuario'] = correo
                 session['logged_in'] = True
                 return redirect(url_for('auth.restricted'))
             else:
@@ -132,7 +125,7 @@ def perfil():
     if not session.get('logged_in'):
         return redirect(url_for('auth.inicio_sesion'))
     else:
-        correo = guardar_valores()
+        correo = session.get('correo_usuario')
         imagen_perfil = db_manager.obtener_imagen_perfil(correo)
         if  request.method =='POST':
             nueva_imagen_perfil = request.files['nueva_imagen']
@@ -152,17 +145,9 @@ def perfil():
 def chat():
     if not session.get('logged_in'):
         return redirect(url_for('auth.inicio_sesion'))
-    correo = guardar_valores()
+    correo = session.get('correo_usuario')
     return render_template('chat.html',correo=correo)
 
-def guardar_valores(correo=None):
-    global correo_electronico
-    if correo is None:
-        return correo_electronico
-    else:
-        correo_electronico = correo
-        return True
-    
 @auth_bp.route('/ayuda')
 def ayuda():
     if not session.get('logged_in'):
