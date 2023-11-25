@@ -16,7 +16,7 @@
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<a class="navbar-brand" href="/restricted" >
-				<img src="static/favicon.png" alt="Inicio" style="width: 30px; height: auto; margin-right: 10px;">TRANSCRIPCIÓN DE TEXTOS
+				<img src="static/favicon.png" alt="Inicio" style="width: 30px; height: auto; margin-right: 10px;">
 			</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
 											    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +25,9 @@
 			<div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
 				<ul class="navbar-nav ml-auto">
 					{% if 'logged_in' in session %}
-					<a href= "/mistextos"> Mis textos</a>
+					<a href= "/mistextos">
+						<i class="fas fa-file-alt fa-lg text-white" style="margin-right: 10px;"></i> Mis textos
+					</a>
 				</ul>
 				<a href="/perfil-usuario">
 					<i class="fas fa-user fa-lg text-white" style="margin-right: 10px;font-size: 24px;"></i>
