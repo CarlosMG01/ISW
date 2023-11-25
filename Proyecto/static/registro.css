@@ -482,3 +482,14 @@ input[type=text]:placeholder {
 .btn-profile:hover i {
     color: #fff;
 }
+
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
