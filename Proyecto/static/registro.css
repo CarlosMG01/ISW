@@ -372,7 +372,7 @@ input[type=text]:placeholder {
 	width: 150px; /* Ancho deseado de la imagen de perfil */
 	height: 150px; /* Alto deseado de la imagen de perfil */
 	border-radius: 50%; /* Hace que la imagen de perfil sea redonda (puedes ajustar según tu preferencia) */
-	margin-left: 40%; /* Ajusta la posición horizontal de la imagen de perfil en relación con el cuadro blanco */
+	margin-left: 0%; /* Ajusta la posición horizontal de la imagen de perfil en relación con el cuadro blanco */
 	border: 2px solid #ffffff; /* Borde opcional alrededor de la imagen de perfil */
 }
 
@@ -449,4 +449,18 @@ input[type=text]:placeholder {
 	text-align: center;
 	margin-top: 20px;
 	font-size: 14px;
+}
+.button-container {
+	position: absolute;
+	top: 5;
+	left: 0;
+	padding: 10px;
+}
+
+.button-home {
+	text-decoration: none;
+	background-color: blue;
+	color: white;
+	padding: 10px 20px;
+	border-radius: 5px;
 }

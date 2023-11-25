@@ -1,24 +1,30 @@
 
 {% include 'header.html' %}
 
+<div class="button-container">
+	<a href="/restricted" class="button-home">Volver al home</a>
+</div>
 <div class="profile-container text-center mt-5">
-	<div class="profile-image">
-		<form method="POST" enctype="multipart/form-data">
-			<label for="nueva_imagen" id="imagen_label">
-				<img src="data:image/jpeg;base64,{{imagen_perfil}}" alt="Imagen" id="image">
-			</label>
-			<input type="file" name="nueva_imagen" id="nueva_imagen" accept="image/*" required style="display: none;" onchange="submitForm()">
-			<button type="submit" id="boton_submit" style="display: none;"></button>
-		</form>
+	<div class="center-container">
+		<div class="profile-image">
+			<form method="POST" enctype="multipart/form-data">
+				<label for="nueva_imagen" id="imagen_label">
+					<img src="data:image/jpeg;base64,{{imagen_perfil}}" alt="Imagen" id="image">
+				</label>
+				<input type="file" name="nueva_imagen" id="nueva_imagen" accept="image/*" required style="display: none;" onchange="submitForm()">
+				<button type="submit" id="boton_submit" style="display: none;"></button>
+			</form>
+		</div>
 	</div>
-	<h1 class="profile-username">Perfil de Usuario</h1>
-	<p><a href="/restricted" class="button">Volver al home</a></p>
+	<div style="text-align: center;">
+		<h1 class="profile-username" style="margin: auto;"><br>Perfil de Usuario</h1>
+	</div>
+	
 	<p><strong>Correo electrónico: </strong> {{ correo }} </p>
 
 	<p><strong>Nombre de usuario: </strong> {{ correo.split('@')[0] }}</p>
-	<div class="col-md-6">
-		<a href="/cambio_contrasena" class="btn btn-primary btn-lg btn-block">Cambiar Contraseña</a>
-	</div>
+	
+	<p><a href="/cambio_contrasena" class="btn btn-primary btn-lg btn-block">Cambiar contraseña</a></p>
 	<p><strong>Otras utilidades: </strong></p>
 	<p><a href="/inicio_sesion" class="button">Cambiar de cuenta</a></p>
 	<p><a href="/logout" class="button">Cerrar sesión</a></p>
