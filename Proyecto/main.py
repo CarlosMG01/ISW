@@ -2,6 +2,7 @@ from flask import Flask
 from flask_mail import Mail
 import webbrowser
 from src import auth_bp, home_bp
+import os
 
 app = Flask(__name__)
 app.register_blueprint(home_bp)
@@ -9,6 +10,8 @@ app.register_blueprint(auth_bp)
 
 app.testing = True
 
+def install_dependencies():
+    os.system("pip install -r requitements.txt")
 
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
