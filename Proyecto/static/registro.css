@@ -490,9 +490,10 @@ body, html {
 }
 
 footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    margin-top: 2vw; 
+  	padding: 2vw;
+  	background-color: #333;
+  	color: #fff;
 }
 
 .navbar {
