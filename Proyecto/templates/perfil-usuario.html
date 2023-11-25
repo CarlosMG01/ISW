@@ -5,6 +5,11 @@
 	<a href="/restricted" class="button-home">Volver al home</a>
 </div>
 <div class="profile-container text-center mt-5">
+	<div class="logout-link mt-3 custom-text-right">
+        <a href="/logout" class="btn btn-dark">Cerrar sesión</a>
+    </div>
+	
+
 	<div class="profile-image">
 		<form method="POST" enctype="multipart/form-data">
 			<label for="nueva_imagen" id="imagen_label">
@@ -22,11 +27,11 @@
 
 	<p><strong>Nombre de usuario: </strong> {{ correo.split('@')[0] }}</p>
 	
-	<p><a href="/cambio_contrasena" class="btn btn-primary btn-lg btn-block">Cambiar contraseña</a></p>
-	<p><strong>Otras utilidades: </strong></p>
-	<p><a href="/inicio_sesion" class="button">Cambiar de cuenta</a></p>
-	<p><a href="/logout" class="button">Cerrar sesión</a></p>
-	<p><a href="/ayuda" class="btn btn-primary btn-lg btn-block">Ayuda</a></p>
+	<p><a href="/cambio_contrasena" class="btn btn-dark">Cambiar contraseña</a></p>
+	<p><a href="/inicio_sesion" class="btn btn-dark">Cambiar de cuenta</a></p>
+	
+	<p><a href="/ayuda" class="btn btn-dark">Ayuda</a></p>
+	
 
 
 	<p><button onclick="mostrarVentanaEmergente()">Mostrar Términos y Condiciones</button>
