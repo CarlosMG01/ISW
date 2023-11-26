@@ -32,11 +32,14 @@
   <button onclick="aceptarCookies()">Aceptar</button>
   <button onclick="rechazarCookies()">Rechazar</button>
 </div>
-
+<div id="cookie-accepted-notification" style="display: none;">
+  <p>Cookies aceptadas. Gracias por usar nuestra página web.</p>
+</div>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     if (!cookiesAceptadas() && !localStorage.getItem("cookiesRechazadas")) {
         mostrarNotificacionCookies();
+  
     }
   });
 
@@ -44,17 +47,27 @@
     var notification = document.getElementById("cookie-notification");
     notification.style.display = "block";
   }
+  function mostrarNotificacionCookiesAceptadas() {
+    var notification = document.getElementById("cookie-accepted-notification");
+    notification.style.display = "block";
+    setTimeout(function() {
+      notification.style.display = "none";
+    }, 5000); // Ocultar la notificación después de 5 segundos (puedes ajustar este valor)
+  }
 
   function aceptarCookies() {
     setCookie("cookiesAceptadas", "true", 30); // Establecer cookie de aceptación por 30 días
     document.getElementById("cookie-notification").style.display = "none";
-	localStorage.setItem("cookiesAceptadas", "true");
+    localStorage.setItem("cookiesAceptadas", "true");
+    mostrarNotificacionCookiesAceptadas();
   }
+
 
   function rechazarCookies() {
     // Puedes agregar acciones adicionales al rechazar cookies si es necesario
     document.getElementById("cookie-notification").style.display = "none";
-	localStorage.setItem("cookiesRechazadas", "true");
+	  localStorage.setItem("cookiesRechazadas", "true");
+
   }
 
   function setCookie(nombre, valor, dias) {
