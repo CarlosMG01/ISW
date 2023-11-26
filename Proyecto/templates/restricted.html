@@ -5,8 +5,52 @@
   <p>Publicidad</p>
 </div>
 
-<!-- App -->
+
+	<script>
+		function mostrarVentanaEmergente() {
+			document.getElementById("popup-container").style.display = "block";
+		}
+		function cerrarVentanaEmergente() {
+			document.getElementById("popup-container").style.display = "none";
+		}
+	</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="container p-5 my-5 bg-dark text-white">
+  <!-- Manual de usuario -->
+  <p><button onclick="mostrarVentanaEmergente()">Manual de usuario</button>
+
+    <div id="popup-container">
+      <div id="popup-box">
+        <button onclick="cerrarVentanaEmergente()">Cerrar</button>
+        <h2>Manual de usuario</h2>
+        <h3>Para usar la aplicación: Necesitas presionar la imagen de seleccionar una imagen para extraer texto</h3>
+        <h3>A continuación, en Texto extraido podrá observar el texto introducido</h3>
+      </div>
+    </div>
+  </p>
+    <!-- App -->
 	<h1>Seleccione una imagen para extraer texto</h1>
 	<div class="container bg-light py-3 my-3">
 		<form method="POST" enctype="multipart/form-data">
