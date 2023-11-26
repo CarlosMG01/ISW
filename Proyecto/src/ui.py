@@ -142,11 +142,13 @@ def perfil():
         return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo)
 
 
-@auth_bp.route('/mistextos')
+@auth_bp.route('/mistextos', methods =['GET','POST'])
 def mistextos():
     if not session.get('logged_in'):
         return redirect(url_for('auth.inicio_sesion'))
-    return render_template('mistextos.html')
+    else:
+        correo = session.get('correo_usuario')
+        return render_template('mistextos.html', correo=correo)
     
 @auth_bp.route('/chat', methods =['GET','POST'])
 def chat():
