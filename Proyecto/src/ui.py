@@ -141,6 +141,13 @@ def perfil():
                     error = "Formato de imagen no válido. Por favor, utiliza archivos de imagen (.jpg, .png, .jpeg, .gif, .bmp)."
         return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo)
 
+
+@auth_bp.route('/mistextos')
+def mistextos():
+    if not session.get('logged_in'):
+        return redirect(url_for('auth.inicio_sesion'))
+    return render_template('mistextos.html')
+    
 @auth_bp.route('/chat', methods =['GET','POST'])
 def chat():
     if not session.get('logged_in'):
@@ -153,6 +160,7 @@ def ayuda():
     if not session.get('logged_in'):
         return redirect(url_for('auth.inicio_sesion'))
     return render_template('ayuda.html')
+
 
 @auth_bp.route('/olvido_contrasena', methods=['GET', 'POST'])
 def olvide_contrasena(): 

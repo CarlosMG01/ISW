@@ -503,3 +503,26 @@ footer {
 .container {
     margin-top: 20px; 
 }
+#cookie-notification {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background-color: #333;
+	color: #fff;
+	padding: 10px;
+	text-align: center;
+	display: none;
+  }
+
+  #cookie-notification button {
+	background-color: #4CAF50;
+	color: #fff;
+	border: none;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	cursor: pointer;
+  }
