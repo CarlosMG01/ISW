@@ -80,6 +80,11 @@
     return "";
   }
 </script>
+<div id="adContainer2" style="border: 1px solid #ccc; padding: 5px; margin: 0px;  width: 30rem; height: 15rem;">
+  <img id="adImage2" src="https://www.marketingdirecto.com/wp-content/uploads/2022/09/iphone-14-pro-dynamic-island-animation.gif" alt="Anuncio de prueba 2" style="width: 30rem; height: 15rem;">
+  <p>Publicidad</p>
+</div>
+
 
 
 <script>
@@ -101,6 +106,24 @@
   setInterval(changeAd, 5000);
 </script>
 
+<script>
+  var adImages2 = [
+  "https://www.publico.es/uploads/2018/06/04/5b154139a2ce5.jpg",
+  "https://img.pccomponentes.com/pcblog/2120/1200x628-3.png",
+  "https://media.tenor.com/gOr8iWY9iIsAAAAC/ronaldinho-danet-natillas.gif",
+  "https://s2.ppllstatics.com/elcomercio/www/multimedia/202203/07/media/cortadas/messi-lays-kPrD-U160122932914299E-1248x770@El%20Comercio.jpg",
+  "https://unapausaparalapublicidad.files.wordpress.com/2014/08/san-miguel.gif",
+  "https://cuartoenfoque.com/wp-content/uploads/2021/02/videos-publicitarios-hp.gif"
+
+  ];
+  var currentAdIndex2 = 0; 
+  function changeAd2() {
+      var adImage2 = document.getElementById('adImage2');
+      currentAdIndex2 = (currentAdIndex2 + 1) % adImages2.length;
+      adImage2.src = adImages2[currentAdIndex2];
+  }
+  setInterval(changeAd2, 5000);
+</script>
 
 
 
