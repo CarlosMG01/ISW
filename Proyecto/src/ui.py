@@ -2,11 +2,14 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
 import re
+from io import BytesIO
+from reportlab.pdfgen import canvas
 import pytesseract
+import pdfkit
 import os
 from werkzeug.utils import secure_filename
 
@@ -119,6 +122,38 @@ def restricted():
             resultado = texto_extraido
 
     return render_template('restricted.html', resultado=resultado)
+
+# PDF
+#@auth_bp.route('/convertir-a-pdf', methods=['POST'])
+#def convertir_a_pdf():
+#    resultado = request.form.get('resultado')
+
+ #   if resultado:
+  #      pdf_buffer = BytesIO()
+
+        # Configurar opciones para pdfkit
+   #     options = {
+    #        'quiet': ''
+    #    }
+
+        # Crear PDF desde el texto
+     #   pdfkit.from_string(resultado, pdf_buffer, options=options)
+
+      #  pdf_buffer.seek(0)
+      #  return send_file(pdf_buffer, as_attachment=True, download_name='documento.pdf')
+
+  #  return "No se proporcionó ningún resultado para convertir a PDF."
+
+
+
+
+
+
+
+
+
+
+
 
 @auth_bp.route('/perfil-usuario', methods =['GET','POST'])
 def perfil():
