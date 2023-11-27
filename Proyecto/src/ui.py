@@ -5,9 +5,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from flask import Flask, render_template, request, jsonify, send_file
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
+from fpdf import FPDF
 import re
-from io import BytesIO
-from reportlab.pdfgen import canvas
 import pytesseract
 import pdfkit
 import os
@@ -18,6 +17,8 @@ home_bp = Blueprint('home', __name__)
 
 
 db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
+
+resultado_global = ""
 
 @home_bp.route('/')
 def index():
@@ -110,7 +111,7 @@ def cambio_contrasena():
 
 @auth_bp.route('/restricted', methods=['GET', 'POST'])
 def restricted():
-    resultado =""
+    global resultado_global
     if request.method == 'POST': 
         file = request.files['file']
         if file:
@@ -119,30 +120,24 @@ def restricted():
             # static es donde se guardan las iamgenes
             texto_extraido = pytesseract.image_to_string(os.path.join('static',file.filename))
             # Imprime el texto extraído
-            resultado = texto_extraido
+            resultado_global = texto_extraido
 
-    return render_template('restricted.html', resultado=resultado)
+    return render_template('restricted.html', resultado=resultado_global)
 
 # PDF
-#@auth_bp.route('/convertir-a-pdf', methods=['POST'])
-#def convertir_a_pdf():
-#    resultado = request.form.get('resultado')
-
- #   if resultado:
-  #      pdf_buffer = BytesIO()
-
-        # Configurar opciones para pdfkit
-   #     options = {
-    #        'quiet': ''
-    #    }
-
-        # Crear PDF desde el texto
-     #   pdfkit.from_string(resultado, pdf_buffer, options=options)
-
-      #  pdf_buffer.seek(0)
-      #  return send_file(pdf_buffer, as_attachment=True, download_name='documento.pdf')
-
-  #  return "No se proporcionó ningún resultado para convertir a PDF."
+@auth_bp.route('/convertir-a-pdf', methods=['POST'])
+def convertir_a_pdf():
+    # Lógica para generar el PDF
+    # resultado = restricted()
+    global resultado_global
+    pdf = FPDF(orientation='P', unit='mm', format='A4')
+    pdf.add_page()
+    pdf.set_font('Arial', '', 12)
+    pdf.multi_cell(190, 10, txt=resultado_global, border=0, align='L')
+    pdf_path = 'mitexto.pdf'
+    pdf.output(pdf_path)
+    
+    return send_file(pdf_path, as_attachment=True)
 
 
 

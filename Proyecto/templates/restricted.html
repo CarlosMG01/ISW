@@ -42,7 +42,7 @@
 	<div id="texto_extraido"></div>
 	<h2>Texto extraído:</h2>
 	<p style ="color:white"> {{ resultado }}</p>
-  <button onclick="convertirAPDF()">Convertir a PDF</button>
+  <button id="generarPDF">Generar PDF</button>
 </div>
 <script>
 	function submitForm() {
@@ -163,33 +163,11 @@
 
 <!-- Conversor a PDF -->
 <script>
-  function convertirAPDF() {
-    print()
-      const resultado = document.querySelector('#texto_extraido p').innerText;
-
-      // Crear un formulario oculto
-      const form = document.createElement('form');
-      form.method = 'post';
-      form.action = '/convertir-a-pdf';
-
-      // Crear un campo de entrada para el resultado
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = 'resultado';
-      input.value = resultado;
-
-      // Agregar el campo de entrada al formulario
-      form.appendChild(input);
-
-      // Agregar el formulario al cuerpo del documento
-      document.body.appendChild(form);
-
-      // Enviar el formulario
-      form.submit();
-
-      // Eliminar el formulario después del envío
-      document.body.removeChild(form);
-  }
+  $('#generarPDF').click(function() {
+      $.post('/convertir-a-pdf', function(data) {
+          console.log('PDF generado correctamente');
+      });
+  });
 </script>
 
 
