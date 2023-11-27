@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, jsonify, send_file
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
 from fpdf import FPDF
+from docx import Document
 import re
 import pytesseract
 import pdfkit
@@ -130,12 +131,31 @@ def convertir_a_pdf():
     global resultado_global
     pdf = FPDF(orientation='P', unit='mm', format='A4')
     pdf.add_page()
+    pdf.set_font('Arial', 'B', 16)  
+    pdf.cell(190, 10, txt='PDF extraído de OCRTeam', ln=True, align='C')
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(190, 10, txt=resultado_global, border=0, align='L')
     pdf_path = 'mitexto.pdf'
     pdf.output(pdf_path)
     
     return send_file(pdf_path, as_attachment=True)
+
+# WORD
+@auth_bp.route('/convertir-a-word', methods=['POST'])
+def convertir_a_word():
+    global resultado_global
+    document = Document()
+    document.add_heading('Documento word extraído de OCRTeam', 0)
+
+    # Agrega el texto al documento de Word
+    document.add_paragraph(resultado_global)
+
+    # Guarda el documento en un archivo .docx
+    docx_path = 'mitexto.docx'
+    document.save(docx_path)
+    
+    return send_file(docx_path, as_attachment=True)
+
 
 
 

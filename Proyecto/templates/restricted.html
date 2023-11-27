@@ -43,6 +43,7 @@
 	<h2>Texto extraído:</h2>
 	<p style ="color:white"> {{ resultado }}</p>
   <button id="generarPDF">Generar PDF</button>
+  <button id="generarWORD">Generar Word</button>
 </div>
 <script>
 	function submitForm() {
@@ -165,10 +166,20 @@
 <script>
   $('#generarPDF').click(function() {
       $.post('/convertir-a-pdf', function(data) {
-          console.log('PDF generado correctamente');
+      alert('PDF generado correctamente');
       });
   });
 </script>
+
+<!-- Conversor a WORD -->
+<script>
+  $('#generarWORD').click(function() {
+      $.post('/convertir-a-word', function(data) {
+      alert('Word generado correctamente');
+      });
+  });
+</script>
+
 
 
 {% include 'footer.html' %} 
