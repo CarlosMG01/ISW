@@ -7,6 +7,7 @@ from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
 from fpdf import FPDF
 from docx import Document
+from googletrans import Translator
 import re
 import pytesseract
 import os
@@ -18,6 +19,8 @@ home_bp = Blueprint('home', __name__)
 
 db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
 
+
+translator = Translator()
 resultado_global = ""
 
 @home_bp.route('/')
@@ -154,7 +157,28 @@ def convertir_a_word():
     document.save(docx_path)
     
     return send_file(docx_path, as_attachment=True)
+# Traductor
+@auth_bp.route('/translate', methods=['GET'])
+def translate_text():
+    global resultado_global
+    if resultado_global:
+        # Traduce el texto a inglés
+        resultado_traducido = traducir_a_ingles(resultado_global)
+        return render_template('translate.html', resultado_traducido=resultado_traducido)
+    else:
+        return "No hay texto para traducir"
 
+def traducir_a_ingles(texto):
+    try:
+        # Traduce el texto a inglés utilizando googletrans
+        translation = translator.translate(texto, dest='en')
+        return translation.origin + ' (Traducido a inglés: ' + translation.text + ')'
+    except Exception as e:
+        return "Error en la traducción"
+
+
+
+#Perfil
 @auth_bp.route('/perfil-usuario', methods =['GET','POST'])
 def perfil():
     if not session.get('logged_in'):

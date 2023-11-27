@@ -44,6 +44,11 @@
 	<p style ="color:white"> {{ resultado }}</p>
   <button id="generarPDF">Generar PDF</button>
   <button id="generarWORD">Generar Word</button>
+  <button id="traducirIngles" onclick="traducirAIngles()">Traducir a Inglés</button>
+  <div id="seccionTraduccion">
+    <h1>Texto Traducido</h1>
+    <p id="textoTraducido"></p>
+  </div>
 </div>
 <script>
 	function submitForm() {
@@ -178,6 +183,23 @@
       alert('Word generado correctamente');
       });
   });
+</script>
+
+<!-- Traducir Ingles -->
+<script>
+  function traducirAIngles() {
+      // Hacer una solicitud al servidor para traducir el texto
+      fetch('/translate')
+          .then(response => response.text())
+          .then(data => {
+              // Mostrar la sección de traducción
+              document.getElementById('seccionTraduccion').style.display = 'block';
+              // Actualizar el contenido de la página con el texto traducido
+              document.getElementById('textoTraducido').innerHTML = data;
+              alert('Traducción completa');
+          })
+          .catch(error => console.error('Error:', error));
+  }
 </script>
 
 
