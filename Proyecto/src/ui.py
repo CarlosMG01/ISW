@@ -156,18 +156,6 @@ def convertir_a_word():
     
     return send_file(docx_path, as_attachment=True)
 
-
-
-
-
-
-
-
-
-
-
-
-
 @auth_bp.route('/perfil-usuario', methods =['GET','POST'])
 def perfil():
     if not session.get('logged_in'):
