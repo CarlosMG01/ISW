@@ -9,7 +9,6 @@ from fpdf import FPDF
 from docx import Document
 import re
 import pytesseract
-import pdfkit
 import os
 from werkzeug.utils import secure_filename
 
