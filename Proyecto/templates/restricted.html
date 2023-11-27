@@ -171,17 +171,45 @@
 <script>
   $('#generarPDF').click(function() {
       $.post('/convertir-a-pdf', function(data) {
-      alert('PDF generado correctamente');
+        var link = document.createElement('a');
+        link.href = 'data:application/pdf;base64,' + data;
+        link.target = '_blank';
+        link.download = 'documento_pdf.pdf'; // Puedes cambiar el nombre del archivo si lo deseas
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        alert('PDF generado correctamente');
       });
   });
 </script>
 
 <!-- Conversor a WORD -->
 <script>
-  $('#generarWORD').click(function() {
-      $.post('/convertir-a-word', function(data) {
-      alert('Word generado correctamente');
-      });
+  document.getElementById('generarWORD').addEventListener('click', function() {
+      // Hace una solicitud al servidor para obtener el contenido del Word
+      fetch('/convertir-a-word')
+          .then(response => response.blob())
+          .then(blob => {
+              // Crea un enlace temporal y simula un clic para abrir la interfaz de directorios
+              var link = document.createElement('a');
+              link.href = URL.createObjectURL(blob);
+              link.download = 'documento_word.docx'; // Puedes cambiar el nombre del archivo si lo deseas
+              link.style.display = 'none';
+              
+              // Para Windows, utiliza el atributo nwsaveas
+              if (window.navigator.msSaveOrOpenBlob) {
+                  window.navigator.msSaveOrOpenBlob(blob, link.download);
+              } else {
+                  document.body.appendChild(link);
+                  link.click();
+              }
+
+              document.body.removeChild(link);
+
+              alert('Word generado correctamente');
+          })
+          .catch(error => console.error('Error:', error));
   });
 </script>
 
