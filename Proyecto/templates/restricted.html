@@ -166,81 +166,57 @@
   }
   setInterval(changeAd2, 5000);
 </script>
-
 <!-- Conversor a PDF -->
 <script>
-  document.getElementById('generarPDF').addEventListener('click', function() {
+  function generarArchivo(url, nombreArchivo) {
+    fetch(url)
+      .then(response => response.blob())
+      .then(blob => {
+        var link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = nombreArchivo;
+        link.style.display = 'none';
 
-      fetch('/convertir-a-pdf')
-          .then(response => response.blob())
-          .then(blob => {
+        if (window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(blob, link.download);
+        } else {
+          document.body.appendChild(link);
+          link.click();
+        }
 
-              var link = document.createElement('a');
-              link.href = URL.createObjectURL(blob);
-              link.download = 'documento_pdf.pdf'; 
-              link.style.display = 'none';
+        document.body.removeChild(link);
 
+        alert(`${nombreArchivo} generado correctamente`);
+      })
+      .catch(error => console.error('Error:', error));
+  }
 
-              if (window.navigator.msSaveOrOpenBlob) {
-                  window.navigator.msSaveOrOpenBlob(blob, link.download);
-              } else {
-                  document.body.appendChild(link);
-                  link.click();
-              }
-
-              document.body.removeChild(link);
-
-              alert('PDF generado correctamente');
-          })
-          .catch(error => console.error('Error:', error));
-  });
-</script>
-
-<!-- Conversor a WORD -->
-<script>
-  document.getElementById('generarWORD').addEventListener('click', function() {
-
-      fetch('/convertir-a-word')
-          .then(response => response.blob())
-          .then(blob => {
-
-              var link = document.createElement('a');
-              link.href = URL.createObjectURL(blob);
-              link.download = 'documento_word.docx';
-              link.style.display = 'none';
-              
-              if (window.navigator.msSaveOrOpenBlob) {
-                  window.navigator.msSaveOrOpenBlob(blob, link.download);
-              } else {
-                  document.body.appendChild(link);
-                  link.click();
-              }
-
-              document.body.removeChild(link);
-
-              alert('Word generado correctamente');
-          })
-          .catch(error => console.error('Error:', error));
-  });
+  document.getElementById('generarPDF').addEventListener('click', () => generarArchivo('/convertir-a-pdf', 'documento_pdf.pdf'));
+  document.getElementById('generarWORD').addEventListener('click', () => generarArchivo('/convertir-a-word', 'documento_word.docx'));
 </script>
 
 <!-- Traducir Ingles -->
 <script>
   function traducirAIngles() {
-      // Hacer una solicitud al servidor para traducir el texto
-      fetch('/translate')
-          .then(response => response.text())
-          .then(data => {
-              // Mostrar la sección de traducción
-              document.getElementById('seccionTraduccion').style.display = 'block';
-              // Actualizar el contenido de la página con el texto traducido
-              document.getElementById('textoTraducido').innerHTML = data;
-              alert('Traducción completa');
-          })
-          .catch(error => console.error('Error:', error));
+    // Hacer una solicitud al servidor para traducir el texto
+    fetch('/translate')
+      .then(response => response.json())
+      .then(data => {
+        if (data.translated_text) {
+          // Mostrar la sección de traducción
+          document.getElementById('seccionTraduccion').style.display = 'block';
+          // Actualizar el contenido de la página con el texto traducido
+          document.getElementById('textoTraducido').innerHTML = data.translated_text;
+          alert('Traducción completa');
+        } else {
+          alert('Error al traducir el texto');
+        }
+      })
+      .catch(error => console.error('Error:', error));
   }
-</script>
 
+  document.getElementById('traducirIngles').addEventListener('click', traducirAIngles);
+</script>
 
 
 {% include 'footer.html' %} 

@@ -162,16 +162,11 @@ def convertir_a_word():
 @auth_bp.route('/translate', methods=['GET'])
 def translate_text():
     global resultado_global
-    global resultado_global_traducido
     if resultado_global:
         translated = translator.translate(resultado_global, src="es", dest="en")
-        resultado_global_traducido = translated.text
-        salida = open("translate.txt", "a")
-        salida.write(resultado_global_traducido)
-        salida.close()
-        return render_template('translate.txt', resultado_traducido=resultado_global_traducido)
+        return jsonify({"translated_text": translated.text})
     else:
-        return "No hay texto para traducir"
+        return jsonify({"error": "No hay texto para traducir"})
 
 
 #Perfil
