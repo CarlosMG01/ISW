@@ -2,5 +2,17 @@
 
 <p>Bienvenido,<strong> {{ correo.split('@')[0] }}</strong>, aquí encontrarás tus textos: </p>
 
+<div class="container p-5 my-5 bg-dark text-white">
+    <h1>Mis Textos Generados</h1>
+    {% if textos %}
+        <ul>
+            {% for texto in textos %}
+                <li>{{ texto }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No has generado ningún texto aún.</p>
+    {% endif %}
+</div>
 
 {% include 'footer.html' %} 
