@@ -166,7 +166,7 @@
   }
   setInterval(changeAd2, 5000);
 </script>
-<!-- Conversor a PDF -->
+<!-- Conversor a PDF/Word -->
 <script>
   function generarArchivo(url, nombreArchivo) {
     fetch(url)
@@ -191,8 +191,8 @@
       .catch(error => console.error('Error:', error));
   }
 
-  document.getElementById('generarPDF').addEventListener('click', () => generarArchivo('/convertir-a-pdf', 'documento_pdf.pdf'));
-  document.getElementById('generarWORD').addEventListener('click', () => generarArchivo('/convertir-a-word', 'documento_word.docx'));
+  document.getElementById('generarPDF').addEventListener('click', () => generarArchivo('/convertir-a-pdf', 'mitexto.pdf'));
+  document.getElementById('generarWORD').addEventListener('click', () => generarArchivo('/convertir-a-word', 'mitexto.docx'));
 </script>
 
 <!-- Traducir Ingles -->

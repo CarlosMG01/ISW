@@ -150,13 +150,16 @@ def convertir_a_word():
     document = Document()
     document.add_heading('Documento word extraído de OCRTeam', 0)
 
+    # Convertir el texto a utf-8
+    utf8_text = resultado_global.encode('utf-8').decode('latin-1')
+
     # Agrega el texto al documento de Word
-    document.add_paragraph(resultado_global)
+    document.add_paragraph(utf8_text)
 
     # Guarda el documento en un archivo .docx
     docx_path = 'mitexto.docx'
     document.save(docx_path)
-    
+
     return send_file(docx_path, as_attachment=True)
 # Traductor
 @auth_bp.route('/translate', methods=['GET'])
