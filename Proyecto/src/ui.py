@@ -127,8 +127,6 @@ def restricted():
 # PDF
 @auth_bp.route('/convertir-a-pdf', methods=['POST'])
 def convertir_a_pdf():
-    # Lógica para generar el PDF
-    # resultado = restricted()
     global resultado_global
     pdf = FPDF(orientation='P', unit='mm', format='A4')
     pdf.add_page()
