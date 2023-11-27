@@ -8,6 +8,7 @@ from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_co
 from fpdf import FPDF
 from docx import Document
 from googletrans import Translator
+import googletrans
 import re
 import pytesseract
 import os
@@ -19,9 +20,9 @@ home_bp = Blueprint('home', __name__)
 
 db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
 
-
-translator = Translator()
 resultado_global = ""
+translator = Translator()
+resultado_global_traducido = ""
 
 @home_bp.route('/')
 def index():
@@ -161,21 +162,16 @@ def convertir_a_word():
 @auth_bp.route('/translate', methods=['GET'])
 def translate_text():
     global resultado_global
+    global resultado_global_traducido
     if resultado_global:
-        # Traduce el texto a inglés
-        resultado_traducido = traducir_a_ingles(resultado_global)
-        return render_template('translate.html', resultado_traducido=resultado_traducido)
+        translated = translator.translate(resultado_global, src="es", dest="en")
+        resultado_global_traducido = translated.text
+        salida = open("translate.txt", "a")
+        salida.write(resultado_global_traducido)
+        salida.close()
+        return render_template('translate.txt', resultado_traducido=resultado_global_traducido)
     else:
         return "No hay texto para traducir"
-
-def traducir_a_ingles(texto):
-    try:
-        # Traduce el texto a inglés utilizando googletrans
-        translation = translator.translate(texto, dest='en')
-        return translation.origin + ' (Traducido a inglés: ' + translation.text + ')'
-    except Exception as e:
-        return "Error en la traducción"
-
 
 
 #Perfil
