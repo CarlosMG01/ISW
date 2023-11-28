@@ -166,33 +166,23 @@
   }
   setInterval(changeAd2, 5000);
 </script>
-<!-- Conversor a PDF/Word -->
+<!-- Conversor a PDF -->
 <script>
-  function generarArchivo(url, nombreArchivo) {
-    fetch(url)
-      .then(response => response.blob())
-      .then(blob => {
-        var link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = nombreArchivo;
-        link.style.display = 'none';
+  $('#generarPDF').click(function() {
+      $.post('/convertir-a-pdf', function(data) {
+          console.log('PDF generado correctamente');
+      alert('PDF generado correctamente');
+      });
+  });
+</script>
 
-        if (window.navigator.msSaveOrOpenBlob) {
-          window.navigator.msSaveOrOpenBlob(blob, link.download);
-        } else {
-          document.body.appendChild(link);
-          link.click();
-        }
-
-        document.body.removeChild(link);
-
-        alert(`${nombreArchivo} generado correctamente`);
-      })
-      .catch(error => console.error('Error:', error));
-  }
-
-  document.getElementById('generarPDF').addEventListener('click', () => generarArchivo('/convertir-a-pdf', 'mitexto.pdf'));
-  document.getElementById('generarWORD').addEventListener('click', () => generarArchivo('/convertir-a-word', 'mitexto.docx'));
+<!-- Conversor a WORD -->
+<script>
+  $('#generarWORD').click(function() {
+      $.post('/convertir-a-word', function(data) {
+      alert('Word generado correctamente');
+      });
+  });
 </script>
 
 <!-- Traducir Ingles -->

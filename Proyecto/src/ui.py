@@ -1,7 +1,7 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, make_response
 from flask import Flask, render_template, request, jsonify, send_file
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
@@ -140,8 +140,12 @@ def convertir_a_pdf():
     pdf.multi_cell(190, 10, txt=resultado_global, border=0, align='L')
     pdf_path = 'mitexto.pdf'
     pdf.output(pdf_path)
-    
-    return send_file(pdf_path, as_attachment=True)
+
+    response = make_response(open(pdf_path, 'rb').read())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename=mitexto.pdf'
+
+    return response
 
 # WORD
 @auth_bp.route('/convertir-a-word', methods=['POST'])
@@ -149,18 +153,17 @@ def convertir_a_word():
     global resultado_global
     document = Document()
     document.add_heading('Documento word extraído de OCRTeam', 0)
+    document.add_paragraph(resultado_global)
 
-    # Convertir el texto a utf-8
-    utf8_text = resultado_global.encode('utf-8').decode('latin-1')
-
-    # Agrega el texto al documento de Word
-    document.add_paragraph(utf8_text)
-
-    # Guarda el documento en un archivo .docx
     docx_path = 'mitexto.docx'
     document.save(docx_path)
 
-    return send_file(docx_path, as_attachment=True)
+    response = make_response(open(docx_path, 'rb').read())
+    response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    response.headers['Content-Disposition'] = 'inline; filename=mitexto.docx'
+
+    return response
+
 # Traductor
 @auth_bp.route('/translate', methods=['GET'])
 def translate_text():
