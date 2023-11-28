@@ -44,15 +44,15 @@
 	<p style ="color:white"> {{ resultado }}</p>
   <button id="generarPDF">Generar PDF</button>
   <button id="generarWORD">Generar Word</button>
-  <button id="traducirIngles" onclick="traducirAIngles()">Traducir a Inglés</button>
+  <button id="traducirIngles">Traducir a Inglés</button>
   <div class="dropdown">
     <button id="seleccionarIdioma">Otro Idioma</button>
     <div class="dropdown-content">
-      <a href="#" onclick="cambiarIdioma('Traducir a Francés')">Francés</a>
-      <a href="#" onclick="cambiarIdioma('Traducir a Italiano')">Italiano</a>
-      <a href="#" onclick="cambiarIdioma('Traducir a Portugués')">Portugués</a>
+      <a href="#" onclick="cambiarIdioma('fr')">Francés</a>
+      <a href="#" onclick="cambiarIdioma('it')">Italiano</a>
+      <a href="#" onclick="cambiarIdioma('pt')">Portugués</a>
       <!-- Agrega más idiomas según sea necesario -->
-    </div>
+  </div>
   </div>
   
   <div id="seccionTraduccion">
@@ -239,35 +239,44 @@
   document.getElementById('generarWORD').addEventListener('click', generarWord);
 </script>
 
-<!-- Traducir Ingles -->
+
+
 <script>
-  function traducirAIngles() {
-    // Hacer una solicitud al servidor para traducir el texto
-    fetch('/translate')
-      .then(response => response.json())
-      .then(data => {
-        if (data.translated_text) {
-          // Mostrar la sección de traducción
-          document.getElementById('seccionTraduccion').style.display = 'block';
-          // Actualizar el contenido de la página con el texto traducido
-          document.getElementById('textoTraducido').innerHTML = data.translated_text;
-          alert('Traducción completa');
-        } else {
-          alert('Error al traducir el texto');
-        }
-      })
-      .catch(error => console.error('Error:', error));
+  let idiomaDestino = 'en'; // Idioma predeterminado
+
+  function cambiarIdioma(idioma) {
+      idiomaDestino = idioma;
+      traducir(idiomaDestino);
   }
 
-  document.getElementById('traducirIngles').addEventListener('click', traducirAIngles);
-</script>
-<script>
-  function cambiarIdioma(idioma) {
-  // Actualiza el contenido del botón "Seleccionar Idioma"
-  document.getElementById('seleccionarIdioma').innerHTML = idioma;
-  
+  async function traducir(idioma) {
+      try {
+          const response = await fetch(`/translate-${idioma}`, { method: 'GET' });
+
+          if (!response.ok) {
+              throw new Error(`Error al traducir: ${response.status} - ${response.statusText}`);
+          }
+
+          const data = await response.json();
+
+          if (data.translated_text) {
+              // Mostrar la sección de traducción
+              document.getElementById('seccionTraduccion').style.display = 'block';
+              // Actualizar el contenido de la página con el texto traducido
+              document.getElementById('textoTraducido').innerHTML = data.translated_text;
+              alert('Traducción completa');
+          } else {
+              alert('Error al traducir el texto');
+          }
+      } catch (error) {
+          console.error('Error:', error);
+          alert('Error al traducir el texto. Consulta la consola para obtener más información.');
+      }
   }
+
+  document.getElementById('traducirIngles').addEventListener('click', () => cambiarIdioma('en'));
 </script>
+
 
 
 {% include 'footer.html' %} 

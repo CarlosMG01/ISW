@@ -168,7 +168,7 @@ def convertir_a_word():
 
 
 # Traductor - Inglés
-@auth_bp.route('/translate', methods=['GET'])
+@auth_bp.route('/translate-en', methods=['GET'])
 def translate_text():
     global resultado_global
     if resultado_global:
@@ -177,6 +177,33 @@ def translate_text():
     else:
         return jsonify({"error": "No hay texto para traducir"})
 
+# Nuevas rutas para traducir a otros idiomas
+@auth_bp.route('/translate-fr', methods=['GET'])
+def translate_to_french():
+    global resultado_global
+    if resultado_global:
+        translated = translator.translate(resultado_global, src="es", dest="fr")
+        return jsonify({"translated_text": translated.text})
+    else:
+        return jsonify({"error": "No hay texto para traducir"})
+
+@auth_bp.route('/translate-it', methods=['GET'])
+def translate_to_italian():
+    global resultado_global
+    if resultado_global:
+        translated = translator.translate(resultado_global, src="es", dest="it")
+        return jsonify({"translated_text": translated.text})
+    else:
+        return jsonify({"error": "No hay texto para traducir"})
+
+@auth_bp.route('/translate-pt', methods=['GET'])
+def translate_to_portuguese():
+    global resultado_global
+    if resultado_global:
+        translated = translator.translate(resultado_global, src="es", dest="pt")
+        return jsonify({"translated_text": translated.text})
+    else:
+        return jsonify({"error": "No hay texto para traducir"})
 
 #Perfil
 @auth_bp.route('/perfil-usuario', methods =['GET','POST'])
