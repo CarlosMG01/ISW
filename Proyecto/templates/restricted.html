@@ -45,6 +45,16 @@
   <button id="generarPDF">Generar PDF</button>
   <button id="generarWORD">Generar Word</button>
   <button id="traducirIngles" onclick="traducirAIngles()">Traducir a Inglés</button>
+  <div class="dropdown">
+    <button id="seleccionarIdioma">Otro Idioma</button>
+    <div class="dropdown-content">
+      <a href="#" onclick="cambiarIdioma('Traducir a Francés')">Francés</a>
+      <a href="#" onclick="cambiarIdioma('Traducir a Italiano')">Italiano</a>
+      <a href="#" onclick="cambiarIdioma('Traducir a Portugués')">Portugués</a>
+      <!-- Agrega más idiomas según sea necesario -->
+    </div>
+  </div>
+  
   <div id="seccionTraduccion">
     <h1>Texto Traducido</h1>
     <p id="textoTraducido"></p>
@@ -250,6 +260,13 @@
   }
 
   document.getElementById('traducirIngles').addEventListener('click', traducirAIngles);
+</script>
+<script>
+  function cambiarIdioma(idioma) {
+  // Actualiza el contenido del botón "Seleccionar Idioma"
+  document.getElementById('seleccionarIdioma').innerHTML = idioma;
+  
+  }
 </script>
 
 

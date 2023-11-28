@@ -167,7 +167,7 @@ def convertir_a_word():
     return send_file(docx_output, as_attachment=True, download_name='mitexto.docx')
 
 
-# Traductor
+# Traductor - Inglés
 @auth_bp.route('/translate', methods=['GET'])
 def translate_text():
     global resultado_global
