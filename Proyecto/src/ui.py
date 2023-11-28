@@ -13,6 +13,7 @@ import re
 import pytesseract
 import os
 from werkzeug.utils import secure_filename
+from io import BytesIO
 
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
@@ -132,37 +133,39 @@ def restricted():
 @auth_bp.route('/convertir-a-pdf', methods=['POST'])
 def convertir_a_pdf():
     global resultado_global
+
+    pdf_output = BytesIO()
+
     pdf = FPDF(orientation='P', unit='mm', format='A4')
     pdf.add_page()
-    pdf.set_font('Arial', 'B', 16)  
+    pdf.set_font('Arial', 'B', 16)
     pdf.cell(190, 10, txt='PDF extraído de OCRTeam', ln=True, align='C')
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(190, 10, txt=resultado_global, border=0, align='L')
-    pdf_path = 'mitexto.pdf'
-    pdf.output(pdf_path)
 
-    response = make_response(open(pdf_path, 'rb').read())
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'inline; filename=mitexto.pdf'
+    pdf_output.write(pdf.output(dest='S').encode('latin1'))
 
-    return response
+    pdf_output.seek(0)
+
+    return send_file(pdf_output, as_attachment=True, download_name='mitexto.pdf')
 
 # WORD
 @auth_bp.route('/convertir-a-word', methods=['POST'])
 def convertir_a_word():
     global resultado_global
+
+    docx_output = BytesIO()
+
     document = Document()
-    document.add_heading('Documento word extraído de OCRTeam', 0)
+    document.add_heading('Documento Word extraído de OCRTeam', 0)
     document.add_paragraph(resultado_global)
 
-    docx_path = 'mitexto.docx'
-    document.save(docx_path)
+    document.save(docx_output)
 
-    response = make_response(open(docx_path, 'rb').read())
-    response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    response.headers['Content-Disposition'] = 'inline; filename=mitexto.docx'
+    docx_output.seek(0)
 
-    return response
+    return send_file(docx_output, as_attachment=True, download_name='mitexto.docx')
+
 
 # Traductor
 @auth_bp.route('/translate', methods=['GET'])

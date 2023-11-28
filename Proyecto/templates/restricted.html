@@ -166,23 +166,67 @@
   }
   setInterval(changeAd2, 5000);
 </script>
+
 <!-- Conversor a PDF -->
 <script>
-  $('#generarPDF').click(function() {
-      $.post('/convertir-a-pdf', function(data) {
-          console.log('PDF generado correctamente');
+  async function generarPDF() {
+    try {
+      const response = await fetch('/convertir-a-pdf', { method: 'POST' });
+
+      if (!response.ok) {
+        throw new Error(`Error al generar el PDF: ${response.status} - ${response.statusText}`);
+      }
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mitexto.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
       alert('PDF generado correctamente');
-      });
-  });
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al generar el PDF. Consulta la consola para obtener más información.');
+    }
+  }
+
+  document.getElementById('generarPDF').addEventListener('click', generarPDF);
 </script>
 
 <!-- Conversor a WORD -->
 <script>
-  $('#generarWORD').click(function() {
-      $.post('/convertir-a-word', function(data) {
+  async function generarWord() {
+    try {
+      const response = await fetch('/convertir-a-word', { method: 'POST' });
+
+      if (!response.ok) {
+        throw new Error(`Error al generar el Word: ${response.status} - ${response.statusText}`);
+      }
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mitexto.docx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
       alert('Word generado correctamente');
-      });
-  });
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al generar el Word. Consulta la consola para obtener más información.');
+    }
+  }
+
+  document.getElementById('generarWORD').addEventListener('click', generarWord);
 </script>
 
 <!-- Traducir Ingles -->
