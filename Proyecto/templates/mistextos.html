@@ -5,14 +5,19 @@
 <div class="container p-5 my-5 bg-dark text-white">
     <h1>Mis Textos Generados</h1>
     {% if documentos %}
-        <ul>
-            {% for documento in documentos %}
-                <li>{{ documento[2] }} - <a href="{{ url_for('auth.descargar_documento', id=documento[0]) }}">{{ documento[1] }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No has generado ningún texto aún.</p>
-    {% endif %}
+    <ul>
+        {% for documento_id, titulo, contenido in documentos %}
+            <li>
+                {{ titulo }} - {{contenido}}
+                
+                <a href="{{ url_for('auth.generar_pdf', id=documento_id) }}">Generar PDF</a>
+                <a href="{{ url_for('auth.generar_word', id=documento_id) }}">Generar Word</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No has generado ningún texto aún.</p>
+{% endif %}
 </div>
 
 {% include 'footer.html' %}

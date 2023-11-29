@@ -75,10 +75,7 @@ class BaseDeDatosMariaDB:
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     usuario_id INT,
                     titulo VARCHAR(255) NOT NULL,
-                    contenido TEXT NOT NULL,
-                    archivo_nombre VARCHAR(255),
-                    fecha_generacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+                    contenido TEXT NOT NULL
                 )
             """)
             
@@ -225,12 +222,13 @@ class DatabaseManager:
 
         return error, success
     
-    def guardar_documento(self, usuario_id, titulo, contenido, nombre_archivo):
+    def guardar_documento(self, usuario_id, titulo, contenido):
         try:
-            query = "INSERT INTO textos (usuario_id, titulo, contenido, archivo_nombre) VALUES (%s, %s, %s, %s)"
-            values = (usuario_id, titulo, contenido.encode('utf-8'), nombre_archivo)
+            query = "INSERT INTO textos (usuario_id, titulo, contenido) VALUES (%s, %s, %s)"
+            values = (usuario_id, titulo, contenido)
             self.cursor.execute(query, values)
             self.connection.commit()
+        
             return "Documento guardado correctamente."
         except mysql.connector.Error as err:
             return f"Error al guardar el documento: {err}"
@@ -238,7 +236,7 @@ class DatabaseManager:
 
     def obtener_documentos(self, usuario_id):
         try:
-            query = "SELECT id, archivo_nombre, contenido, fecha_generacion FROM textos WHERE usuario_id = %s"
+            query = "SELECT id, titulo, contenido FROM textos WHERE usuario_id = %s"
             self.cursor.execute(query, (usuario_id,))
             documentos = self.cursor.fetchall()
             return documentos

@@ -137,6 +137,10 @@ def restricted():
             texto_extraido = pytesseract.image_to_string(os.path.join('static',file.filename))
             # Imprime el texto extraído
             resultado_global = texto_extraido
+            usuario_id = obtener_id_usuario_actual()
+            if usuario_id is not None:
+                titulo = "Documento"
+                db_manager.guardar_documento(usuario_id, titulo, texto_extraido)
 
     return render_template('restricted.html', resultado=resultado_global)
 
@@ -161,11 +165,6 @@ def convertir_a_pdf():
 
     pdf_output.seek(0)
 
-    usuario_id = obtener_id_usuario_actual()
-    if usuario_id is not None:
-        titulo = "Documento PDF"
-        db_manager.guardar_documento(usuario_id, titulo, resultado_global, filename)
-
     return send_file(pdf_output, as_attachment=True, download_name=filename)
 
 
@@ -186,11 +185,6 @@ def convertir_a_word():
     document.save(docx_output)
 
     docx_output.seek(0)
-
-    usuario_id = obtener_id_usuario_actual()
-    if usuario_id is not None:
-        titulo = "Documento Word"
-        db_manager.guardar_documento(usuario_id, titulo, resultado_global, filename)
 
     return send_file(docx_output, as_attachment=True, download_name=filename)
 
@@ -269,16 +263,51 @@ def mistextos():
         else:
             return "Error al obtener ID del usuario."
 
-@auth_bp.route('/descargar-documento/<int:id>', methods=['GET'])
-def descargar_documento(id):
+@auth_bp.route('/generar-pdf/<int:id>', methods=['GET'])
+def generar_pdf(id):
     usuario_id = obtener_id_usuario_actual()
 
     if usuario_id is not None:
         documento = db_manager.obtener_documento_por_id(usuario_id, id)
 
         if documento is not None:
-            contenido = documento[2].decode('utf-8')
-            return send_file(BytesIO(contenido.encode('utf-8')), attachment_filename=documento[1], as_attachment=True)
+            # Obtener el contenido del documento
+            contenido = documento[2]
+            
+            # Crear un archivo PDF
+            pdf_output = BytesIO()
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
+            pdf.cell(200, 10, txt=contenido, ln=True, align='L')
+            pdf_output.write(pdf.output(dest='S').encode('latin1'))
+
+            # Devolver el PDF como respuesta para descargar
+            return send_file(pdf_output, download_name=f"{documento[1]}.pdf", as_attachment=True)
+        else:
+            return "Documento no encontrado."
+    else:
+        return "Error al obtener ID del usuario."
+
+@auth_bp.route('/generar-word/<int:id>', methods=['GET'])
+def generar_word(id):
+    usuario_id = obtener_id_usuario_actual()
+
+    if usuario_id is not None:
+        documento = db_manager.obtener_documento_por_id(usuario_id, id)
+
+        if documento is not None:
+            # Obtener el contenido del documento
+            contenido = documento[2]
+            
+            # Crear un archivo Word
+            docx_output = BytesIO()
+            document = Document()
+            document.add_paragraph(contenido)
+            document.save(docx_output)
+
+            # Devolver el Word como respuesta para descargar
+            return send_file(docx_output, download_name=f"{documento[1]}.docx", as_attachment=True)
         else:
             return "Documento no encontrado."
     else:
