@@ -8,6 +8,7 @@ from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_co
 from fpdf import FPDF
 from docx import Document
 from googletrans import Translator
+from datetime import datetime
 import googletrans
 import re
 import pytesseract
@@ -24,6 +25,7 @@ db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
 resultado_global = ""
 translator = Translator()
 resultado_global_traducido = ""
+contador_archivos = 0
 
 @home_bp.route('/')
 def index():
@@ -145,9 +147,14 @@ def convertir_a_pdf():
 
     pdf_output.write(pdf.output(dest='S').encode('latin1'))
 
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    filename = f'mitexto_{timestamp}.pdf'
+
     pdf_output.seek(0)
 
-    return send_file(pdf_output, as_attachment=True, download_name='mitexto.pdf')
+    return send_file(pdf_output, as_attachment=True, download_name=filename)
+
+    #return send_file(pdf_output, as_attachment=True, download_name='mitexto.pdf')
 
 # WORD
 @auth_bp.route('/convertir-a-word', methods=['POST'])
@@ -160,11 +167,14 @@ def convertir_a_word():
     document.add_heading('Documento Word extraído de OCRTeam', 0)
     document.add_paragraph(resultado_global)
 
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    filename = f'mitexto_{timestamp}.docx'
+
     document.save(docx_output)
 
     docx_output.seek(0)
 
-    return send_file(docx_output, as_attachment=True, download_name='mitexto.docx')
+    return send_file(docx_output, as_attachment=True, download_name=filename)
 
 
 # Traductor - Inglés
