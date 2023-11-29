@@ -269,21 +269,20 @@ def mistextos():
         else:
             return "Error al obtener ID del usuario."
 
-@auth_bp.route('/descargar_documento/<int:id>')
+@auth_bp.route('/descargar-documento/<int:id>', methods=['GET'])
 def descargar_documento(id):
     usuario_id = obtener_id_usuario_actual()
-    
+
     if usuario_id is not None:
-        # Asumiendo que tienes una función en tu base de datos para obtener el documento por ID
         documento = db_manager.obtener_documento_por_id(usuario_id, id)
 
-        if documento:
-            return send_file(BytesIO(documento['contenido']), attachment_filename=documento['archivo_nombre'], as_attachment=True)
+        if documento is not None:
+            contenido = documento[2].decode('utf-8')
+            return send_file(BytesIO(contenido.encode('utf-8')), attachment_filename=documento[1], as_attachment=True)
         else:
-            return abort(404, description="Documento no encontrado")
-
-    return abort(500, description="Error al obtener ID del usuario")
-    
+            return "Documento no encontrado."
+    else:
+        return "Error al obtener ID del usuario."
     
 @auth_bp.route('/chat', methods =['GET','POST'])
 def chat():

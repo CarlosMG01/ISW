@@ -228,16 +228,17 @@ class DatabaseManager:
     def guardar_documento(self, usuario_id, titulo, contenido, nombre_archivo):
         try:
             query = "INSERT INTO textos (usuario_id, titulo, contenido, archivo_nombre) VALUES (%s, %s, %s, %s)"
-            values = (usuario_id, titulo, contenido, nombre_archivo)
+            values = (usuario_id, titulo, contenido.encode('utf-8'), nombre_archivo)
             self.cursor.execute(query, values)
             self.connection.commit()
             return "Documento guardado correctamente."
         except mysql.connector.Error as err:
             return f"Error al guardar el documento: {err}"
 
+
     def obtener_documentos(self, usuario_id):
         try:
-            query = "SELECT id, archivo_nombre, fecha_generacion FROM textos WHERE usuario_id = %s"
+            query = "SELECT id, archivo_nombre, contenido, fecha_generacion FROM textos WHERE usuario_id = %s"
             self.cursor.execute(query, (usuario_id,))
             documentos = self.cursor.fetchall()
             return documentos
