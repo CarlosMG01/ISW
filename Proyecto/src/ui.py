@@ -5,6 +5,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from flask import Flask, render_template, request, jsonify, send_file
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
+#guardar_documento, obtener_textos
 from fpdf import FPDF
 from docx import Document
 from googletrans import Translator
@@ -174,6 +175,9 @@ def convertir_a_word():
 
     docx_output.seek(0)
 
+    #tu_bbdd = guardar_documento()  # Asegúrate de crear una instancia de tu clase de base de datos
+    #tu_bbdd.guardar_documento(filename, docx_output.read())
+
     return send_file(docx_output, as_attachment=True, download_name=filename)
 
 
@@ -245,6 +249,13 @@ def mistextos():
     else:
         correo = session.get('correo_usuario')
         return render_template('mistextos.html', correo=correo)
+        #tu_bbdd = guardar_documento()  # Asegúrate de crear una instancia de tu clase de base de datos
+        #textos = tu_bbdd.obtener_textos()  # Necesitarás implementar esta función en tu clase de base de datos
+
+       # correo = session.get('correo_usuario')  # Asume que tienes una función para obtener el correo actual del usuario
+
+       # return render_template('mistextos.html', correo=correo, textos=textos)
+    
     
 @auth_bp.route('/chat', methods =['GET','POST'])
 def chat():

@@ -173,6 +173,8 @@ class DatabaseManager:
             print(f"Error al obtener la imagen de perfil: {err}")
             return None
         
+        
+        
     def change_password(self, correo, contrasena_actual, nueva_contrasena):
         error = None
         success = None
@@ -197,6 +199,27 @@ class DatabaseManager:
                 error = f'Error al cambiar la contraseña: {err}'
 
         return error, success
+    
+    #def guardar_documento(self, nombre, contenido):
+    #    try:
+    #        query = "INSERT INTO documentos (nombre, contenido) VALUES (%s, %s)"
+    #        self.cursor.execute(query, (nombre, contenido))
+    #        self.connection.commit()
+    #        return True
+    #   except mysql.connector.Error as err:
+     #       print(f"Error al guardar el documento en la base de datos: {err}")
+      #      return False
+        
+    #def obtener_textos(self):
+     #   try:
+     #       query = "SELECT nombre FROM documentos"
+     #       self.cursor.execute(query)
+     #       textos = self.cursor.fetchall()
+     #       return [texto[0] for texto in textos]
+     #   except mysql.connector.Error as err:
+     #       print(f"Error al obtener los textos desde la base de datos: {err}")
+     #       return []
+
     
     def verificar_usuario_por_correo(self, correo):
         query = "SELECT id FROM usuarios WHERE correo = %s"
