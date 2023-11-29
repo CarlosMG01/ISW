@@ -2,7 +2,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, make_response
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, abort
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
 #guardar_documento, obtener_textos
@@ -27,6 +27,14 @@ resultado_global = ""
 translator = Translator()
 resultado_global_traducido = ""
 contador_archivos = 0
+
+def obtener_id_usuario_actual():
+    correo = session.get('correo_usuario')
+    if correo:
+        return db_manager.obtener_id_usuario(correo)
+    else:
+        return None
+
 
 @home_bp.route('/')
 def index():
@@ -153,9 +161,13 @@ def convertir_a_pdf():
 
     pdf_output.seek(0)
 
+    usuario_id = obtener_id_usuario_actual()
+    if usuario_id is not None:
+        titulo = "Documento PDF"
+        db_manager.guardar_documento(usuario_id, titulo, resultado_global, filename)
+
     return send_file(pdf_output, as_attachment=True, download_name=filename)
 
-    #return send_file(pdf_output, as_attachment=True, download_name='mitexto.pdf')
 
 # WORD
 @auth_bp.route('/convertir-a-word', methods=['POST'])
@@ -175,8 +187,10 @@ def convertir_a_word():
 
     docx_output.seek(0)
 
-    #tu_bbdd = guardar_documento()  # Asegúrate de crear una instancia de tu clase de base de datos
-    #tu_bbdd.guardar_documento(filename, docx_output.read())
+    usuario_id = obtener_id_usuario_actual()
+    if usuario_id is not None:
+        titulo = "Documento Word"
+        db_manager.guardar_documento(usuario_id, titulo, resultado_global, filename)
 
     return send_file(docx_output, as_attachment=True, download_name=filename)
 
@@ -242,19 +256,33 @@ def perfil():
         return render_template('perfil-usuario.html', imagen_perfil=imagen_perfil, correo=correo)
 
 
-@auth_bp.route('/mistextos', methods =['GET','POST'])
+@auth_bp.route('/mistextos', methods=['GET'])
 def mistextos():
     if not session.get('logged_in'):
         return redirect(url_for('auth.inicio_sesion'))
     else:
         correo = session.get('correo_usuario')
-        return render_template('mistextos.html', correo=correo)
-        #tu_bbdd = guardar_documento()  # Asegúrate de crear una instancia de tu clase de base de datos
-        #textos = tu_bbdd.obtener_textos()  # Necesitarás implementar esta función en tu clase de base de datos
+        usuario_id = obtener_id_usuario_actual()
+        if usuario_id is not None:
+            documentos = db_manager.obtener_documentos(usuario_id)
+            return render_template('mistextos.html', correo=correo, documentos=documentos)
+        else:
+            return "Error al obtener ID del usuario."
 
-       # correo = session.get('correo_usuario')  # Asume que tienes una función para obtener el correo actual del usuario
+@auth_bp.route('/descargar_documento/<int:id>')
+def descargar_documento(id):
+    usuario_id = obtener_id_usuario_actual()
+    
+    if usuario_id is not None:
+        # Asumiendo que tienes una función en tu base de datos para obtener el documento por ID
+        documento = db_manager.obtener_documento_por_id(usuario_id, id)
 
-       # return render_template('mistextos.html', correo=correo, textos=textos)
+        if documento:
+            return send_file(BytesIO(documento['contenido']), attachment_filename=documento['archivo_nombre'], as_attachment=True)
+        else:
+            return abort(404, description="Documento no encontrado")
+
+    return abort(500, description="Error al obtener ID del usuario")
     
     
 @auth_bp.route('/chat', methods =['GET','POST'])

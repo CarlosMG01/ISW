@@ -76,9 +76,12 @@ class BaseDeDatosMariaDB:
                     usuario_id INT,
                     titulo VARCHAR(255) NOT NULL,
                     contenido TEXT NOT NULL,
+                    archivo_nombre VARCHAR(255),
+                    fecha_generacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
                 )
             """)
+            
 
             print("Tablas creadas correctamente.")
         except mysql.connector.Error as err:
@@ -114,8 +117,6 @@ class DatabaseManager:
         elif not re.match(r'^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\.[a-zA-Z]+$', correo):
             error = 'Formato de correo incorrecto'
         
-       # elif not checkbox:
-        #    error = "Es obligatorio aceptar los términos y condiciones"
             
         elif not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', contrasena):
             error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
@@ -200,27 +201,6 @@ class DatabaseManager:
 
         return error, success
     
-    #def guardar_documento(self, nombre, contenido):
-    #    try:
-    #        query = "INSERT INTO documentos (nombre, contenido) VALUES (%s, %s)"
-    #        self.cursor.execute(query, (nombre, contenido))
-    #        self.connection.commit()
-    #        return True
-    #   except mysql.connector.Error as err:
-     #       print(f"Error al guardar el documento en la base de datos: {err}")
-      #      return False
-        
-    #def obtener_textos(self):
-     #   try:
-     #       query = "SELECT nombre FROM documentos"
-     #       self.cursor.execute(query)
-     #       textos = self.cursor.fetchall()
-     #       return [texto[0] for texto in textos]
-     #   except mysql.connector.Error as err:
-     #       print(f"Error al obtener los textos desde la base de datos: {err}")
-     #       return []
-
-    
     def verificar_usuario_por_correo(self, correo):
         query = "SELECT id FROM usuarios WHERE correo = %s"
         self.cursor.execute(query, (correo,))
@@ -244,6 +224,49 @@ class DatabaseManager:
                 error = f'Error al cambiar la contraseña: {err}'
 
         return error, success
+    
+    def guardar_documento(self, usuario_id, titulo, contenido, nombre_archivo):
+        try:
+            query = "INSERT INTO textos (usuario_id, titulo, contenido, archivo_nombre) VALUES (%s, %s, %s, %s)"
+            values = (usuario_id, titulo, contenido, nombre_archivo)
+            self.cursor.execute(query, values)
+            self.connection.commit()
+            return "Documento guardado correctamente."
+        except mysql.connector.Error as err:
+            return f"Error al guardar el documento: {err}"
+
+    def obtener_documentos(self, usuario_id):
+        try:
+            query = "SELECT id, archivo_nombre, fecha_generacion FROM textos WHERE usuario_id = %s"
+            self.cursor.execute(query, (usuario_id,))
+            documentos = self.cursor.fetchall()
+            return documentos
+        except mysql.connector.Error as err:
+            print(f"Error al obtener documentos: {err}")
+            return []
+
+    def obtener_documento_por_id(self, usuario_id, documento_id):
+        try:
+            query = "SELECT id, archivo_nombre, contenido FROM textos WHERE usuario_id = %s AND id = %s"
+            self.cursor.execute(query, (usuario_id, documento_id))
+            documento = self.cursor.fetchone()
+            return documento
+        except mysql.connector.Error as err:
+            print(f"Error al obtener documento por ID: {err}")
+            return None
+        
+    def obtener_id_usuario(self, correo):
+        try:
+            query = "SELECT id FROM usuarios WHERE correo = %s"
+            self.cursor.execute(query, (correo,))
+            user_id = self.cursor.fetchone()
+            if user_id:
+                return user_id[0]
+            else:
+                return None
+        except mysql.connector.Error as err:
+            print(f"Error al obtener ID del usuario: {err}")
+            return None
 
 
      
