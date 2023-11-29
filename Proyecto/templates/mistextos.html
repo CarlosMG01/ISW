@@ -19,6 +19,32 @@
     <p>No has generado ningún texto aún.</p>
 {% endif %}
 </div>
-
+<script>
+    async function generarPDF(documentoId) {
+      try {
+        const response = await fetch(`/generar-pdf/${documentoId}`, { method: 'GET' });
+  
+        if (!response.ok) {
+          throw new Error(`Error al generar el PDF: ${response.status} - ${response.statusText}`);
+        }
+  
+        const blob = await response.blob();
+  
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'mitexto.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+  
+        alert('PDF generado correctamente');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error al generar el PDF. Consulta la consola para obtener más información.');
+      }
+    }
+  </script>
 {% include 'footer.html' %}
 
