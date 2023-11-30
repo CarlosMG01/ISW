@@ -246,7 +246,7 @@ class DatabaseManager:
 
     def obtener_documento_por_id(self, usuario_id, documento_id):
         try:
-            query = "SELECT id, archivo_nombre, contenido FROM textos WHERE usuario_id = %s AND id = %s"
+            query = "SELECT id, contenido FROM textos WHERE usuario_id = %s AND id = %s"
             self.cursor.execute(query, (usuario_id, documento_id))
             documento = self.cursor.fetchone()
             return documento

@@ -272,18 +272,26 @@ def generar_pdf(id):
 
         if documento is not None:
             # Obtener el contenido del documento
-            contenido = documento[2]
+            contenido = documento[1]
             
             # Crear un archivo PDF
             pdf_output = BytesIO()
-            pdf = FPDF()
+            pdf = FPDF(orientation='P', unit='mm', format='A4')
             pdf.add_page()
-            pdf.set_font("Arial", size=12)
-            pdf.cell(200, 10, txt=contenido, ln=True, align='L')
+            pdf.set_font('Arial', 'B', 16)
+            pdf.cell(190, 10, txt='PDF extraído de OCRTeam', ln=True, align='C')
+            pdf.set_font('Arial', '', 12)
+            pdf.multi_cell(190, 10, txt=contenido, border=0, align='L')
             pdf_output.write(pdf.output(dest='S').encode('latin1'))
 
+            # Limpiar el nombre del archivo de caracteres no permitidos
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            filename = f'mitexto_{timestamp}.pdf'
+
+            pdf_output.seek(0)
+            
             # Devolver el PDF como respuesta para descargar
-            return send_file(pdf_output, download_name=f"{documento[1]}.pdf", as_attachment=True)
+            return send_file(pdf_output, download_name=filename, as_attachment=True)
         else:
             return "Documento no encontrado."
     else:
@@ -298,16 +306,19 @@ def generar_word(id):
 
         if documento is not None:
             # Obtener el contenido del documento
-            contenido = documento[2]
+            contenido = documento[1]
             
             # Crear un archivo Word
             docx_output = BytesIO()
-            document = Document()
+            document = Document()   
             document.add_paragraph(contenido)
             document.save(docx_output)
 
+            # Limpiar el nombre del archivo de caracteres no permitidos
+            nombre_archivo = f"{documento[1]}.docx".replace('\n', '').replace('\r', '')
+            
             # Devolver el Word como respuesta para descargar
-            return send_file(docx_output, download_name=f"{documento[1]}.docx", as_attachment=True)
+            return send_file(docx_output, download_name=nombre_archivo, as_attachment=True)
         else:
             return "Documento no encontrado."
     else:
