@@ -629,3 +629,11 @@ textarea {
     padding: 5px 10px;
     cursor: pointer;
 }
+.attach-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}

@@ -24,6 +24,9 @@
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input">
             <textarea id="messageInput" placeholder="Escribe un mensaje..."></textarea>
+            <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(this)">
+            <label for="fileInput" class="attach-button">Adjuntar</label>
+            <div id="selectedFilePath"></div>
             <button id="button_chat" onclick="sendMessage()">Enviar</button>
             <!-- Puedes agregar un botón para adjuntar archivos -->
         </div>
@@ -33,36 +36,49 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </body>
 </html>
+
 <script>
+function displayFilePath(filePath) {
+    const selectedFilePath = document.getElementById('selectedFilePath');
+    selectedFilePath.textContent = 'Archivo seleccionado: ' + filePath;
+}
+
+</script>
+
+<script>
+// Función para cargar un chat específico
 function loadChat(username) {
-    // Puedes cargar la información del chat, como el historial de mensajes, aquí.
-    // Por ejemplo, podrías hacer una solicitud AJAX para obtener los mensajes del servidor.
-
-    // Actualiza el encabezado del chat con el nombre del usuario
     $('#chatHeader').text(username);
-
-    // Actualiza el contenido del chat con los mensajes cargados
-    // Puedes agregar lógica para cargar los mensajes del usuario correspondiente.
     $('#chatMessages').html('<div>Mensaje de ejemplo</div>');
 }
 </script>
 <script>
 // Función para enviar un mensaje
 function sendMessage() {
-    const message = $('#messageInput').val();
-    
-    // Aquí puedes implementar la lógica para enviar el mensaje al servidor
-    // y actualizar el historial de mensajes en el cliente.
+     const message = document.getElementById('messageInput').value;
+    const filePath = document.getElementById('selectedFilePath').textContent;
 
-    // Ejemplo: Agrega el mensaje al historial de mensajes
-    $('#chatMessages').append('<div class="message sent">' + message + '</div>');
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.innerHTML += '<div class="message sent">' + message + '</div>';
+    if (filePath) {
+        chatMessages.innerHTML += '<div class="message sent">' + filePath + '</div>';
+    }
 
-    // Borra el contenido del cuadro de entrada después de enviar el mensaje
-    $('#messageInput').val('');
+    document.getElementById('messageInput').value = '';
+    document.getElementById('selectedFilePath').textContent = '';
+    document.getElementById('fileInput').value = '';
+
 }
 </script>
-
-
+<script>
+function handleFileSelect(input) {
+    const file = input.files[0];
+    if (file) {
+        const filePath = file.name;
+        displayFilePath(filePath);
+    }
+}
+</script>
 
 
 {% include 'footer.html' %} 
