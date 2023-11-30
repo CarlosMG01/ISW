@@ -25,12 +25,15 @@
 			<div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
 				<ul class="navbar-nav ml-auto">
 					{% if 'logged_in' in session %}
-					<a href= "/mistextos">
-						<i class="fas fa-file-alt fa-lg text-white" style="margin-right: 10px;"></i> Mis textos
-					</a>
-					<a href= "/chat">
-						<i class="chat_users" style="margin-right: 10px;"></i> Chat
-					</a>
+					<a href="/mistextos" style="margin-bottom: 0px; display: flex; align-items: center;">
+						<i class="fas fa-file-alt fa-lg text-white" style="margin-right: 0px;"></i>
+						Mis textos
+					  </a>
+					  
+					  <a href="/chat" style="margin-bottom: 0px; display: flex; align-items: center;">
+						<i class="chat_users" style="margin-right: 10px;"></i>
+						Chat
+					  </a>
 				</ul>
 				<a href="/perfil-usuario" class="btn btn-profile" role="button" style="margin-right: 10px">
 					<i class="fas fa-user fa-lg text-white" style="margin-right: 10px;font-size: 24px;"></i>
