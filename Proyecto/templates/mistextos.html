@@ -10,9 +10,9 @@
             <li>
                 {{ titulo }} - {{contenido}}
                 
-                <a href="{{ url_for('auth.generar_pdf', id=documento_id) }}">Generar PDF</a>
-                <a href="{{ url_for('auth.generar_word', id=documento_id) }}">Generar Word</a>
-                <a href="mailto:?subject={{titulo}}&body={{contenido}}">Compartir por correo</a>
+                <a href="{{ url_for('auth.generar_pdf', id=documento_id) }}"><img src="static/pdf.png" alt="Generar PDF" style="width: 20px;">Generar PDF</a>
+                <a href="{{ url_for('auth.generar_word', id=documento_id) }}"><img src="static/word.png" alt="Generar Word" style="width: 20px;">Generar Word</a>
+                <a href="mailto:?subject={{titulo}}&body={{contenido}}"><img src="static/correo.png" alt="Compartir con correo" style="width: 20px;">Compartir por correo</a>
             </li>
         {% endfor %}
     </ul>
