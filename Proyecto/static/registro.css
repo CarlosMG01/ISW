@@ -365,7 +365,6 @@ input[type=text]:placeholder {
 	padding: 20px;
 	width: 900px;
 }
-.p
 
 .profile-container {
 	max-width: 800px;
@@ -631,4 +630,30 @@ textarea {
 	padding: 8px 12px;
 	border-radius: 4px;
 	cursor: pointer;
+}
+.adContainer{
+	padding: 5px;
+	position: fixed;
+	top: 10;
+	left: 0;
+	width: 100%;
+	background-color: #ffffff;
+	transition: height 0.3s ease;
+	overflow: hidden;
+	height: 100px; /* Altura inicial del anuncio desplegado */
+}
+.adImage{
+	width: ; 
+	height: 100px;
+	margin-left: 350px;
+}
+.toggle-button {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	font-size: 20px;
+	border: none;
+	background: none;
+	cursor: pointer;
+	transition: transform 0.3s ease;
 }

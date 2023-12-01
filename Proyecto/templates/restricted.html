@@ -1,34 +1,32 @@
 {% include 'header.html' %}
-<!-- Anuncios -->
-<div id="adContainer" style="border: 1px solid #ccc; padding: 5px; margin: 0px;  width: 30rem; height: 15rem;">
-  <img id="adImage" src="https://s1.eestatic.com/2018/09/24/actualidad/actualidad_340480310_130311010_850x478.jpg" alt="Anuncio de prueba" style="width: 30rem; height: 15rem;">
-  <p>Publicidad</p>
+
+<div class="adContainer" id= "miAnuncio">
+	<img class="adImage" src="https://s1.eestatic.com/2018/09/24/actualidad/actualidad_340480310_130311010_850x478.jpg">
+	<button class="toggle-button" onclick="toggleSize()">▼</button>
 </div>
+<script>
+	function mostrarVentanaEmergente() {
+		document.getElementById("popup-container").style.display = "block";
+	}
+	function cerrarVentanaEmergente() {
+		document.getElementById("popup-container").style.display = "none";
+	}
+</script>
 
-
-	<script>
-		function mostrarVentanaEmergente() {
-			document.getElementById("popup-container").style.display = "block";
-		}
-		function cerrarVentanaEmergente() {
-			document.getElementById("popup-container").style.display = "none";
-		}
-	</script>
-  
 <div class="container p-5 my-5 bg-dark text-white">
-  <!-- Manual de usuario -->
-  <p><button onclick="mostrarVentanaEmergente()">Manual de usuario</button>
+	<!-- Manual de usuario -->
+	<p><button onclick="mostrarVentanaEmergente()">Manual de usuario</button>
 
-    <div id="popup-container">
-      <div id="popup-box">
-        <button onclick="cerrarVentanaEmergente()">Cerrar</button>
-        <h2>Manual de usuario</h2>
-        <h3>Para usar la aplicación: Necesitas presionar la imagen de seleccionar una imagen para extraer texto</h3>
-        <h3>A continuación, en Texto extraído podrá observar el texto introducido</h3>
-      </div>
-    </div>
-  </p>
-    <!-- App -->
+	<div id="popup-container">
+		<div id="popup-box">
+			<button onclick="cerrarVentanaEmergente()">Cerrar</button>
+			<h2>Manual de usuario</h2>
+			<h3>Para usar la aplicación: Necesitas presionar la imagen de seleccionar una imagen para extraer texto</h3>
+			<h3>A continuación, en Texto extraído podrá observar el texto introducido</h3>
+		</div>
+	</div>
+	</p>
+	<!-- App -->
 	<h1>Seleccione una imagen para extraer texto</h1>
 	<div class="container bg-light py-3 my-3">
 		<form method="POST" enctype="multipart/form-data">
@@ -42,24 +40,24 @@
 	<div id="texto_extraido"></div>
 	<h2>Texto extraído:</h2>
 	<p style ="color:white"> {{ resultado }}</p>
-  <button id="generarPDF">Generar PDF</button>
-  <button id="generarWORD">Generar Word</button>
-  <button id="traducirIngles">Traducir a Inglés</button>
-  <div class="dropdown">
-    <button id="seleccionarIdioma">Otro Idioma</button>
-    <div class="dropdown-content">
-      <a href="#" onclick="cambiarIdioma('fr')">Francés</a>
-      <a href="#" onclick="cambiarIdioma('it')">Italiano</a>
-      <a href="#" onclick="cambiarIdioma('pt')">Portugués</a>
-      <!-- Agrega más idiomas según sea necesario -->
-  </div>
+	<button id="generarPDF">Generar PDF</button>
+	<button id="generarWORD">Generar Word</button>
+	<button id="traducirIngles">Traducir a Inglés</button>
+	<div class="dropdown">
+		<button id="seleccionarIdioma">Otro Idioma</button>
+		<div class="dropdown-content">
+			<a href="#" onclick="cambiarIdioma('fr')">Francés</a>
+			<a href="#" onclick="cambiarIdioma('it')">Italiano</a>
+			<a href="#" onclick="cambiarIdioma('pt')">Portugués</a>
+			<!-- Agrega más idiomas según sea necesario -->
+		</div>
 
-  </div>
-  
-  <div id="seccionTraduccion">
-    <h1>Texto Traducido</h1>
-    <p id="textoTraducido"></p>
-  </div>
+	</div>
+
+	<div id="seccionTraduccion">
+		<h1>Texto Traducido</h1>
+		<p id="textoTraducido"></p>
+	</div>
 </div>
 <script>
 	function submitForm() {
@@ -69,215 +67,225 @@
 
 <!-- Cookies -->
 <div id="cookie-notification">
-  <p>Este sitio utiliza cookies para mejorar tu experiencia. ¿Aceptas nuestras cookies?</p>
-  <button onclick="aceptarCookies()">Aceptar</button>
-  <button onclick="rechazarCookies()">Rechazar</button>
+	<p>Este sitio utiliza cookies para mejorar tu experiencia. ¿Aceptas nuestras cookies?</p>
+	<button onclick="aceptarCookies()">Aceptar</button>
+	<button onclick="rechazarCookies()">Rechazar</button>
 </div>
 <div id="cookie-accepted-notification" style="display: none;">
-  <p>Cookies aceptadas. Gracias por usar nuestra página web.</p>
+	<p>Cookies aceptadas. Gracias por usar nuestra página web.</p>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    if (!cookiesAceptadas() && !localStorage.getItem("cookiesRechazadas")) {
-        mostrarNotificacionCookies();
-  
-    }
-  });
+	document.addEventListener("DOMContentLoaded", function() {
+		if (!cookiesAceptadas() && !localStorage.getItem("cookiesRechazadas")) {
+			mostrarNotificacionCookies();
 
-  function mostrarNotificacionCookies() {
-    var notification = document.getElementById("cookie-notification");
-    notification.style.display = "block";
-  }
-  function mostrarNotificacionCookiesAceptadas() {
-    var notification = document.getElementById("cookie-accepted-notification");
-    notification.style.display = "block";
-    setTimeout(function() {
-      notification.style.display = "none";
-    }, 5000); // Ocultar la notificación después de 5 segundos (puedes ajustar este valor)
-  }
+		}
+	});
 
-  function aceptarCookies() {
-    setCookie("cookiesAceptadas", "true", 30); // Establecer cookie de aceptación por 30 días
-    document.getElementById("cookie-notification").style.display = "none";
-    localStorage.setItem("cookiesAceptadas", "true");
-    mostrarNotificacionCookiesAceptadas();
-  }
+	function mostrarNotificacionCookies() {
+		var notification = document.getElementById("cookie-notification");
+		notification.style.display = "block";
+	}
+	function mostrarNotificacionCookiesAceptadas() {
+		var notification = document.getElementById("cookie-accepted-notification");
+		notification.style.display = "block";
+		setTimeout(function() {
+			notification.style.display = "none";
+		}, 5000); // Ocultar la notificación después de 5 segundos (puedes ajustar este valor)
+	}
+
+	function aceptarCookies() {
+		setCookie("cookiesAceptadas", "true", 30); // Establecer cookie de aceptación por 30 días
+		document.getElementById("cookie-notification").style.display = "none";
+		localStorage.setItem("cookiesAceptadas", "true");
+		mostrarNotificacionCookiesAceptadas();
+	}
 
 
-  function rechazarCookies() {
-    // Puedes agregar acciones adicionales al rechazar cookies si es necesario
-    document.getElementById("cookie-notification").style.display = "none";
-	  localStorage.setItem("cookiesRechazadas", "true");
+	function rechazarCookies() {
+		// Puedes agregar acciones adicionales al rechazar cookies si es necesario
+		document.getElementById("cookie-notification").style.display = "none";
+		localStorage.setItem("cookiesRechazadas", "true");
 
-  }
+	}
 
-  function setCookie(nombre, valor, dias) {
-    var fechaExpiracion = new Date();
-    fechaExpiracion.setTime(fechaExpiracion.getTime() + (dias * 24 * 60 * 60 * 1000));
-    var expira = "expires=" + fechaExpiracion.toUTCString();
-    document.cookie = nombre + "=" + valor + ";" + expira + ";path=/";
-  }
+	function setCookie(nombre, valor, dias) {
+		var fechaExpiracion = new Date();
+		fechaExpiracion.setTime(fechaExpiracion.getTime() + (dias * 24 * 60 * 60 * 1000));
+		var expira = "expires=" + fechaExpiracion.toUTCString();
+		document.cookie = nombre + "=" + valor + ";" + expira + ";path=/";
+	}
 
-  function cookiesAceptadas() {
-	return localStorage.getItem("cookiesAceptadas") === "true";
-  }
+	function cookiesAceptadas() {
+		return localStorage.getItem("cookiesAceptadas") === "true";
+	}
 
-  function getCookie(nombre) {
-    var nombreC = nombre + "=";
-    var cookies = decodeURIComponent(document.cookie).split(';');
-    for(var i = 0; i < cookies.length; i++) {
-      var c = cookies[i].trim();
-      if (c.indexOf(nombreC) == 0) {
-        return c.substring(nombreC.length, c.length);
-      }
-    }
-    return "";
-  }
+	function getCookie(nombre) {
+		var nombreC = nombre + "=";
+		var cookies = decodeURIComponent(document.cookie).split(';');
+		for(var i = 0; i < cookies.length; i++) {
+			var c = cookies[i].trim();
+			if (c.indexOf(nombreC) == 0) {
+				return c.substring(nombreC.length, c.length);
+			}
+		}
+		return "";
+	}
 </script>
 <!-- Anuncios -->
 <div id="adContainer2" style="border: 1px solid #ccc; padding: 5px; margin: 0px;  width: 30rem; height: 15rem;">
-  <img id="adImage2" src="https://www.marketingdirecto.com/wp-content/uploads/2022/09/iphone-14-pro-dynamic-island-animation.gif" alt="Anuncio de prueba 2" style="width: 30rem; height: 15rem;">
-  <p>Publicidad</p>
+	<img id="adImage2" src="https://www.marketingdirecto.com/wp-content/uploads/2022/09/iphone-14-pro-dynamic-island-animation.gif" alt="Anuncio de prueba 2" style="width: 30rem; height: 15rem;">
 </div>
 
 <script>
-  var adImages = [
-  "https://www.mercaderesdigitales.com/wp-content/uploads/2018/10/Imagen-animada-Restaurante-03.gif",
-  "https://www.mercaderesdigitales.com/wp-content/uploads/2018/10/cocacolagiphy-1.gif",
-  "https://anaortizpublicidad.com/wp-content/uploads/2020/11/Navidad-1200x480.jpg",
-  "https://s1.ppllstatics.com/hoy/www/multimedia/201805/02/media/cortadas/POKER-FAMOSOS-k1TF-U501775935057sbH-624x385@Hoy.jpg",
-  "https://www.elplural.com/uploads/s1/59/92/19/casino-page-1530522070811-tcm1719-408799.png",
-  "https://www.elfinanciero.com.mx/resizer/yVBPPlV_02MM4m5d70zk0l7y-i0=/1200x630/filters:format(jpg):quality(70)/cloudfront-us-east-1.images.arcpublishing.com/elfinanciero/SUJH2N6DTRDGXNBXO2VRSAUCZA.jpg"
+	var adImages = [
+		"https://www.mercaderesdigitales.com/wp-content/uploads/2018/10/Imagen-animada-Restaurante-03.gif",
+		"https://www.mercaderesdigitales.com/wp-content/uploads/2018/10/cocacolagiphy-1.gif",
+		"https://anaortizpublicidad.com/wp-content/uploads/2020/11/Navidad-1200x480.jpg",
+		"https://s1.ppllstatics.com/hoy/www/multimedia/201805/02/media/cortadas/POKER-FAMOSOS-k1TF-U501775935057sbH-624x385@Hoy.jpg",
+		"https://www.elplural.com/uploads/s1/59/92/19/casino-page-1530522070811-tcm1719-408799.png",
+		"https://www.elfinanciero.com.mx/resizer/yVBPPlV_02MM4m5d70zk0l7y-i0=/1200x630/filters:format(jpg):quality(70)/cloudfront-us-east-1.images.arcpublishing.com/elfinanciero/SUJH2N6DTRDGXNBXO2VRSAUCZA.jpg"
 
-  ];
-  var currentAdIndex = 0; 
-  function changeAd() {
-      var adImage = document.getElementById('adImage');
-      currentAdIndex = (currentAdIndex + 1) % adImages.length;
-      adImage.src = adImages[currentAdIndex];
-  }
-  setInterval(changeAd, 5000);
+	];
+	var currentAdIndex = 0; 
+	function changeAd() {
+		var adImage = document.getElementById('adImage');
+		currentAdIndex = (currentAdIndex + 1) % adImages.length;
+		adImage.src = adImages[currentAdIndex];
+	}
+	setInterval(changeAd, 5000);
 </script>
 
 <script>
-  var adImages2 = [
-  "https://www.publico.es/uploads/2018/06/04/5b154139a2ce5.jpg",
-  "https://img.pccomponentes.com/pcblog/2120/1200x628-3.png",
-  "https://media.tenor.com/gOr8iWY9iIsAAAAC/ronaldinho-danet-natillas.gif",
-  "https://s2.ppllstatics.com/elcomercio/www/multimedia/202203/07/media/cortadas/messi-lays-kPrD-U160122932914299E-1248x770@El%20Comercio.jpg",
-  "https://unapausaparalapublicidad.files.wordpress.com/2014/08/san-miguel.gif",
-  "https://cuartoenfoque.com/wp-content/uploads/2021/02/videos-publicitarios-hp.gif"
+	var adImages2 = [
+		"https://www.publico.es/uploads/2018/06/04/5b154139a2ce5.jpg",
+		"https://img.pccomponentes.com/pcblog/2120/1200x628-3.png",
+		"https://media.tenor.com/gOr8iWY9iIsAAAAC/ronaldinho-danet-natillas.gif",
+		"https://s2.ppllstatics.com/elcomercio/www/multimedia/202203/07/media/cortadas/messi-lays-kPrD-U160122932914299E-1248x770@El%20Comercio.jpg",
+		"https://unapausaparalapublicidad.files.wordpress.com/2014/08/san-miguel.gif",
+		"https://cuartoenfoque.com/wp-content/uploads/2021/02/videos-publicitarios-hp.gif"
 
-  ];
-  var currentAdIndex2 = 0; 
-  function changeAd2() {
-      var adImage2 = document.getElementById('adImage2');
-      currentAdIndex2 = (currentAdIndex2 + 1) % adImages2.length;
-      adImage2.src = adImages2[currentAdIndex2];
-  }
-  setInterval(changeAd2, 5000);
+	];
+	var currentAdIndex2 = 0; 
+	function changeAd2() {
+		var adImage2 = document.getElementById('adImage2');
+		currentAdIndex2 = (currentAdIndex2 + 1) % adImages2.length;
+		adImage2.src = adImages2[currentAdIndex2];
+	}
+	setInterval(changeAd2, 5000);
 </script>
 
 <!-- Conversor a PDF -->
 <script>
-  async function generarPDF() {
-    try {
-      const response = await fetch('/convertir-a-pdf', { method: 'POST' });
+	async function generarPDF() {
+		try {
+			const response = await fetch('/convertir-a-pdf', { method: 'POST' });
 
-      if (!response.ok) {
-        throw new Error(`Error al generar el PDF: ${response.status} - ${response.statusText}`);
-      }
+			if (!response.ok) {
+				throw new Error(`Error al generar el PDF: ${response.status} - ${response.statusText}`);
+			}
 
-      const blob = await response.blob();
+			const blob = await response.blob();
 
-      const url = window.URL.createObjectURL(new Blob([blob]));
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'mitexto.pdf';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+			const url = window.URL.createObjectURL(new Blob([blob]));
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = 'mitexto.pdf';
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			window.URL.revokeObjectURL(url);
 
-      alert('PDF generado correctamente');
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error al generar el PDF. Consulta la consola para obtener más información.');
-    }
-  }
+			alert('PDF generado correctamente');
+		} catch (error) {
+			console.error('Error:', error);
+			alert('Error al generar el PDF. Consulta la consola para obtener más información.');
+		}
+	}
 
-  document.getElementById('generarPDF').addEventListener('click', generarPDF);
+	document.getElementById('generarPDF').addEventListener('click', generarPDF);
 </script>
 
 <!-- Conversor a WORD -->
 <script>
-  async function generarWord() {
-    try {
-      const response = await fetch('/convertir-a-word', { method: 'POST' });
+	async function generarWord() {
+		try {
+			const response = await fetch('/convertir-a-word', { method: 'POST' });
 
-      if (!response.ok) {
-        throw new Error(`Error al generar el Word: ${response.status} - ${response.statusText}`);
-      }
+			if (!response.ok) {
+				throw new Error(`Error al generar el Word: ${response.status} - ${response.statusText}`);
+			}
 
-      const blob = await response.blob();
+			const blob = await response.blob();
 
-      const url = window.URL.createObjectURL(new Blob([blob]));
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'mitexto.docx';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+			const url = window.URL.createObjectURL(new Blob([blob]));
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = 'mitexto.docx';
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+			window.URL.revokeObjectURL(url);
 
-      alert('Word generado correctamente');
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error al generar el Word. Consulta la consola para obtener más información.');
-    }
-  }
+			alert('Word generado correctamente');
+		} catch (error) {
+			console.error('Error:', error);
+			alert('Error al generar el Word. Consulta la consola para obtener más información.');
+		}
+	}
 
-  document.getElementById('generarWORD').addEventListener('click', generarWord);
+	document.getElementById('generarWORD').addEventListener('click', generarWord);
 </script>
 
 
 
 <script>
-  let idiomaDestino = 'en'; // Idioma predeterminado
+	let idiomaDestino = 'en'; // Idioma predeterminado
 
-  function cambiarIdioma(idioma) {
-      idiomaDestino = idioma;
-      traducir(idiomaDestino);
-  }
+	function cambiarIdioma(idioma) {
+		idiomaDestino = idioma;
+		traducir(idiomaDestino);
+	}
 
-  async function traducir(idioma) {
-      try {
-          const response = await fetch(`/translate-${idioma}`, { method: 'GET' });
+	async function traducir(idioma) {
+		try {
+			const response = await fetch(`/translate-${idioma}`, { method: 'GET' });
 
-          if (!response.ok) {
-              throw new Error(`Error al traducir: ${response.status} - ${response.statusText}`);
-          }
+			if (!response.ok) {
+				throw new Error(`Error al traducir: ${response.status} - ${response.statusText}`);
+			}
 
-          const data = await response.json();
+			const data = await response.json();
 
-          if (data.translated_text) {
-              // Mostrar la sección de traducción
-              document.getElementById('seccionTraduccion').style.display = 'block';
-              // Actualizar el contenido de la página con el texto traducido
-              document.getElementById('textoTraducido').innerHTML = data.translated_text;
-              alert('Traducción completa');
-          } else {
-              alert('Error al traducir el texto');
-          }
-      } catch (error) {
-          console.error('Error:', error);
-          alert('Error al traducir el texto. Consulta la consola para obtener más información.');
-      }
-  }
+			if (data.translated_text) {
+				// Mostrar la sección de traducción
+				document.getElementById('seccionTraduccion').style.display = 'block';
+				// Actualizar el contenido de la página con el texto traducido
+				document.getElementById('textoTraducido').innerHTML = data.translated_text;
+				alert('Traducción completa');
+			} else {
+				alert('Error al traducir el texto');
+			}
+		} catch (error) {
+			console.error('Error:', error);
+			alert('Error al traducir el texto. Consulta la consola para obtener más información.');
+		}
+	}
 
-  document.getElementById('traducirIngles').addEventListener('click', () => cambiarIdioma('en'));
+	document.getElementById('traducirIngles').addEventListener('click', () => cambiarIdioma('en'));
 </script>
 
+<script>
+	function toggleSize() {
+		var anuncio = document.getElementById("miAnuncio");
 
+		if (anuncio.style.height === "200px" || anuncio.style.height === "") {
+			anuncio.style.display = "none";
+			anuncio.style.top = "0";
+		} else {
+			anuncio.style.height = "200px";
+		}
+	}
+</script>
 
 {% include 'footer.html' %} 
