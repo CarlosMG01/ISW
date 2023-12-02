@@ -640,11 +640,11 @@ textarea {
 	background-color: #ffffff;
 	transition: height 0.3s ease;
 	overflow: hidden;
-	height: 100px; /* Altura inicial del anuncio desplegado */
+	height: 200px; /* Altura inicial del anuncio desplegado */
 }
 .adImage{
 	width: ; 
-	height: 100px;
+	height: 200px;
 	margin-left: 350px;
 }
 .toggle-button {
