@@ -339,21 +339,19 @@ def ayuda():
 
 @auth_bp.route('/olvido_contrasena', methods=['GET', 'POST'])
 def olvide_contrasena(): 
+    error = None
+
     if request.method == 'POST':
         correo = request.form['correo']
-
         if correo:
-            user_id = db_manager.verificar_usuario_por_correo(correo)
-            if user_id:
-                # Generar el token y enviar el correo.
+            error, success = db_manager.verificar_usuario_por_correo(correo)
+            if success:
                 enviar_correo_restablecer(correo)
-
-                flash('Se ha enviado un enlace de restablecimiento de contraseña a tu dirección de correo electrónico.', 'success')
-                return redirect(url_for('auth.inicio_sesion'))
+                return render_template('inicio_sesion.html', error=error, success=success)
         else:
-            flash('Por favor, proporciona una dirección de correo electrónico válida.', 'error')
+            return render_template('olvido_contrasena.html', error = error)
 
-    return render_template('olvido_contrasena.html')
+    return render_template('olvido_contrasena.html', error = error)
 
 @auth_bp.route('/restablecer_contrasena/<token>', methods=['GET', 'POST'])
 def restablecer_contrasena(token):

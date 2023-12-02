@@ -199,11 +199,17 @@ class DatabaseManager:
         return error, success
     
     def verificar_usuario_por_correo(self, correo):
+        error = None
+        success = None
         query = "SELECT id FROM usuarios WHERE correo = %s"
         self.cursor.execute(query, (correo,))
-        user_id = self.cursor.fetchone()
-        return user_id
-    
+        comprobacion = self.cursor.fetchone()
+        if comprobacion is not None:
+            success = 'Se ha enviado un correo electrónico con la contraseña'
+        else:
+            error = 'Correo electrónico no registrado en la página web'
+        return error, success;
+
     def restablecer_contrasena(self, correo, nueva_contrasena):
         error = None
         success = None
@@ -221,14 +227,14 @@ class DatabaseManager:
                 error = f'Error al cambiar la contraseña: {err}'
 
         return error, success
-    
+
     def guardar_documento(self, usuario_id, titulo, contenido):
         try:
             query = "INSERT INTO textos (usuario_id, titulo, contenido) VALUES (%s, %s, %s)"
             values = (usuario_id, titulo, contenido)
             self.cursor.execute(query, values)
             self.connection.commit()
-        
+
             return "Documento guardado correctamente."
         except mysql.connector.Error as err:
             return f"Error al guardar el documento: {err}"
@@ -253,7 +259,7 @@ class DatabaseManager:
         except mysql.connector.Error as err:
             print(f"Error al obtener documento por ID: {err}")
             return None
-        
+
     def obtener_id_usuario(self, correo):
         try:
             query = "SELECT id FROM usuarios WHERE correo = %s"
@@ -268,7 +274,7 @@ class DatabaseManager:
             return None
 
 
-     
+
 
 #Funciones para validar correo en el registro
 

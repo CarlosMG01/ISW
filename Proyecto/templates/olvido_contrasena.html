@@ -1,19 +1,15 @@
 {% include 'header.html' %}
-<h1>Olvidé mi contraseña</h1>
-<p>Ingresa tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
 
-<form method="post">
-	<input type="email" name="correo" placeholder="Correo electrónico" required>
-	<button type="submit">Enviar enlace de restablecimiento de contraseña</button>
-</form>
-
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul>
-	{% for message in messages %}
-	<li class="{{ message[1] }}">{{ message[0] }}</li>
-	{% endfor %}
-</ul>
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+    <a class="active"> Recuperar Contraseña </a>
+    <form method="post">
+      <input type="email" id="login" class="fadeIn second" name="correo" placeholder="correo electrónico" required>
+      <input type="submit" class="fadeIn third" value="Mandar Correo">
+    </form>
+  </div>
+</div>
+{% if error %}
+<p class="alert alert-danger" role="alert">{{ error }}</p>
 {% endif %}
-{% endwith %}
-{% include 'footer.html' %} 
