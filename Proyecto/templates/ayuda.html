@@ -1,73 +1,89 @@
 {% include 'header.html' %} 
 <h2>Preguntas Frecuentes</h2>
-<p>Aqui puedes encontrar respuestas a algunas preguntas frecuentes.</p>
-<input type="text" id="search" placeholder="Buscar Pregunta...">
-<script>
-	document.getElementById('search').addEventListener('input', function() {
-		var searchQuery = this.value.toLowerCase();
-		var faqList = document.getElementById('faq-list');
-		var faqItems = faqList.getElementsByTagName('li');
-
-		for (var i = 0; i < faqItems.length; i++) {
-			var question = faqItems[i].textContent.toLowerCase();
-			if (question.includes(searchQuery)) {
-				faqItems[i].style.display = 'block';
-			} else {
-				faqItems[i].style.display = 'none';
-			}
-		}
-	});
-</script>
 <ol id="faq-list">
 	<li>
-		<strong>¿Cómo cambio mi contraseña? Para cambiar tu contraseña, ve a la página de perfil, presione el botón cambiar mi contraseña e introducir los datos requeridos.</strong>
+		<a class ="inactive underlineHover" onclick="desplegar('desplegable1')" >
+			<strong>¿Cómo cambio mi contraseña? Para cambiar tu contraseña, ve a la página de perfil, presione el botón cambiar mi contraseña e introducir los datos requeridos. ▼ </strong>
+		</a>
+		<p id ="desplegable1"style = "display:none" >Texto 1 </p>
 	</li>
 	<li>
-		<strong>¿Cómo puedo ver los Términos y condiciones aceptados? Para ver los términos y condiciones deberá dirigirse a su perfil y pulsar el botón de Términos y condiciones</strong>
+		<a class ="inactive underlineHover" onclick="desplegar('desplegable2')" >
+			<strong>¿Cómo puedo ver los Términos y condiciones aceptados? Para ver los términos y condiciones deberá dirigirse a su perfil y pulsar el botón de Términos y condiciones ▼</strong> 
+		</a>
+		<p id ="desplegable2"style = "display:none" >Texto 1 </p>
 	</li>
 	<li>
-		<strong>¿Cómo puedo ponerme una imagen de perfil? Para introducir una imagen de perfil, deberá accede a su perfil y pulsar sobre la imagen, para elegir la imagen a introducir   </strong>
+		<a class ="inactive underlineHover" onclick="desplegar('desplegable3')" >
+			<strong>¿Cómo puedo ponerme una imagen de perfil? Para introducir una imagen de perfil, deberá accede a su perfil y pulsar sobre la imagen, para elegir la imagen a introducir ▼  </strong>
+		</a>
+		<p id ="desplegable3"style = "display:none" >Texto 1 </p>
 	</li>
 	<li>
-		<strong>¿Cómo usar la aplicación? En la página principal introducir una imagen del texto y pulsar el botón de Subir y procesar archivo</strong>
+		<a class ="inactive underlineHover" onclick="desplegar('desplegable4')" >
+			<strong>¿Cómo usar la aplicación? En la página principal introducir una imagen del texto y pulsar el botón de Subir y procesar archivo ▼</strong>
+		</a>
+		<p id ="desplegable4"style = "display:none" >Texto 1 </p>
 	</li>
 	<li>
-		<strong>¿Cómo contactar con ocrsupport? Al final de la página de ayuda podemos observar los diferentes métodos de contacto con nuestro equipo</strong>
+		<a class ="inactive underlineHover" onclick="desplegar('desplegable5')" >
+			<strong>¿Cómo contactar con ocrsupport? Al final de la página de ayuda podemos observar los diferentes métodos de contacto con nuestro equipo ▼</strong>
+		</a>
+		<p id ="desplegable5"style = "display:none" >Texto 1 </p>
 	</li>
 	<li>
-		<strong>¿Cómo puedo cambiar de cuenta? Para cambiar de cuenta deberá dirigirse a su perfil y pulsar el botón Cambiar de cuenta</strong>
+		<a class ="inactive underlineHover" onclick="desplegar('desplegable6')" >
+			<strong>¿Cómo puedo cambiar de cuenta? Para cambiar de cuenta deberá dirigirse a su perfil y pulsar el botón Cambiar de cuenta ▼</strong>
+		</a>
+		<p id ="desplegable6"style = "display:none" >Texto 1 </p>
 	</li>
 	<li>
-		<strong>¿Cómo puedo cerrar sesión? Para cerrar sesión deberá dirigirse a su perfil y pulsar el botón Cerrar sesión</strong>
+		<a class ="inactive underlineHover" onclick="desplegar('desplegable7')" >
+			<strong>¿Cómo puedo cerrar sesión? Para cerrar sesión deberá dirigirse a su perfil y pulsar el botón Cerrar sesión ▼</strong>
+		</a>
+		<p id ="desplegable7"style = "display:none" >Texto 1 </p>
 	</li>
 	<li>
-		<strong>¿Otros errores? Otros errores</strong>
+		<a class ="inactive underlineHover" onclick="desplegar('desplegable8')" >
+			<strong>¿Otros errores? Otros errores ▼</strong>
+		</a>
+		<p id ="desplegable8"style = "display:none" >Texto 1 </p>
 	</li>
 	<li>
-		<strong>¿Cómo restablecer la contraseña si se me ha olvidado? Cierra la sesión y en inicio de sesión te aparece un botón de He olvidado mi contraseña para restablecerla </strong>
+		<a class ="inactive underlineHover" onclick="desplegar('desplegable9')" >
+			<strong>¿Cómo restablecer la contraseña si se me ha olvidado? Cierra la sesión y en inicio de sesión te aparece un botón de He olvidado mi contraseña para restablecerla ▼</strong>
+		</a>
+		<p id ="desplegable9"style = "display:none" >Texto 1 </p>
 	</li>
 </ol>
 
-<!-- 
-<p><a href="/chat" class="btn btn-primary btn-lg btn-block">Chat en vivo</a></p>
--->
 <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 <df-messenger
-  intent="WELCOME"
-  chat-title="AgentBot"
-  chat-icon= "https://cdn-icons-png.flaticon.com/512/2040/2040946.png"
-  agent-id="01518210-7115-4f58-b7c2-170579062503"
-  language-code="es"
-></df-messenger>
+		intent="WELCOME"
+		chat-title="AgentBot"
+		chat-icon= "https://cdn-icons-png.flaticon.com/512/2040/2040946.png"
+		agent-id="01518210-7115-4f58-b7c2-170579062503"
+		language-code="es"
+		></df-messenger>
 <style>
-	df-messenger {
-	 --df-messenger-bot-message: #878fac;
-	 --df-messenger-button-titlebar-color: #1b007c;
-	 --df-messenger-chat-background-color: #fafafa;
-	 --df-messenger-font-color: white;
-	 --df-messenger-send-icon: #878fac;
-	 --df-messenger-user-message: #479b3d;
+df-messenger {
+	--df-messenger-bot-message: #878fac;
+	--df-messenger-button-titlebar-color: #1b007c;
+	--df-messenger-chat-background-color: #fafafa;
+	--df-messenger-font-color: white;
+	--df-messenger-send-icon: #878fac;
+	--df-messenger-user-message: #479b3d;
+}
+</style>
+<script>
+	function desplegar(id){
+		var textos = document.getElementsByTagName("p");
+		for (var i = 0; i < textos.length; i++) {
+			textos[i].style.display = "none";
+		}
+		var textoMostrar = document.getElementById(id);
+			textoMostrar.style.display = "block";
 	}
-  </style>
+</script>
 
 {% include 'footer.html' %} 
