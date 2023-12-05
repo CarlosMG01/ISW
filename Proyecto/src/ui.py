@@ -16,13 +16,12 @@ import pytesseract
 import os
 from werkzeug.utils import secure_filename
 from io import BytesIO
-from PIL import Image
 
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
 
 
-db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
+db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
 
 resultado_global = ""
 translator = Translator()
@@ -144,44 +143,6 @@ def restricted():
                 db_manager.guardar_documento(usuario_id, titulo, texto_extraido)
 
     return render_template('restricted.html', resultado=resultado_global)
-
-#extraer TEXTO
-@auth_bp.route('/extraer_texto', methods=['POST'])
-def extraer_texto():
-    # Verifica si se ha subido un archivo de imagen en la solicitud
-    if 'file' not in request.files:
-        error= "no se ha encontrado la imagen"
-        return render_template('restricted.html', error=error)
-
-    imagen = request.files['file']
-    print(imagen)
-
-    # Verifica si el archivo es una imagen
-    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
-    if '.' not in imagen.filename or imagen.filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
-         texto_extraido="Por favor suba una imagen png.jpg o jpeg"
-         return render_template('restricted.html', texto_extraido=texto_extraido)
-
-    try:
-        # Abre la imagen con Pillow
-        img = Image.open(imagen)
-        print(img)
-
-        # Utiliza Pytesseract para extraer texto de la imagen
-        texto_extraido = pytesseract.image_to_string(img)
-        print(texto_extraido)
-
-        # Renderiza el template con el texto extraído
-        return render_template('restricted.html', texto_extraido=texto_extraido)
-
-    except Exception as e:
-        print(f"Exception: {str(e)}")
-        # Devuelve un mensaje de error si hay algún problema al procesar la imagen
-        error="Error al procesar la imagen"
-        return render_template('restricted.html', error=error)
-
-
-
 
 # PDF
 @auth_bp.route('/convertir-a-pdf', methods=['POST'])
