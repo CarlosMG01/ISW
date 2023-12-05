@@ -27,7 +27,7 @@ secret_key = '1234'
 class BaseDeDatosMariaDB:
     def __init__(self):
         self.host = "localhost"
-        self.usuario = "carlos"
+        self.usuario = "root"
         self.contraseña = "root"
         self.base_de_datos = "prueba"
         self.conexion = None

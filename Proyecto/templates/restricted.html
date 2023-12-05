@@ -29,10 +29,15 @@
 	<!-- App -->
 	<h1>Seleccione una imagen para extraer texto</h1>
 	<div class="container bg-light py-3 my-3">
-		<form method="POST" enctype="multipart/form-data">
+		<form method="POST" action="/extraer_texto" enctype="multipart/form-data">
 			<label for="file" >
 				<img src="static/fondo4.jpeg"  style="margin-right: 10px;" >
 			</label>
+			{% if error %}
+			<p class="alert alert-danger" role="alert">{{ error }}</p>
+			{% elif texto_extraido %}
+			<p class="alert alert-success" role="alert">{{texto_extraido}}</p>
+			{% endif %}
 				<input type="file" name="file" id="file" accept="image/*" required style="display: none;" onchange="submitForm()">
 				<button type="submit" id="boton_submit" style="display: none;"></button>
 		</form>
