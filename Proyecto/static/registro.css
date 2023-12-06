@@ -37,7 +37,10 @@ h3 {
 	margin: 40px 8px 10px 8px;
 	color: black;
 }
-
+h4 {
+	
+	color: black;
+}
 
 
 /* STRUCTURE */
@@ -356,15 +359,25 @@ input[type=text]:placeholder {
 	height: 100%;
 	background: rgba(0, 0, 0, 0.7);
 	overflow: auto;
+	z-index: 2;
 }
 #popup-box {
-	position: absolute;
-	top: 10%; 
-	left: 50%;
-	transform: translate(-50%, 0);
-	background: #fff;
-	padding: 20px;
-	width: 900px;
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background: #fff;
+    padding: 10px;
+    width: 800px;
+    z-index: 2;
+}
+
+#popup-box h2,
+#popup-box h3,
+#popup-box h4,
+#popup-box li,
+#popup-box ol {
+    margin-top: 0; 
 }
 
 .profile-container {
@@ -533,9 +546,11 @@ footer {
 #seccionTraduccion {
 	display: none;
 }
+
 .dropdown {
-	position: relative;
+	position: absolute;
 	display: inline-block;
+	z-index: 1;
 }
 
 .dropdown-content {
@@ -644,7 +659,7 @@ textarea {
 	height: 200px; /* Altura inicial del anuncio desplegado */
 }
 .adImage{
-	width: ; 
+	
 	height: 200px;
 	margin-left: 350px;
 }
