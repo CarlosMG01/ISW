@@ -658,3 +658,6 @@ textarea {
 	cursor: pointer;
 	transition: transform 0.3s ease;
 }
+.negro {
+	color: black;
+}
