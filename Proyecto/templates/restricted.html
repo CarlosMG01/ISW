@@ -67,70 +67,80 @@
 
 <!-- Cookies -->
 <div id="cookie-notification">
-	<p>Este sitio utiliza cookies para mejorar tu experiencia. ¿Aceptas nuestras cookies?</p>
-	<button onclick="aceptarCookies()">Aceptar</button>
-	<button onclick="rechazarCookies()">Rechazar</button>
+    <p>Este sitio utiliza cookies para mejorar tu experiencia. ¿Aceptas nuestras cookies?</p>
+    <button onclick="aceptarCookies()">Aceptar</button>
+    <button onclick="rechazarCookies()">Rechazar</button>
 </div>
 <div id="cookie-accepted-notification" style="display: none;">
-	<p>Cookies aceptadas. Gracias por usar nuestra página web.</p>
+    <p>Cookies aceptadas. Gracias por usar nuestra página web.</p>
 </div>
 <script>
-	document.addEventListener("DOMContentLoaded", function() {
-		if (!cookiesAceptadas() && !localStorage.getItem("cookiesRechazadas")) {
-			mostrarNotificacionCookies();
+    document.addEventListener("DOMContentLoaded", function () {
+        if (!cookiesAceptadas() && !localStorage.getItem("cookiesRechazadas")) {
+            mostrarNotificacionCookies();
+        }
+    });
 
-		}
-	});
+    function mostrarNotificacionCookies() {
+        var notification = document.getElementById("cookie-notification");
+        notification.style.display = "block";
+    }
 
-	function mostrarNotificacionCookies() {
-		var notification = document.getElementById("cookie-notification");
-		notification.style.display = "block";
-	}
-	function mostrarNotificacionCookiesAceptadas() {
-		var notification = document.getElementById("cookie-accepted-notification");
-		notification.style.display = "block";
-		setTimeout(function() {
-			notification.style.display = "none";
-		}, 5000); // Ocultar la notificación después de 5 segundos (puedes ajustar este valor)
-	}
-
+    function mostrarNotificacionCookiesAceptadas() {
+        var notification = document.getElementById("cookie-accepted-notification");
+        notification.style.display = "block";
+        setTimeout(function () {
+            notification.style.display = "none";
+        }, 5000); // Ocultar la notificación después de 5 segundos (puedes ajustar este valor)
+    }
 	function aceptarCookies() {
-		setCookie("cookiesAceptadas", "true", 30); // Establecer cookie de aceptación por 30 días
-		document.getElementById("cookie-notification").style.display = "none";
-		localStorage.setItem("cookiesAceptadas", "true");
-		mostrarNotificacionCookiesAceptadas();
-	}
+        setCookie("cookiesAceptadas", "true", 30); // Establecer cookie de aceptación por 30 días
+        document.getElementById("cookie-notification").style.display = "none";
+        localStorage.setItem("cookiesAceptadas", "true");
+        mostrarNotificacionCookiesAceptadas();
 
+        // Llamada de ejemplo a una función en el servidor para establecer la cookie de sesión
+        fetch('/accept_cookies', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'accept=true',
+        })
+        .then(response => response.text())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }
 
-	function rechazarCookies() {
-		// Puedes agregar acciones adicionales al rechazar cookies si es necesario
-		document.getElementById("cookie-notification").style.display = "none";
-		localStorage.setItem("cookiesRechazadas", "true");
+    function rechazarCookies() {
+        // Puedes agregar acciones adicionales al rechazar cookies si es necesario
+        document.getElementById("cookie-notification").style.display = "none";
+        localStorage.setItem("cookiesRechazadas", "true");
+    
 
-	}
+    function setCookie(nombre, valor, dias) {
+        var fechaExpiracion = new Date();
+        fechaExpiracion.setTime(fechaExpiracion.getTime() + (dias * 24 * 60 * 60 * 1000));
+        var expira = "expires=" + fechaExpiracion.toUTCString();
+        document.cookie = nombre + "=" + valor + ";" + expira + ";path=/";
+    }
 
-	function setCookie(nombre, valor, dias) {
-		var fechaExpiracion = new Date();
-		fechaExpiracion.setTime(fechaExpiracion.getTime() + (dias * 24 * 60 * 60 * 1000));
-		var expira = "expires=" + fechaExpiracion.toUTCString();
-		document.cookie = nombre + "=" + valor + ";" + expira + ";path=/";
-	}
+    function cookiesAceptadas() {
+        return localStorage.getItem("cookiesAceptadas") === "true";
+    }
 
-	function cookiesAceptadas() {
-		return localStorage.getItem("cookiesAceptadas") === "true";
-	}
+    function getCookie(nombre) {
+        var nombreC = nombre + "=";
+        var cookies = decodeURIComponent(document.cookie).split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var c = cookies[i].trim();
+            if (c.indexOf(nombreC) == 0) {
+                return c.substring(nombreC.length, c.length);
+            }
+        }
+        return "";
+    }
 
-	function getCookie(nombre) {
-		var nombreC = nombre + "=";
-		var cookies = decodeURIComponent(document.cookie).split(';');
-		for(var i = 0; i < cookies.length; i++) {
-			var c = cookies[i].trim();
-			if (c.indexOf(nombreC) == 0) {
-				return c.substring(nombreC.length, c.length);
-			}
-		}
-		return "";
-	}
 </script>
 <!-- Anuncios -->
 <div style="border: 1px solid #ccc; padding: 5px; margin: 0px;  width: 30rem; height: 15rem;">

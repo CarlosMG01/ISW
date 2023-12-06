@@ -7,6 +7,7 @@ from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
 #guardar_documento, obtener_textos
 from fpdf import FPDF
+import fitz # pip install pymupdf
 from docx import Document
 from googletrans import Translator
 from datetime import datetime
@@ -130,11 +131,24 @@ def restricted():
     global resultado_global
     if request.method == 'POST': 
         file = request.files['file']
+        
         if file:
-            # Utiliza pytesseract para extraer texto de la imagen
             file.save(os.path.join('static', file.filename))
-            # static es donde se guardan las iamgenes
-            texto_extraido = pytesseract.image_to_string(os.path.join('static',file.filename))
+            _, file_extension = os.path.splitext(file.filename)
+
+            if file_extension.lower() in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff']:
+                # Utilizar pytesseract para extraer texto de la imagen
+                texto_extraido = pytesseract.image_to_string(os.path.join('static', file.filename))
+            elif file_extension.lower() == '.pdf':
+                # Utilizar fpdf para extraer texto de un archivo PDF
+                texto_extraido = extract_text_from_pdf(os.path.join('static', file.filename))
+            elif file_extension.lower() == '.docx':
+                # Utilizar python-docx para extraer texto de un archivo Word
+                texto_extraido = extract_text_from_docx(os.path.join('static', file.filename))
+            else:
+                # Manejar otros tipos de archivos o mostrar un mensaje de error
+                texto_extraido = "Tipo de archivo no admitido."
+
             # Imprime el texto extraído
             resultado_global = texto_extraido
             usuario_id = obtener_id_usuario_actual()
@@ -143,6 +157,22 @@ def restricted():
                 db_manager.guardar_documento(usuario_id, titulo, texto_extraido)
 
     return render_template('restricted.html', resultado=resultado_global)
+#PDF
+def extract_text_from_pdf(pdf_path):
+    text = ''
+    with fitz.open(pdf_path) as pdf_document:
+        for page_num in range(pdf_document.page_count):
+            page = pdf_document[page_num]
+            text += page.get_text()
+
+    return text
+#WORD
+def extract_text_from_docx(docx_path):
+    doc = Document(docx_path)
+    text = ''
+    for paragraph in doc.paragraphs:
+        text += paragraph.text + '\n'
+    return text
 
 # PDF
 @auth_bp.route('/convertir-a-pdf', methods=['POST'])
