@@ -76,14 +76,16 @@ df-messenger {
 }
 </style>
 <script>
-	function desplegar(id){
-		var textos = document.getElementsByTagName("p");
-		for (var i = 0; i < textos.length; i++) {
-			textos[i].style.display = "none";
-		}
-		var textoMostrar = document.getElementById(id);
-			textoMostrar.style.display = "block";
-	}
+    function desplegar(id) {
+        var textoMostrar = document.getElementById(id);
+
+        if (window.getComputedStyle(textoMostrar).display === 'block') {
+            textoMostrar.style.display = 'none';
+        } else {
+            textoMostrar.style.display = 'block';
+        }
+    }
 </script>
+
 
 {% include 'footer.html' %} 
