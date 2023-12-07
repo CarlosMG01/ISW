@@ -382,24 +382,32 @@ def borrar_texto(id):
 def chat():
     if not session.get('logged_in'):
         return redirect(url_for('auth.inicio_sesion'))
-
     user = str(uuid4())
     avatar = f'https://robohash.org/{user}?bgset=bg2'
+    
+    if 'user' not in session:
+        session['user'] = str(uuid4())
+        session['avatar'] = f'https://robohash.org/{session["user"]}?bgset=bg2'
 
-    processed_messages = chat_messages(user, messages)
+    user = session['user']
+    avatar = session['avatar']
 
-    return render_template('chat.html', user=user, avatar=avatar, messages=processed_messages)
+    if request.method == 'POST':
+        text = request.form.get('text', '')
+        messages.append((user, avatar, text))
+    correo = session.get('correo_usuario')
+    return render_template('chat.html', user=user, avatar=avatar, messages=messages, correo=correo)
 
-def chat_messages(own_id, messages):
-    processed_messages = []
-    for user_id, avatar, text in messages:
-        sent_by_own_id = user_id == own_id
-        processed_messages.append({
-            'avatar': avatar,
-            'text': text,
-            'sent_by_own_id': sent_by_own_id
-        })
-    return processed_messages
+#def chat_messages(own_id, messages):
+#    processed_messages = []
+#    for user_id, avatar, text in messages:
+#        sent_by_own_id = user_id == own_id
+#        processed_messages.append({
+#            'avatar': avatar,
+#            'text': text,
+#            'sent_by_own_id': sent_by_own_id
+#        })
+#    return processed_messages
 
 
 

@@ -3,6 +3,7 @@ from flask_mail import Mail
 import webbrowser
 from src import auth_bp, home_bp
 import os
+from nicegui import ui
 
 app = Flask(__name__)
 app.register_blueprint(home_bp)
@@ -29,3 +30,4 @@ if __name__ == '__main__':
     webbrowser.open(url)
 
     app.run(debug=False)
+    

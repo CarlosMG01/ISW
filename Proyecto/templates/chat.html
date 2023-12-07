@@ -70,67 +70,34 @@
     </style>
 </head>
 <body>
+    <p>Bienvenido, <strong>{{ correo.split('@')[0] }}</strong>, aquí podrás hablar con otros usuarios y compartir tus textos:</p>
     <div class="chat-container">
         <div class="messages" id="chat-messages">
-            <!-- Messages will be dynamically added here -->
+            {% for user_id, user_avatar, message_text in messages %}
+                <div class="message">
+                    <img src="{{ user_avatar }}" alt="{{ user_id }}" class="avatar">
+                    <div class="message-content">
+                        <p>{{ message_text }}</p>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
         <div class="footer">
             <img src="{{ avatar }}" alt="User Avatar" class="avatar">
-            <input id="text-input" class="input-message" placeholder="Type your message...">
-            <button onclick="sendMessage()" class="send-button">Send</button>
+            <form method="post" action="{{ url_for('auth.chat') }}">
+                <input type="text" id="text-input" name="text" class="input-message" placeholder="Type your message...">
+                <button type="submit" class="send-button">Send</button>
+            </form>
         </div>
     </div>
 
     <script>
         function sendMessage() {
-            var user = '{{ user }}';
-            var avatar = '{{ avatar }}';
-            var text = document.getElementById('text-input').value;
-
-            // Simulate sending a message
-            var messageContainer = document.getElementById('chat-messages');
-            var messageElement = document.createElement('div');
-            messageElement.className = 'message';
-            messageElement.innerHTML = `
-                <img src="${avatar}" alt="User Avatar" class="avatar">
-                <div class="message-content">
-                    <p>${text}</p>
-                </div>
-            `;
-            messageContainer.appendChild(messageElement);
-
-            // Clear the input field
-            document.getElementById('text-input').value = '';
+            return true;
         } 
     </script>
-    <script>
-         function loadOldMessages() {
-        setTimeout(function () {
-            var oldMessages = [
-                { avatar: "{{ avatar }}", text: "{{ text }}" },
+   
         
-                // Agrega más mensajes antiguos según sea necesario
-            ];
-
-            var messageContainer = document.getElementById('chat-messages');
-
-            oldMessages.forEach(function (message) {
-                var messageElement = document.createElement('div');
-                messageElement.className = 'message';
-                messageElement.innerHTML = `
-                    <img src="${message.avatar}" alt="User Avatar" class="avatar">
-                    <div class="message-content">
-                        <p>${message.text}</p>
-                    </div>
-                `;
-                messageContainer.appendChild(messageElement);
-            });
-        }, 1000); // Simulación de un segundo de retraso en la respuesta del servidor
-    }
-
-    // Cargar mensajes antiguos al cargar la página
-        loadOldMessages();
-    </script>
     
 </body>
 </html>
