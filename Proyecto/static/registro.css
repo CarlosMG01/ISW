@@ -69,7 +69,7 @@ h4 {
 	flex-direction: column;
 	justify-content: center;
 	width: 100%;
-	min-height: 80%;
+	min-height: 60%;
 	padding: 20px;
 }
 
@@ -344,7 +344,8 @@ input[type=text]:placeholder {
 }
 
 #icon {
-	width: 60%;
+	margin-right: 10px;
+	width: 30%;
 }
 
 * {
@@ -650,7 +651,7 @@ textarea {
 .adContainer{
 	padding: 5px;
 	position: fixed;
-	top: 10;
+	top: 5;
 	left: 0;
 	width: 100%;
 	background-color: #ffffff;
@@ -658,10 +659,10 @@ textarea {
 	overflow: hidden;
 	height: 200px; /* Altura inicial del anuncio desplegado */
 }
-.adImage{
-	
+.adImage{	
+	padding: 10px;
 	height: 200px;
-	margin-left: 350px;
+	margin-left: 400px;
 }
 .toggle-button {
 	position: absolute;
