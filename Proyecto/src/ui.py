@@ -17,6 +17,8 @@ import pytesseract
 import os
 from werkzeug.utils import secure_filename
 from io import BytesIO
+from uuid import uuid4
+from nicegui import ui
 
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
@@ -24,6 +26,7 @@ home_bp = Blueprint('home', __name__)
 
 db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
 
+messages = []   
 resultado_global = ""
 translator = Translator()
 resultado_global_traducido = ""
@@ -352,13 +355,36 @@ def generar_word(id):
             return "Documento no encontrado."
     else:
         return "Error al obtener ID del usuario."
-    
-@auth_bp.route('/chat', methods =['GET','POST'])
+
+ 
+
+
+
+@auth_bp.route('/chat', methods=['GET', 'POST'])
 def chat():
     if not session.get('logged_in'):
         return redirect(url_for('auth.inicio_sesion'))
-    correo = session.get('correo_usuario')
-    return render_template('chat.html',correo=correo)
+
+    user = str(uuid4())
+    avatar = f'https://robohash.org/{user}?bgset=bg2'
+
+    processed_messages = chat_messages(user, messages)
+
+    return render_template('chat.html', user=user, avatar=avatar, messages=processed_messages)
+
+def chat_messages(own_id, messages):
+    processed_messages = []
+    for user_id, avatar, text in messages:
+        sent_by_own_id = user_id == own_id
+        processed_messages.append({
+            'avatar': avatar,
+            'text': text,
+            'sent_by_own_id': sent_by_own_id
+        })
+    return processed_messages
+
+
+
 
 @auth_bp.route('/ayuda')
 def ayuda():

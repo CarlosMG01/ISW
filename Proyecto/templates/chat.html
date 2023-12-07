@@ -1,84 +1,140 @@
 {% include 'header.html' %} 
+
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
-    <link rel="stylesheet" href="registro.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .message-content {
+            flex-grow: 1;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .input-message {
+            flex-grow: 1;
+            margin-right: 10px;
+            padding: 5px;
+        }
+
+        .send-button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-
-<div class="chat-container">
-    <div class="chats-list">
-        <!-- Lista de chats a la izquierda -->
-        <div class="chat-item" onclick="loadChat('usuario1')">{{ correo.split('@')[0] }}</div>
-        <div class="chat-item" onclick="loadChat('usuario2')">Usuario 2</div>
-		
-        <!-- Agrega más elementos según tus necesidades -->
-    </div>
-
-    <div class="chat-content">
-        <!-- Contenido del chat -->
-        <div class="chat-header" id="chatHeader"></div>
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input">
-            <textarea id="messageInput" placeholder="Escribe un mensaje..."></textarea>
-            <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(this)">
-            <label for="fileInput" class="attach-button">Adjuntar</label>
-            <div id="selectedFilePath"></div>
-            <button id="button_chat" onclick="sendMessage()">Enviar</button>
-            <!-- Puedes agregar un botón para adjuntar archivos -->
+    <div class="chat-container">
+        <div class="messages" id="chat-messages">
+            <!-- Messages will be dynamically added here -->
+        </div>
+        <div class="footer">
+            <img src="{{ avatar }}" alt="User Avatar" class="avatar">
+            <input id="text-input" class="input-message" placeholder="Type your message...">
+            <button onclick="sendMessage()" class="send-button">Send</button>
         </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        function sendMessage() {
+            var user = '{{ user }}';
+            var avatar = '{{ avatar }}';
+            var text = document.getElementById('text-input').value;
+
+            // Simulate sending a message
+            var messageContainer = document.getElementById('chat-messages');
+            var messageElement = document.createElement('div');
+            messageElement.className = 'message';
+            messageElement.innerHTML = `
+                <img src="${avatar}" alt="User Avatar" class="avatar">
+                <div class="message-content">
+                    <p>${text}</p>
+                </div>
+            `;
+            messageContainer.appendChild(messageElement);
+
+            // Clear the input field
+            document.getElementById('text-input').value = '';
+        } 
+    </script>
+    <script>
+         function loadOldMessages() {
+        setTimeout(function () {
+            var oldMessages = [
+                { avatar: "{{ avatar }}", text: "{{ text }}" },
+        
+                // Agrega más mensajes antiguos según sea necesario
+            ];
+
+            var messageContainer = document.getElementById('chat-messages');
+
+            oldMessages.forEach(function (message) {
+                var messageElement = document.createElement('div');
+                messageElement.className = 'message';
+                messageElement.innerHTML = `
+                    <img src="${message.avatar}" alt="User Avatar" class="avatar">
+                    <div class="message-content">
+                        <p>${message.text}</p>
+                    </div>
+                `;
+                messageContainer.appendChild(messageElement);
+            });
+        }, 1000); // Simulación de un segundo de retraso en la respuesta del servidor
+    }
+
+    // Cargar mensajes antiguos al cargar la página
+        loadOldMessages();
+    </script>
+    
 </body>
 </html>
 
-<script>
-function displayFilePath(filePath) {
-    const selectedFilePath = document.getElementById('selectedFilePath');
-    selectedFilePath.textContent = 'Archivo seleccionado: ' + filePath;
-}
-
-</script>
-
-<script>
-// Función para cargar un chat específico
-function loadChat(username) {
-    $('#chatHeader').text(username);
-    $('#chatMessages').html('<div>Mensaje de ejemplo</div>');
-}
-</script>
-<script>
-// Función para enviar un mensaje
-function sendMessage() {
-     const message = document.getElementById('messageInput').value;
-    const filePath = document.getElementById('selectedFilePath').textContent;
-
-    const chatMessages = document.getElementById('chatMessages');
-    chatMessages.innerHTML += '<div class="message sent">' + message + '</div>';
-    if (filePath) {
-        chatMessages.innerHTML += '<div class="message sent">' + filePath + '</div>';
-    }
-
-    document.getElementById('messageInput').value = '';
-    document.getElementById('selectedFilePath').textContent = '';
-    document.getElementById('fileInput').value = '';
-
-}
-</script>
-<script>
-function handleFileSelect(input) {
-    const file = input.files[0];
-    if (file) {
-        const filePath = file.name;
-        displayFilePath(filePath);
-    }
-}
-</script>
 
 
 {% include 'footer.html' %} 
