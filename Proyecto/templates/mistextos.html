@@ -5,22 +5,19 @@
 <div class="container p-5 my-5 bg-dark text-white">
     <h1>Mis Textos Generados</h1>
     {% if documentos %}
-    <ul>
         {% for documento_id, titulo, contenido in documentos %}
-            <li>
-                {{ titulo }} - {{contenido}}
-                
+            <div class="texto-container">
+                <h3>{{ titulo }}</h3>
+                <p>{{ contenido }}</p>
                 <a href="{{ url_for('auth.generar_pdf', id=documento_id) }}"><img src="static/pdf.png" alt="Generar PDF" style="width: 30px;">Generar PDF</a>
                 <a href="{{ url_for('auth.generar_word', id=documento_id) }}"><img src="static/word.png" alt="Generar Word" style="width: 30px;">Generar Word</a>
                 <a href="mailto:?subject={{titulo}}&body={{contenido}}"><img src="static/correo.png" alt="Compartir con correo" style="width: 30px;">Compartir por correo</a>
-
-                <a href="{{ url_for('auth.borrar_texto', id=documento_id) }}" onclick="return confirm('¿Estás seguro de que quieres borrar este texto?')"><img src="static/borrar.jpg" alt="Borrar" style="width: 30px;">Borrar</a>
-            </li>
+                <a class="borrar" href="{{ url_for('auth.borrar_texto', id=documento_id) }}" onclick="return confirm('¿Estás seguro de que quieres borrar este texto?')"><img src="static/borrar.jpg" alt="Borrar" style="width: 30px;">Borrar</a>
+            </div>
         {% endfor %}
-    </ul>
-{% else %}
-    <p>No has generado ningún texto aún.</p>
-{% endif %}
+    {% else %}
+        <p>No has generado ningún texto aún.</p>
+    {% endif %}
 </div>
 
 {% include 'footer.html' %}

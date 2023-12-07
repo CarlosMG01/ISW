@@ -677,3 +677,15 @@ textarea {
 .negro {
 	color: black;
 }
+
+.texto-container {
+    position: relative;
+    margin-bottom: 20px; /* Añade espacio entre cada texto */
+}
+
+.borrar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 10px; /* Añade un poco de espacio entre el enlace de borrar y los otros elementos */
+}
