@@ -355,6 +355,24 @@ def generar_word(id):
             return "Documento no encontrado."
     else:
         return "Error al obtener ID del usuario."
+    
+@auth_bp.route('/borrar-texto/<int:id>', methods=['GET'])
+def borrar_texto(id):
+    usuario_id = obtener_id_usuario_actual()
+
+    if usuario_id is not None:
+
+        documento = db_manager.obtener_documento_por_id(usuario_id, id)
+
+        if documento is not None:
+            db_manager.borrar_documento(id)
+            flash('Texto borrado correctamente', 'success')
+        else:
+            flash('No se puede borrar el texto. El documento no pertenece al usuario actual.', 'error')
+    else:
+        flash('Error al obtener ID del usuario.', 'error')
+
+    return redirect(url_for('auth.mistextos'))
 
  
 

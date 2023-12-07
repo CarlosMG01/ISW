@@ -272,6 +272,15 @@ class DatabaseManager:
         except mysql.connector.Error as err:
             print(f"Error al obtener ID del usuario: {err}")
             return None
+        
+    def borrar_documento(self, documento_id):
+        try:
+            query = "DELETE FROM textos WHERE id = %s"
+            self.cursor.execute(query, (documento_id,))
+            self.connection.commit()
+            return "Documento borrado correctamente."
+        except mysql.connector.Error as err:
+            return f"Error al borrar el documento: {err}"
 
 
 
