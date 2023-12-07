@@ -1,0 +1,14 @@
+{% include 'header.html' %}
+
+<p>Editando texto:</p>
+
+<div class="container p-5 my-5 bg-dark text-white">
+    <form method="POST" action="">
+        <label for="nuevo_contenido">Nuevo Contenido:</label>
+        <textarea id="nuevo_contenido" name="nuevo_contenido" rows="4" cols="50">{{ documento[1] }}</textarea>
+        <br>
+        <input type="submit" value="Guardar Cambios">
+    </form>
+</div>
+
+{% include 'footer.html' %}

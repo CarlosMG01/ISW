@@ -281,6 +281,16 @@ class DatabaseManager:
             return "Documento borrado correctamente."
         except mysql.connector.Error as err:
             return f"Error al borrar el documento: {err}"
+        
+    def actualizar_contenido_documento(self, documento_id, nuevo_contenido):
+        try:
+            query = "UPDATE textos SET contenido = %s WHERE id = %s"
+            values = (nuevo_contenido, documento_id)
+            self.cursor.execute(query, values)
+            self.connection.commit()
+            return "Contenido del documento actualizado correctamente."
+        except mysql.connector.Error as err:
+            return f"Error al actualizar el contenido del documento: {err}"
 
 
 

@@ -374,6 +374,26 @@ def borrar_texto(id):
 
     return redirect(url_for('auth.mistextos'))
 
+@auth_bp.route('/editar-texto/<int:id>', methods=['GET', 'POST'])
+def editar_texto(id):
+    usuario_id = obtener_id_usuario_actual()
+
+    if usuario_id is not None:
+        documento = db_manager.obtener_documento_por_id(usuario_id, id)
+
+        if documento is not None:
+            if request.method == 'POST':
+                nuevo_contenido = request.form['nuevo_contenido']
+                db_manager.actualizar_contenido_documento(id, nuevo_contenido)
+                flash('Texto actualizado correctamente', 'success')
+                return redirect(url_for('auth.mistextos'))
+
+            return render_template('editar_texto.html', documento=documento)
+        else:
+            return "Documento no encontrado."
+    else:
+        return "Error al obtener ID del usuario."
+
  
 
 
