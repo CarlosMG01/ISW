@@ -94,14 +94,14 @@ class BaseDeDatosMariaDB:
             print(f"Error al crear las tablas: {err}")
 
 
-     def crear_baseDeDatos(self):
-         try:
-             database = mysql.connector.connect(
+    def crear_baseDeDatos(self):
+        try:
+            database = mysql.connector.connect(
                      host=self.host,
                      user=self.usuario,
                      password=self.contraseña,
                      )
-             cursor = database.cursor()
+            cursor = database.cursor()
             # Crear la tabla de usuarios
             cursor.execute("CREATE DATABASE prueba;")
             cursor.close()
