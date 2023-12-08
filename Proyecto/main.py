@@ -4,7 +4,7 @@ import webbrowser
 from src import auth_bp, home_bp
 import os
 from nicegui import ui
-import time
+
 
 app = Flask(__name__)
 app.register_blueprint(home_bp)
@@ -23,8 +23,7 @@ mail = Mail(app)
 app.secret_key = '12345'
 
 if __name__ == '__main__':
-    time.sleep(5)
     url = "http://127.0.0.1:5000"
     webbrowser.open(url)
-    app.run(debug=False)
+app.run(debug=False)
      

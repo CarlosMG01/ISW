@@ -15,3 +15,11 @@ with open('./src/ui.py', 'r') as file:
 
 with open('./src/ui.py', 'w') as file:
     file.writelines(lines_ui)  # Escribir las líneas modificadas de vuelta al archivo
+
+with open('./main.py', 'r') as file:
+    lines_main = file.readlines()  # Leer todas las líneas del archivo
+    lines_main[27] = "app.run(debug=False)\n"  # Modificar la línea
+
+# Escribir de nuevo al archivo
+with open('./main.py', 'w') as file:
+    file.writelines(lines_main)  # Escribir las líneas modificadas de vuelta al archivo

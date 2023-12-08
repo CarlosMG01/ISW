@@ -7,7 +7,7 @@ from flask import Flask
 from PIL import Image
 import io
 import base64
-
+import time
 app = Flask(__name__)
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -43,6 +43,8 @@ class BaseDeDatosMariaDB:
 
     def conectar(self):
         try:
+            if docker == 1:
+                time.sleep(15)
             self.crear_baseDeDatos() 
             self.conexion = mysql.connector.connect(
                     host=self.host,
