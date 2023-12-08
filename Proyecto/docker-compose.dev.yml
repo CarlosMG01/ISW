@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mysql-container:
+    image: mysql
+    container_name: mysql-container
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql-python-app-volume:/var/lib/mysql
+      - mysql-python-app-volume-config:/etc/mysql
+    networks:
+      - mysql-python-app-network
+
+  python-container:
+    image: app-flask
+    restart: on-failure:5
+    container_name: python-container
+    ports:
+      - 5001:5000
+    volumes:
+      - ./:/app
+    networks:
+      - mysql-python-app-network
+
+networks:
+  mysql-python-app-network:
+    name: mysql-python-app-network
+volumes:
+  mysql-python-app-volume:
+  mysql-python-app-volume-config:

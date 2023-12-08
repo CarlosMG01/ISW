@@ -18,7 +18,7 @@ app.config['MAIL_PASSWORD'] = 'lkytkgkbhirfyxlv'
 
 mail = Mail(app)
 
-
+docker = 0
 # Cargar la imagen desde el disco
 
 secret_key = '1234' 
@@ -26,21 +26,30 @@ secret_key = '1234'
 
 class BaseDeDatosMariaDB:
     def __init__(self):
-        self.host = "localhost"
-        self.usuario = "carlos"
-        self.contraseña = "root"
-        self.base_de_datos = "prueba"
-        self.conexion = None
-        
+        if docker == 1:
+            self.host = "mysql-container"
+            self.usuario = "root"
+            self.contraseña = "root"
+            self.base_de_datos = "prueba"
+            self.conexion = None
+        else:
+            self.host = "localhost"
+            self.usuario = "carlos"
+            self.contraseña = "root"
+            self.base_de_datos = "prueba"
+            self.conexion = None
+
+
 
     def conectar(self):
         try:
             self.conexion = mysql.connector.connect(
-                host=self.host,
-                user=self.usuario,
-                password=self.contraseña,
-                database=self.base_de_datos
-            )
+                    host=self.host,
+                    user=self.usuario,
+                    password=self.contraseña,
+                    database=self.base_de_datos
+                    )
+            self.crear_baseDeDatos() 
             print("Conexión a la base de datos exitosa.")
             self.crear_tablas()  # Llamar a la función para crear tablas
         except mysql.connector.Error as err:
@@ -48,8 +57,8 @@ class BaseDeDatosMariaDB:
 
 
      # Conexión a la colección 'usuarios'
-    
-   
+
+
 
 
     def desconectar(self):
@@ -78,11 +87,27 @@ class BaseDeDatosMariaDB:
                     contenido TEXT NOT NULL
                 )
             """)
-            
+
 
             print("Tablas creadas correctamente.")
         except mysql.connector.Error as err:
             print(f"Error al crear las tablas: {err}")
+
+
+     def crear_baseDeDatos(self):
+         try:
+             database = mysql.connector.connect(
+                     host=self.host,
+                     user=self.usuario,
+                     password=self.contraseña,
+                     )
+             cursor = database.cursor()
+            # Crear la tabla de usuarios
+            cursor.execute("CREATE DATABASE prueba;")
+            cursor.close()
+        except mysql.connector.Error as err:
+            print(f"Error al crear las tablas: {err}")
+
 
 
 class DatabaseManager:
@@ -90,11 +115,11 @@ class DatabaseManager:
 
     def __init__(self, host, user, password, database):
         self.connection = mysql.connector.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
-        )
+                host=host,
+                user=user,
+                password=password,
+                database=database
+                )
         self.cursor = self.connection.cursor()
 
     def close_connection(self):
@@ -113,8 +138,8 @@ class DatabaseManager:
 
         elif not re.match(r'^[a-zA-Z0-9_.]+@[a-zA-Z0-9]+\.[a-zA-Z]+$', correo):
             error = 'Formato de correo incorrecto'
-        
-            
+
+
         elif not re.search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$', contrasena):
             error = 'La contraseña debe tener al menos 5 caracteres, una mayúscula, una minúscula y un número.'
 
@@ -130,9 +155,9 @@ class DatabaseManager:
                 # El correo no está en uso, proceder con el registro
                 success = 'formulario completado'
                 # Aquí puedes realizar la inserción en la base de datos si lo deseas
-            
+
         return error, success
-    
+
     def guardar_imagen_perfil(self, correo, imagen_path):
         try:
             # Cargar la imagen desde el disco
@@ -147,7 +172,7 @@ class DatabaseManager:
             return "Imagen de perfil actualizada exitosamente."
         except mysql.connector.Error as err:
             return f"Error al actualizar la imagen de perfil: {err}"
-        
+
     def obtener_imagen_perfil(self, correo):
         try:
             query = "SELECT imagen_perfil FROM usuarios WHERE correo = %s"
@@ -161,7 +186,7 @@ class DatabaseManager:
 
             else:
                 with Image.open("static/perfil.png") as imagen:
-                        # Obtener los datos binarios de la imagen
+                    # Obtener los datos binarios de la imagen
                     with io.BytesIO() as output:
                         imagen.save(output, format=imagen.format)  # Guardar en el mismo formato original
                         datos_binarios = output.getvalue()
@@ -170,9 +195,9 @@ class DatabaseManager:
         except mysql.connector.Error as err:
             print(f"Error al obtener la imagen de perfil: {err}")
             return None
-        
-        
-        
+
+
+
     def change_password(self, correo, contrasena_actual, nueva_contrasena):
         error = None
         success = None
@@ -197,7 +222,7 @@ class DatabaseManager:
                 error = f'Error al cambiar la contraseña: {err}'
 
         return error, success
-    
+
     def verificar_usuario_por_correo(self, correo):
         error = None
         success = None
@@ -272,7 +297,7 @@ class DatabaseManager:
         except mysql.connector.Error as err:
             print(f"Error al obtener ID del usuario: {err}")
             return None
-        
+
     def borrar_documento(self, documento_id):
         try:
             query = "DELETE FROM textos WHERE id = %s"
@@ -281,7 +306,7 @@ class DatabaseManager:
             return "Documento borrado correctamente."
         except mysql.connector.Error as err:
             return f"Error al borrar el documento: {err}"
-        
+
     def actualizar_contenido_documento(self, documento_id, nuevo_contenido):
         try:
             query = "UPDATE textos SET contenido = %s WHERE id = %s"
