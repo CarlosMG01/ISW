@@ -634,6 +634,8 @@ footer {
 textarea {
 	flex: 1;
 	padding: 5px;
+	width: 100%;
+    resize: vertical;
 }
 
 .button_chat {
@@ -821,4 +823,13 @@ textarea {
 	color: white;
 	border-radius: 5px;
 	cursor: pointer;
+}
+
+.card {
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+}
+
+.card-body {
+    padding: 20px;
 }

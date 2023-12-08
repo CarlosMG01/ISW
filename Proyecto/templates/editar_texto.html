@@ -1,14 +1,20 @@
 {% include 'header.html' %}
 
-<p>Editando texto:</p>
-
-<div class="container p-5 my-5 bg-dark text-white">
-    <form method="POST" action="">
-        <label for="nuevo_contenido">Nuevo Contenido:</label>
-        <textarea id="nuevo_contenido" name="nuevo_contenido" rows="4" cols="50">{{ documento[1] }}</textarea>
-        <br>
-        <input type="submit" value="Guardar Cambios">
-    </form>
+<div class="container mt-5">
+    <h2 class="text-dark">Editando Texto:</h2>
+    
+    <div class="card my-4">
+        <div class="card-body">
+            <form method="POST" action="">
+                <div class="form-group">
+                    <label for="nuevo_contenido">Nuevo Contenido:</label>
+                    <textarea class="form-control" id="nuevo_contenido" name="nuevo_contenido" rows="8">{{ documento[1] }}</textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 {% include 'footer.html' %}
