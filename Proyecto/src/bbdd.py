@@ -43,13 +43,13 @@ class BaseDeDatosMariaDB:
 
     def conectar(self):
         try:
+            self.crear_baseDeDatos() 
             self.conexion = mysql.connector.connect(
                     host=self.host,
                     user=self.usuario,
                     password=self.contraseña,
                     database=self.base_de_datos
                     )
-            self.crear_baseDeDatos() 
             print("Conexión a la base de datos exitosa.")
             self.crear_tablas()  # Llamar a la función para crear tablas
         except mysql.connector.Error as err:
@@ -94,14 +94,14 @@ class BaseDeDatosMariaDB:
             print(f"Error al crear las tablas: {err}")
 
 
-     def crear_baseDeDatos(self):
-         try:
-             database = mysql.connector.connect(
-                     host=self.host,
-                     user=self.usuario,
-                     password=self.contraseña,
-                     )
-             cursor = database.cursor()
+    def crear_baseDeDatos(self):
+        try:
+            database = mysql.connector.connect(
+                    host=self.host,
+                    user=self.usuario,
+                    password=self.contraseña,
+                    )
+            cursor = database.cursor()
             # Crear la tabla de usuarios
             cursor.execute("CREATE DATABASE prueba;")
             cursor.close()
