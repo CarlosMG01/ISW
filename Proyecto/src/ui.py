@@ -20,11 +20,16 @@ from io import BytesIO
 from uuid import uuid4
 from nicegui import ui
 
+
+docker = 0
+
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
 
-
-db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
+if docker == 1:
+    db_manager = DatabaseManager('mysql-container', 'root', 'root', 'prueba')
+else:
+    db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
 
 messages = []   
 resultado_global = ""
