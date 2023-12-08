@@ -7,74 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
-
-        .message {
-            display: flex;
-            margin-bottom: 10px;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .message-content {
-            flex-grow: 1;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 10px;
-        }
-
-        .footer {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .input-message {
-            flex-grow: 1;
-            margin-right: 10px;
-            padding: 5px;
-        }
-
-        .send-button {
-            padding: 5px 10px;
-            border: none;
-            background-color: #4caf50;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
     <p>Bienvenido, <strong>{{ correo.split('@')[0] }}</strong>, aquí podrás hablar con otros usuarios y compartir tus textos:</p>
     <div class="chat-container">
         <div class="messages" id="chat-messages">
             {% for user_id, user_avatar, message_text in messages %}
-                <div class="message">
+                <div class="message {% if user_id == user %}sent{% else %}received{% endif %}">
                     <img src="{{ user_avatar }}" alt="{{ user_id }}" class="avatar">
                     <div class="message-content">
                         <p>{{ message_text }}</p>
@@ -82,20 +21,50 @@
                 </div>
             {% endfor %}
         </div>
+        
         <div class="footer">
             <img src="{{ avatar }}" alt="User Avatar" class="avatar">
-            <form method="post" action="{{ url_for('auth.chat') }}">
-                <input type="text" id="text-input" name="text" class="input-message" placeholder="Type your message...">
-                <button type="submit" class="send-button">Send</button>
+            <form method="post" action="{{ url_for('auth.chat') }}" style="display: flex; align-items: center;">
+            <input type="text" id="text-input" name="text" class="input-message" placeholder="Escribe aquí...">
+            <input type="file" id="file-input" style="display: none;">
+            <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(this)">
+            <label for="fileInput" class="attach-button">Adjuntar Archivo</label>
+            <div id="selectedFilePath"></div>
+            <button type="submit" class="send-button-chat">Enviar</button>
             </form>
         </div>
     </div>
 
     <script>
         function sendMessage() {
-            return true;
-        } 
+        const message = document.getElementById('messageInput').value;
+        const filePath = document.getElementById('selectedFilePath').textContent;
+
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.innerHTML += '<div class="message sent">' + message + '</div>';
+        if (filePath) {
+            chatMessages.innerHTML += '<div class="message sent">' + filePath + '</div>';
+        }
+
+        document.getElementById('messageInput').value = '';
+        document.getElementById('selectedFilePath').textContent = '';
+        document.getElementById('fileInput').value = '';
+        }
+        function handleFileSelect(input) {
+        const file = input.files[0];
+            if (file) {
+                const filePath = file.name;
+                displayFilePath(filePath);
+            }
+        }
+
+        function displayFilePath(filePath) {
+            const selectedFilePath = document.getElementById('selectedFilePath');
+            selectedFilePath.textContent = 'Archivo seleccionado: ' + filePath;
+        }
+        
     </script>
+    
    
         
     

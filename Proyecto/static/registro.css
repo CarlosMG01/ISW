@@ -628,6 +628,7 @@ footer {
 	display: flex;
 	align-items: center;
 	padding: 10px;
+	
 }
 
 textarea {
@@ -641,10 +642,10 @@ textarea {
 	cursor: pointer;
 }
 .attach-button {
-	background-color: #4CAF50;
+	background-color: blue;
 	color: white;
 	border: none;
-	padding: 8px 12px;
+	padding: 2px 4px;
 	border-radius: 4px;
 	cursor: pointer;
 }
@@ -688,4 +689,136 @@ textarea {
     top: 0;
     right: 0;
     margin-top: 10px; /* Añade un poco de espacio entre el enlace de borrar y los otros elementos */
+}
+.sent {
+    flex-direction: row-reverse;
+}
+
+.received {
+    flex-direction: row;
+}
+.sent .message-content {
+    background-color: #4caf50; /* Verde para mensajes del usuario actual */
+    color: white;
+}
+
+.received .message-content {
+    background-color: #ccc; /* Gris para mensajes de otros usuarios */
+}
+.input-message {
+    width: 80%; /* Puedes ajustar el porcentaje según tus preferencias */
+}	
+.send-button-chat{
+	background-color: #4CAF50;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+.chat-container {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+.messages {
+	flex-grow: 1;
+	overflow-y: auto;
+	border: 1px solid #ccc;
+	padding: 10px;
+}
+
+.message {
+	display: flex;
+	margin-bottom: 10px;
+}
+
+.avatar {
+	width: 40px;
+	height: 40px;
+	margin-right: 10px;
+}
+
+.message-content {
+	flex-grow: 1;
+	background-color: #f0f0f0;
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.footer {
+	display: flex;
+	align-items: center;
+	margin-top: 10px;
+}
+
+.input-message {
+	flex-grow: 1;
+	margin-right: 10px;
+	padding: 5px;
+}
+
+.send-button {
+	padding: 5px 10px;
+	border: none;
+	background-color: #4caf50;
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.chat-container {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+.messages {
+	flex-grow: 1;
+	overflow-y: auto;
+	border: 1px solid #ccc;
+	padding: 10px;
+}
+
+.message {
+	display: flex;
+	margin-bottom: 10px;
+}
+
+.avatar {
+	width: 40px;
+	height: 40px;
+	margin-right: 10px;
+}
+
+.message-content {
+	flex-grow: 1;
+	background-color: #f0f0f0;
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.footer {
+	display: flex;
+	align-items: center;
+	margin-top: 10px;
+}
+
+.input-message {
+	flex-grow: 1;
+	margin-right: 10px;
+	padding: 5px;
+}
+
+.send-button {
+	padding: 5px 10px;
+	border: none;
+	background-color: #4caf50;
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
 }
