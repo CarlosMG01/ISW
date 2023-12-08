@@ -18,7 +18,7 @@ import os
 from werkzeug.utils import secure_filename
 from io import BytesIO
 from uuid import uuid4
-from nicegui import ui
+
 
 
 docker = 0
@@ -420,6 +420,7 @@ def chat():
     if request.method == 'POST':
         text = request.form.get('text', '')
         messages.append((user, avatar, text))
+
     correo = session.get('correo_usuario')
     return render_template('chat.html', user=user, avatar=avatar, messages=messages, correo=correo)
 

@@ -25,8 +25,6 @@ app.secret_key = '12345'
 if __name__ == '__main__':
     time.sleep(5)
     url = "http://127.0.0.1:5000"
-   
     webbrowser.open(url)
-
     app.run(debug=False)
-    
+     
