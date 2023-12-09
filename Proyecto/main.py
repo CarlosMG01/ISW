@@ -3,7 +3,6 @@ from flask_mail import Mail
 import webbrowser
 from src import auth_bp, home_bp
 import os
-from nicegui import ui
 
 
 app = Flask(__name__)
@@ -25,5 +24,5 @@ app.secret_key = '12345'
 if __name__ == '__main__':
     url = "http://127.0.0.1:5000"
     webbrowser.open(url)
+url= app.run(debug=False, host='0.0.0.0')
 app.run(debug=False)
-     

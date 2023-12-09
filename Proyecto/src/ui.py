@@ -210,12 +210,12 @@ def convertir_a_pdf():
 @auth_bp.route('/convertir-a-word', methods=['POST'])
 def convertir_a_word():
     global resultado_global
-
+    texto_limpio = re.sub(r'[^\x20-\x7E]', '', resultado_global)
     docx_output = BytesIO()
 
     document = Document()
     document.add_heading('Documento Word extraído de OCRTeam', 0)
-    document.add_paragraph(resultado_global)
+    document.add_paragraph(texto_limpio)
 
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     filename = f'mitexto_{timestamp}.docx'
