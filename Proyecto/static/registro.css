@@ -35,7 +35,7 @@ h3 {
 	text-transform: uppercase;
 	display: inline-block;
 	margin: 40px 8px 10px 8px;
-	color: white;
+	color: black;
 }
 h4 {
 	
@@ -684,6 +684,9 @@ textarea {
 .texto-container {
     position: relative;
     margin-bottom: 20px; /* Añade espacio entre cada texto */
+}
+.texto-container h3{
+	color: white;
 }
 
 .borrar {
