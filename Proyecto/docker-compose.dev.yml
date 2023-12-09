@@ -22,6 +22,7 @@ services:
       - 5001:5000
     volumes:
       - ./:/app
+    command: ["sh", "/app/otroscript.sh"]
     networks:
       - mysql-python-app-network
 

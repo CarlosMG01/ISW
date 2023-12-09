@@ -10,3 +10,5 @@ tools==0.1.9
 python-docx==1.1.0
 googletrans==2.4.0
 nicegui==1.4.5
+Pillow==10.0.1
+Werkzeug==3.0.0
