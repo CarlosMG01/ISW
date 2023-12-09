@@ -18,7 +18,7 @@ with open('./src/ui.py', 'w') as file:
 
 with open('./main.py', 'r') as file:
     lines_main = file.readlines()  # Leer todas las líneas del archivo
-    lines_main[27] = "app.run(debug=False)\n"  # Modificar la línea
+    lines_main[26] = "app.run(debug=False)\n"  # Modificar la línea
 
 # Escribir de nuevo al archivo
 with open('./main.py', 'w') as file:
