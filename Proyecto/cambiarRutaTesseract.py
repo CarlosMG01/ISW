@@ -6,5 +6,3 @@ with open('/usr/local/lib/python3.9/site-packages/pytesseract/pytesseract.py', '
 # Escribir de nuevo al archivo
 with open('/usr/local/lib/python3.9/site-packages/pytesseract/pytesseract.py', 'w') as file:
     file.writelines(lines)  # Escribir las líneas modificadas de vuelta al archivo
-
-

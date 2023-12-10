@@ -1,4 +1,3 @@
-
 # Abrir el archivo en modo lectura
 with open('./src/bbdd.py', 'r') as file:
     lines = file.readlines()  # Leer todas las líneas del archivo
@@ -18,7 +17,7 @@ with open('./src/ui.py', 'w') as file:
 
 with open('./main.py', 'r') as file:
     lines_main = file.readlines()  # Leer todas las líneas del archivo
-    lines_main[27] = "app.run(debug=False)\n"  # Modificar la línea
+    #lines_main[33] = "app.run(debug=False)\n"  # Modificar la línea
 
 # Escribir de nuevo al archivo
 with open('./main.py', 'w') as file:

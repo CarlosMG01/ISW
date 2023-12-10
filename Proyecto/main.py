@@ -2,7 +2,7 @@ from flask import Flask
 from flask_mail import Mail
 import webbrowser
 from src import auth_bp, home_bp
-import os
+import os, sys, ipaddress
 
 
 app = Flask(__name__)
@@ -21,8 +21,26 @@ mail = Mail(app)
 
 app.secret_key = '12345'
 
+ip, port = '', 5000
+
 if __name__ == '__main__':
-    url = "http://127.0.0.1:5000"
+    if len(sys.argv) > 1:
+        ip_port = sys.argv[1]
+        if ":" in ip_port:
+            ip, port = ip_port.split(":")
+        else:
+            ip, port = [ip_port, "5000"]
+        try:
+            f = ipaddress.IPv4Address(ip)
+            url = f"http://{ip}:{port}"
+            port = int(port)
+        except:
+            url = "http://127.0.0.1:5000"
+            ip, port = "127.0.0.1", 5000
+    else:
+        url = "http://127.0.0.1:5000"
+        ip, port = "127.0.0.1", 5000
+
     webbrowser.open(url)
-url= app.run(debug=False, host='0.0.0.0')
-app.run(debug=False)
+
+app.run(debug=False, host="0.0.0.0")

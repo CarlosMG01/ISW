@@ -22,7 +22,9 @@ services:
       - 5001:5000
     volumes:
       - ./:/app
-    command: ["sh", "/app/otroscript.sh"]
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST:-127.0.0.1}
+    command: ["sh", "/app/otroscript.sh", "${MYSQL_HOST:-127.0.0.1}"]
     networks:
       - mysql-python-app-network
 
