@@ -685,6 +685,9 @@ textarea {
     position: relative;
     margin-bottom: 20px; /* Añade espacio entre cada texto */
 }
+.texto-container h3{
+	color: white;
+}
 
 .borrar {
     position: absolute;
