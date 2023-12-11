@@ -8,6 +8,8 @@ from PIL import Image
 import io
 import base64
 import time
+from passlib.hash import bcrypt
+
 app = Flask(__name__)
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -131,6 +133,7 @@ class DatabaseManager:
 
     def insert_user_directly(self, correo, contrasena):
         try:
+            contrasena = bcrypt.hash(contrasena) #hasheamos la contrasena
             query = "INSERT INTO usuarios (correo, contraseña) VALUES (%s, %s)"
             values = (correo, contrasena)
             self.cursor.execute(query, values)
@@ -373,10 +376,20 @@ def enviar_correo_verificacion(correo, contrasena):
     mail.send(mensaje)
 
 def confirmar_correo_en_bd(correo, contrasena, cursor, connection):
+    # Genera un hash de la contraseña usando passlib y bcrypt
+    hashed_password = bcrypt.hash(contrasena)
+    
+    print(f"Longitud del hash: {len(hashed_password)}")  # Imprime la longitud del hash
+    
     query = "INSERT INTO usuarios (correo, contraseña) VALUES (%s, %s)"
-    values = (correo, contrasena)
-    cursor.execute(query, values)
-    connection.commit()
+    values = (correo, hashed_password)
+    
+    try:
+        cursor.execute(query, values)
+        connection.commit()
+        print("Usuario insertado correctamente.")
+    except mysql.connector.Error as err:
+        print(f"Error al insertar usuario: {err}")
 
 # Parece ser que esta no se usa en ningún momento
 def verificar_credenciales_en_bd(correo, contrasena, cursor):
@@ -406,11 +419,11 @@ def login(correo, contrasena, cursor):
         error = "Correo y contraseña son obligatorios"
     else:
         try:
-            query = "SELECT * FROM usuarios WHERE correo = %s AND contraseña = %s"
-            values = (correo, contrasena)
-            cursor.execute(query, values)
-            user = cursor.fetchone()
-            if user is not None:
+            query = "SELECT contraseña FROM usuarios WHERE correo = %s"
+            cursor.execute(query, (correo,))
+            hash_almacenado = cursor.fetchone()
+
+            if hash_almacenado is not None and bcrypt.verify(contrasena, hash_almacenado[0]):
                 return True, None  # Éxito en el inicio de sesión, sin errores
             else:
                 error = "Credenciales incorrectas"
