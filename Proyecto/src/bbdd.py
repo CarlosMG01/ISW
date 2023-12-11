@@ -257,7 +257,7 @@ class DatabaseManager:
         self.cursor.execute(query, (correo,))
         comprobacion = self.cursor.fetchone()
         if comprobacion is not None:
-            success = 'Se ha enviado un correo electrónico con la contraseña'
+            success = 'Se ha enviado un correo electrónico con el enlace para restablecer la contraseña'
         else:
             error = 'Correo electrónico no registrado en la página web'
         return error, success;
@@ -272,7 +272,7 @@ class DatabaseManager:
         else:
             query = "UPDATE usuarios SET contraseña = %s WHERE correo = %s"
             try:
-                self.cursor.execute(query, (nueva_contrasena, correo))
+                self.cursor.execute(query, (bcrypt.hash(nueva_contrasena), correo))
                 self.connection.commit()
                 success = "Contraseña restablecida correctamente"
             except mysql.connector.Error as err:
