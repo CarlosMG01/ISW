@@ -56,9 +56,9 @@ def test_login_missing_fields():
 
 def test_login_with_incorrect_email():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    with pytest.raises(ValueError, match="Credenciales incorrectas"):
-        cursor = db_manager.cursor
-        login("nonexistent@example.com", "Password123", cursor)
+    cursor = db_manager.cursor 
+    _,error = login("nonexistent@example.com", "Password123", cursor)
+    assert  error == "Credenciales incorrectas"
 
 def test_login_with_incorrect_password():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
