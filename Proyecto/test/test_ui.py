@@ -13,7 +13,14 @@ def client():
 
 def test_index(client):
     response = client.get('/')
-    assert response.status_code == 200
+    assert response.status_code == 302
+
+def test_logout(client):
+    response = client.get('/logout')
+    assert response.status_code == 302
+
+    
+    
 
 def test_registro_form(client):
     response = client.get('/registro')
