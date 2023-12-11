@@ -234,13 +234,13 @@ class DatabaseManager:
 
         else:
             try:
-                query = "SELECT id FROM usuarios WHERE correo = %s AND contraseña = %s"
-                self.cursor.execute(query, (correo, contrasena_actual))
-                user_id = self.cursor.fetchone()
+                query = "SELECT id, contraseña FROM usuarios WHERE correo = %s"
+                self.cursor.execute(query, (correo,))
+                user_info = self.cursor.fetchone()
 
-                if user_id is not None:
+                if user_info is not None and bcrypt.verify(contrasena_actual, user_info[1]):
                     query = "UPDATE usuarios SET contraseña = %s WHERE id = %s"
-                    self.cursor.execute(query, (nueva_contrasena, user_id[0]))
+                    self.cursor.execute(query, (bcrypt.hash(nueva_contrasena), user_info[0]))
                     self.connection.commit()
                     success = 'Contraseña actualizada exitosamente'
                 else:
