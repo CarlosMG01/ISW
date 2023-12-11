@@ -40,12 +40,11 @@ def test_duplicate_email_registration():
 
 def test_login_successful():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
-    
     cursor = db_manager.cursor
     assert login('pruebapracticasw@gmail.com', 'Prueba12345', cursor)
 
+
 def test_login_missing_fields():
-    
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
     db_manager.delete_user_manually('pruebapracticasw@gmail.com') # borrado manual 
     cursor = db_manager.cursor 
@@ -53,21 +52,24 @@ def test_login_missing_fields():
     assert  error == "Correo y contraseña son obligatorios"
     
    
-
 def test_login_with_incorrect_email():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
     cursor = db_manager.cursor 
     _,error = login("nonexistent@example.com", "Password123", cursor)
     assert  error == "Credenciales incorrectas"
 
+
 def test_login_with_incorrect_password():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+    db_manager.insert_user_directly('test@example.com', 'right_password') # registro manual 
     cursor = db_manager.cursor 
-    assert login("test@example.com", "wrong_password", cursor) == False
+    _,error = login("test@example.com", "wrong_password", cursor)
+    assert  error == "Credenciales incorrectas"
 
 
 def test_register_user_wrong_email():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+    db_manager.delete_user_manually('test@example.com') # borrado manual del test anterior
     response = db_manager.register_user("hola", "Password123", "Password123")
     assert response == ("Formato de correo incorrecto",None)
 
