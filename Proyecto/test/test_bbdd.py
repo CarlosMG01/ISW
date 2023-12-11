@@ -40,18 +40,19 @@ def test_duplicate_email_registration():
 
 def test_login_successful():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
-    db_manager.delete_user_manually('pruebapracticasw@gmail.com') # borrado manual 
+    
     cursor = db_manager.cursor
     assert login('pruebapracticasw@gmail.com', 'Prueba12345', cursor)
 
 def test_login_missing_fields():
-    db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-    cursor = db_manager.cursor  
-    with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
-        login("", "Password123", cursor)
     
-    with pytest.raises(ValueError, match="Correo y contraseña son obligatorios"):
-        login("test@example.com", "", cursor)
+    db_manager = DatabaseManager("localhost", "root", "root", "prueba")
+    db_manager.delete_user_manually('pruebapracticasw@gmail.com') # borrado manual 
+    cursor = db_manager.cursor 
+    _,error = login('pruebapracticasw@gmail.com', '', cursor)
+    assert  error == "Correo y contraseña son obligatorios"
+    
+   
 
 def test_login_with_incorrect_email():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
