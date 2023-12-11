@@ -17,7 +17,6 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'practicaceu@gmail.com'
 app.config['MAIL_PASSWORD'] = 'lkytkgkbhirfyxlv'
-
 mail = Mail(app)
 
 docker = 0
@@ -36,7 +35,7 @@ class BaseDeDatosMariaDB:
             self.conexion = None
         else:
             self.host = "localhost"
-            self.usuario = "root"
+            self.usuario = "carlos"
             self.contraseña = "root"
             self.base_de_datos = "prueba"
             self.conexion = None
