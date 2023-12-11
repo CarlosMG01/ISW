@@ -34,7 +34,7 @@ class BaseDeDatosMariaDB:
             self.conexion = None
         else:
             self.host = "localhost"
-            self.usuario = "carlos"
+            self.usuario = "root"
             self.contraseña = "root"
             self.base_de_datos = "prueba"
             self.conexion = None
@@ -127,6 +127,29 @@ class DatabaseManager:
     def close_connection(self):
         self.cursor.close()
         self.connection.close()
+
+
+    def insert_user_directly(self, correo, contrasena):
+        try:
+            query = "INSERT INTO usuarios (correo, contraseña) VALUES (%s, %s)"
+            values = (correo, contrasena)
+            self.cursor.execute(query, values)
+            self.connection.commit()
+            return "Usuario insertado directamente en la base de datos."
+        except mysql.connector.Error as err:
+            return f"Error al insertar usuario directamente: {err}"
+
+
+    def delete_user_manually(self, correo):
+        try:
+            query = "DELETE FROM usuarios WHERE correo = %s"
+            self.cursor.execute(query, (correo,))
+            self.connection.commit()
+            return f"Usuario con correo {correo} borrado correctamente."
+        except mysql.connector.Error as err:
+            return f"Error al borrar usuario: {err}"
+
+
 
     def register_user(self, correo, contrasena, confirmar_contrasena):
         error = None  

@@ -29,7 +29,7 @@ home_bp = Blueprint('home', __name__)
 if docker == 1:
     db_manager = DatabaseManager('mysql-container', 'root', 'root', 'prueba')
 else:
-    db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
+    db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
 
 messages = []   
 resultado_global = ""

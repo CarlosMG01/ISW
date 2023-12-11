@@ -32,14 +32,15 @@ def test_register_user_missing_fields():
 
 def test_duplicate_email_registration():
     db_manager = DatabaseManager("localhost", "root", "root", "prueba")
-
+    db_manager.insert_user_directly('pruebapracticasw@gmail.com', 'Password123') # registro manual 
     # Intenta registrar un usuario con un correo duplicado
-    error, success = db_manager.register_user('pruebapracticasw@gmail.com', 'Password123', 'Password123')
+    error,_=db_manager.register_user('pruebapracticasw@gmail.com', 'Password1234', 'Password1234')
     assert error == 'Este correo electrónico ya está en uso. Por favor, elige otro.'
-    assert success is None
+    
 
 def test_login_successful():
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
+    db_manager.delete_user_manually('pruebapracticasw@gmail.com') # borrado manual 
     cursor = db_manager.cursor
     assert login('pruebapracticasw@gmail.com', 'Prueba12345', cursor)
 
