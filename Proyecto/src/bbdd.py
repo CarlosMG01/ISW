@@ -98,7 +98,7 @@ class BaseDeDatosMariaDB:
                     )
             cursor = database.cursor()
             # Crear la tabla de usuarios
-            cursor.execute("CREATE DATABASE prueba;")
+            cursor.execute("CREATE DATABASE IF NOT EXISTS prueba;")
             cursor.close()
         except mysql.connector.Error as err:
             print(f"Error al crear las tablas: {err}")
