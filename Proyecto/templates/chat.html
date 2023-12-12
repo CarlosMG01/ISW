@@ -34,40 +34,6 @@
             </form>
         </div>
     </div>
-
-    <script>
-        function sendMessage() {
-        const message = document.getElementById('messageInput').value;
-        const filePath = document.getElementById('selectedFilePath').textContent;
-
-        const chatMessages = document.getElementById('chatMessages');
-        chatMessages.innerHTML += '<div class="message sent">' + message + '</div>';
-        if (filePath) {
-            chatMessages.innerHTML += '<div class="message sent">' + filePath + '</div>';
-        }
-
-        document.getElementById('messageInput').value = '';
-        document.getElementById('selectedFilePath').textContent = '';
-        document.getElementById('fileInput').value = '';
-        }
-        function handleFileSelect(input) {
-        const file = input.files[0];
-            if (file) {
-                const filePath = file.name;
-                displayFilePath(filePath);
-            }
-        }
-
-        function displayFilePath(filePath) {
-            const selectedFilePath = document.getElementById('selectedFilePath');
-            selectedFilePath.textContent = 'Archivo seleccionado: ' + filePath;
-        }
-        
-    </script>
-    
-   
-        
-    
 </body>
 </html>
 

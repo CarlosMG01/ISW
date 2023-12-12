@@ -204,7 +204,7 @@ class DatabaseManager:
                 return datos_binarios_procesados
 
             else:
-                with Image.open("static/perfil.png") as imagen:
+                with Image.open("static/img/perfil.png") as imagen:
                     # Obtener los datos binarios de la imagen
                     with io.BytesIO() as output:
                         imagen.save(output, format=imagen.format)  # Guardar en el mismo formato original
