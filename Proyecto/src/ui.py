@@ -18,8 +18,8 @@ import os
 from werkzeug.utils import secure_filename
 from io import BytesIO
 from uuid import uuid4
-
-
+from PIL import Image
+import PyPDF2
 
 docker = 0
 
@@ -33,8 +33,6 @@ else:
 
 messages = []   
 resultado_global = ""
-translator = Translator()
-resultado_global_traducido = ""
 contador_archivos = 0
 
 def obtener_id_usuario_actual():
@@ -44,10 +42,8 @@ def obtener_id_usuario_actual():
     else:
         return None
 
-
 @home_bp.route('/')
 def index():
-    session.clear()
     return redirect(url_for('auth.restricted'))
 
 @auth_bp.route('/logout')
@@ -59,22 +55,16 @@ def logout():
 def registro():
     error = None
     success = None
-
     if request.method == 'POST':
         correo = request.form['correo']
         contrasena = request.form['contrasena']
         confirmar_contrasena = request.form['confirmar_contrasena']
         error, success = db_manager.register_user(correo, contrasena, confirmar_contrasena)  
-
         if success:            
             enviar_correo_verificacion(correo, contrasena) 
-            print(contrasena)
-            
-
             success= 'Se ha enviado un correo de confirmación a tu dirección de correo electrónico.'
             session['correo_usuario'] = correo
             return render_template('inicio_sesion.html', error=error, success=success)
-
     return render_template('registro.html', error=error, success=success)
 
 @auth_bp.route('/confirmar-correo/<token>')
@@ -119,12 +109,10 @@ def cambio_contrasena():
         return redirect(url_for('auth.inicio_sesion'))
     error = None
     success = None
-
     if request.method == 'POST':
         contrasena_actual = request.form['contrasena_actual']
         nueva_contrasena = request.form['nueva_contrasena']
         confirmar_nueva_contrasena = request.form['confirmar_nueva_contrasena']
-
         if nueva_contrasena != confirmar_nueva_contrasena:
             error = "Las contraseñas nuevas no coinciden"
         else:
@@ -133,47 +121,56 @@ def cambio_contrasena():
 
     return render_template('cambio_contrasena.html', error=error, success=success)
 
-
 @auth_bp.route('/restricted', methods=['GET', 'POST'])
 def restricted():
     global resultado_global
+    error = None
+    texto_extraido = ''
+    translated = None
     if request.method == 'POST': 
-        file = request.files['file']
-        
-        if file:
-            file.save(os.path.join('static', file.filename))
+        if 'file' in request.files:
+            file = request.files['file']
             _, file_extension = os.path.splitext(file.filename)
-
+            # Comprobar imagenes
             if file_extension.lower() in ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff']:
-                # Utilizar pytesseract para extraer texto de la imagen
-                texto_extraido = pytesseract.image_to_string(os.path.join('static', file.filename))
+                texto_extraido = pytesseract.image_to_string(Image.open(file))
+            # Comprobar PDFs
             elif file_extension.lower() == '.pdf':
-                # Utilizar fpdf para extraer texto de un archivo PDF
-                texto_extraido = extract_text_from_pdf(os.path.join('static', file.filename))
+                pdf_reader = PyPDF2.PdfReader(file)
+                for page_num in range(len(pdf_reader.pages)):
+                    page = pdf_reader.pages[page_num]
+                    texto_extraido += page.extract_text()
+            # Comprobar DOCX
             elif file_extension.lower() == '.docx':
-                # Utilizar python-docx para extraer texto de un archivo Word
-                texto_extraido = extract_text_from_docx(os.path.join('static', file.filename))
+                texto_extraido = extract_text_from_docx(file)
             else:
-                # Manejar otros tipos de archivos o mostrar un mensaje de error
-                texto_extraido = "Tipo de archivo no admitido."
+                error = "Tipo de archivo no admitido."
 
-            # Imprime el texto extraído
             resultado_global = texto_extraido
             usuario_id = obtener_id_usuario_actual()
             if usuario_id is not None:
                 titulo = "Documento"
                 db_manager.guardar_documento(usuario_id, titulo, texto_extraido)
+        elif 'dest_lang' in request.form:
+            # Traducción
+            translator = Translator()
+            idioma = request.form.get('dest_lang')
+            if idioma == "Traducir al Ingles": 
+                dest_lang="en"
+            elif idioma == "Frances":
+                dest_lang = "fr"
+            elif idioma =="Portugues":
+                dest_lang = "pt"
+            elif idioma == "Italiano":
+                dest_lang = "it"
+            else:
+                error = "Idioma no reconocido"
+            if resultado_global:
+                    translated = translator.translate(resultado_global, src="es", dest=dest_lang).text
+            else:
+                error = "No hay texto para traducir"
+    return render_template('restricted.html', resultado = resultado_global,translated_text=translated, error = error)
 
-    return render_template('restricted.html', resultado=resultado_global)
-#PDF
-def extract_text_from_pdf(pdf_path):
-    text = ''
-    with fitz.open(pdf_path) as pdf_document:
-        for page_num in range(pdf_document.page_count):
-            page = pdf_document[page_num]
-            text += page.get_text()
-
-    return text
 #WORD
 def extract_text_from_docx(docx_path):
     doc = Document(docx_path)
@@ -227,44 +224,6 @@ def convertir_a_word():
     return send_file(docx_output, as_attachment=True, download_name=filename)
 
 
-# Traductor - Inglés
-@auth_bp.route('/translate-en', methods=['GET'])
-def translate_text():
-    global resultado_global
-    if resultado_global:
-        translated = translator.translate(resultado_global, src="es", dest="en")
-        return jsonify({"translated_text": translated.text})
-    else:
-        return jsonify({"error": "No hay texto para traducir"})
-
-# Nuevas rutas para traducir a otros idiomas
-@auth_bp.route('/translate-fr', methods=['GET'])
-def translate_to_french():
-    global resultado_global
-    if resultado_global:
-        translated = translator.translate(resultado_global, src="es", dest="fr")
-        return jsonify({"translated_text": translated.text})
-    else:
-        return jsonify({"error": "No hay texto para traducir"})
-
-@auth_bp.route('/translate-it', methods=['GET'])
-def translate_to_italian():
-    global resultado_global
-    if resultado_global:
-        translated = translator.translate(resultado_global, src="es", dest="it")
-        return jsonify({"translated_text": translated.text})
-    else:
-        return jsonify({"error": "No hay texto para traducir"})
-
-@auth_bp.route('/translate-pt', methods=['GET'])
-def translate_to_portuguese():
-    global resultado_global
-    if resultado_global:
-        translated = translator.translate(resultado_global, src="es", dest="pt")
-        return jsonify({"translated_text": translated.text})
-    else:
-        return jsonify({"error": "No hay texto para traducir"})
-
 #Perfil
 @auth_bp.route('/perfil-usuario', methods =['GET','POST'])
 def perfil():
@@ -303,6 +262,8 @@ def mistextos():
 
 @auth_bp.route('/generar-pdf/<int:id>', methods=['GET'])
 def generar_pdf(id):
+    if not session.get('logged_in'):
+        return redirect(url_for('auth.inicio_sesion'))
     usuario_id = obtener_id_usuario_actual()
 
     if usuario_id is not None:
@@ -335,6 +296,8 @@ def generar_pdf(id):
 
 @auth_bp.route('/generar-word/<int:id>', methods=['GET'])
 def generar_word(id):
+    if not session.get('logged_in'):
+        return redirect(url_for('auth.inicio_sesion'))
     usuario_id = obtener_id_usuario_actual()
 
     if usuario_id is not None:
@@ -363,6 +326,8 @@ def generar_word(id):
     
 @auth_bp.route('/borrar-texto/<int:id>', methods=['GET'])
 def borrar_texto(id):
+    if not session.get('logged_in'):
+        return redirect(url_for('auth.inicio_sesion'))
     usuario_id = obtener_id_usuario_actual()
 
     if usuario_id is not None:
@@ -381,6 +346,8 @@ def borrar_texto(id):
 
 @auth_bp.route('/editar-texto/<int:id>', methods=['GET', 'POST'])
 def editar_texto(id):
+    if not session.get('logged_in'):
+        return redirect(url_for('auth.inicio_sesion'))
     usuario_id = obtener_id_usuario_actual()
 
     if usuario_id is not None:

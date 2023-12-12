@@ -58,12 +58,6 @@ class BaseDeDatosMariaDB:
         except mysql.connector.Error as err:
             print(f"Error de conexión: {err}")
 
-
-     # Conexión a la colección 'usuarios'
-
-
-
-
     def desconectar(self):
         if self.conexion is not None and self.conexion.is_connected():
             self.conexion.close()
@@ -90,8 +84,6 @@ class BaseDeDatosMariaDB:
                     contenido TEXT NOT NULL
                 )
             """)
-
-
             print("Tablas creadas correctamente.")
         except mysql.connector.Error as err:
             print(f"Error al crear las tablas: {err}")
@@ -290,8 +282,7 @@ class DatabaseManager:
             return "Documento guardado correctamente."
         except mysql.connector.Error as err:
             return f"Error al guardar el documento: {err}"
-
-
+    
     def obtener_documentos(self, usuario_id):
         try:
             query = "SELECT id, titulo, contenido FROM textos WHERE usuario_id = %s"

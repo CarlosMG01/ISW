@@ -4,7 +4,6 @@ import webbrowser
 from src import auth_bp, home_bp
 import os, sys, ipaddress
 
-
 app = Flask(__name__)
 app.register_blueprint(home_bp)
 app.register_blueprint(auth_bp)
@@ -42,5 +41,4 @@ if __name__ == '__main__':
         ip, port = "127.0.0.1", 5000
 
     webbrowser.open(url)
-
-app.run(debug=False, host="0.0.0.0")
+    app.run(debug=False, host="0.0.0.0")

@@ -544,9 +544,6 @@ footer {
 	font-size: 16px;
 	cursor: pointer;
 }
-#seccionTraduccion {
-	display: none;
-}
 
 .dropdown {
 	position: absolute;

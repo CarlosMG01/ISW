@@ -4,15 +4,6 @@
 	<img class="adImage" src="https://s1.eestatic.com/2018/09/24/actualidad/actualidad_340480310_130311010_850x478.jpg">
 	<button class="toggle-button" onclick="toggleSize()">X</button>
 </div>
-<script>
-	function mostrarVentanaEmergente() {
-		document.getElementById("popup-container").style.display = "block";
-	}
-	function cerrarVentanaEmergente() {
-		document.getElementById("popup-container").style.display = "none";
-	}
-</script>
-
 <div class="container p-5 my-5 bg-dark text-white">
 	<!-- Manual de usuario -->
 	<p><button onclick="mostrarVentanaEmergente()">Manual de usuario</button>
@@ -40,39 +31,38 @@
 			<label for="file" >
 				<img src="static/fondo4.jpeg"  style="margin-right: 10px;" >
 			</label>
-				<input type="file" name="file" id="file" accept="image/*" required style="display: none;" onchange="submitForm()">
+				<input type="file" name="file" id="file" accept="image/*, .doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,application/pdf" required style="display: none;" onchange="submitForm()">
 				<button type="submit" id="boton_submit" style="display: none;"></button>
 		</form>
 	</div>
-	<div id="texto_extraido"></div>
-	<h2>Texto extraído:</h2>
-	<p style ="color:white"> {{ resultado }}</p>
-	<button id="generarPDF">Generar PDF</button>
-	<button id="generarWORD">Generar Word</button>
-	<button id="traducirIngles">Traducir a Inglés</button>
-	<div class="dropdown">
-		<button id="seleccionarIdioma">Otro Idioma</button>
-		<div class="dropdown-content">
-			<a href="#" onclick="cambiarIdioma('fr')">Francés</a>
-			<a href="#" onclick="cambiarIdioma('it')">Italiano</a>
-			<a href="#" onclick="cambiarIdioma('pt')">Portugués</a>
-		<!-- Agrega más idiomas según sea necesario -->
+	<input type="button" id="generarPDF" value="Generar PDF">
+	<input type = "button" id="generarWORD" value="Generar Word">
+	<form method="POST" action="/restricted" >
+		<input type ="submit" name="dest_lang" value="Traducir al Ingles">
+		<div class="dropdown">
+			<input type="button" value="Otro idioma">
+				<div class="dropdown-content">
+					<input type="submit" name="dest_lang" value="Frances">
+					<input type ="submit" name="dest_lang" value="Italiano">
+					<input type="submit" name="dest_lang" value = "Portugues">
+				</div>
 		</div>
-	</div>	
-
-	
-
-	<div id="seccionTraduccion">
+	</form>
+	{% if resultado %}
+	<h2>Texto extraído:</h2>
+	<p> {{ resultado }}</p>
+ 	{% endif %}	
+	{% if translated_text %}
+	<div>
 		<h1>Texto Traducido:</h1>
-		<p id="textoTraducido"></p>
+		<p> {{ translated_text }}</p>
 	</div>
-</div>
-<script>
-	function submitForm() {
-		document.getElementById("boton_submit").click();
-	}
-</script>
+	{% endif %}
+	{% if error %}
+	<p class="alert alert-danger" role="alert">{{ error }}</p>
+	{% endif %}
 
+</div>
 <!-- Cookies -->
 <div id="cookie-notification">
 	<p>Este sitio utiliza cookies para mejorar tu experiencia. ¿Aceptas nuestras cookies?</p>
@@ -236,44 +226,6 @@
 	document.getElementById('generarWORD').addEventListener('click', generarWord);
 </script>
 
-
-
-<script>
-	let idiomaDestino = 'en'; // Idioma predeterminado
-
-	function cambiarIdioma(idioma) {
-		idiomaDestino = idioma;
-		traducir(idiomaDestino);
-	}
-
-	async function traducir(idioma) {
-		try {
-			const response = await fetch(`/translate-${idioma}`, { method: 'GET' });
-
-			if (!response.ok) {
-				throw new Error(`Error al traducir: ${response.status} - ${response.statusText}`);
-			}
-
-			const data = await response.json();
-
-			if (data.translated_text) {
-				// Mostrar la sección de traducción
-				document.getElementById('seccionTraduccion').style.display = 'block';
-				// Actualizar el contenido de la página con el texto traducido
-				document.getElementById('textoTraducido').innerHTML = data.translated_text;
-				alert('Traducción completa');
-			} else {
-				alert('Error al traducir el texto');
-			}
-		} catch (error) {
-			console.error('Error:', error);
-			alert('Error al traducir el texto. Consulta la consola para obtener más información.');
-		}
-	}
-
-	document.getElementById('traducirIngles').addEventListener('click', () => cambiarIdioma('en'));
-</script>
-
 <script>
 	function toggleSize() {
 		var anuncio = document.getElementById("miAnuncio");
@@ -286,5 +238,20 @@
 		}
 	}
 </script>
+<script>
+	function mostrarVentanaEmergente() {
+		document.getElementById("popup-container").style.display = "block";
+	}
+	function cerrarVentanaEmergente() {
+		document.getElementById("popup-container").style.display = "none";
+	}
+</script>
+<script>
+	function submitForm() {
+		document.getElementById("boton_submit").click();
+	}
+</script>
+
+
 
 {% include 'footer.html' %} 
