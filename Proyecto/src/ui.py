@@ -169,7 +169,60 @@ def restricted():
                     translated = translator.translate(resultado_global, src="es", dest=dest_lang).text
             else:
                 error = "No hay texto para traducir"
+        elif 'PDF' in request.form:
+            if resultado_global:
+                error, success= convertir_a_pdf(resultado_global)
+                if success:
+                    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                    filename = f'mitexto_{timestamp}.pdf'
+                    return send_file(success, as_attachment=True, download_name=filename, mimetype='application/pdf')
+            else:
+                error = "No hay texto para generar un PDF"
+        elif 'WORD' in request.form:
+            if resultado_global:
+                error, success= convertir_a_word(resultado_global)
+                if success:
+                    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                    filename = f'mitexto_{timestamp}.docx'
+                    return send_file(success, as_attachment=True, download_name=filename, mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            else:
+                error = "No hay texto para generar un Word"
     return render_template('restricted.html', resultado = resultado_global,translated_text=translated, error = error)
+
+# PDF
+def convertir_a_pdf(resultado_global):
+    pdf_output = BytesIO()
+    try:
+        pdf = FPDF(orientation='P', unit='mm', format='A4')
+        pdf.add_page()
+        pdf.set_font('Arial', 'B', 16)
+        pdf.cell(190, 10, txt='PDF extraído de OCRTeam', ln=True, align='C')
+        pdf.set_font('Arial', '', 12)
+        pdf.multi_cell(190, 10, txt=resultado_global, border=0, align='L')
+        pdf_output.write(pdf.output(dest='S').encode('latin1'))
+        pdf_output.seek(0)
+        success = pdf_output
+    except Exception as e:
+        error = f"Error al generar el PDF: {str(e)}"
+        pdf_output.close()
+        return error, None 
+    return None, pdf_output
+
+# WORD
+def convertir_a_word(resultado_global):
+    texto_limpio = re.sub(r'[^\x20-\x7E]', '', resultado_global)
+    docx_output = BytesIO()
+    try:
+        document = Document()
+        document.add_heading('Documento Word extraído de OCRTeam', 0)
+        document.add_paragraph(texto_limpio)
+        document.save(docx_output)
+        docx_output.seek(0)
+    except Exception as e:
+        error = f"Error al generar ek Word: {str(e)}"
+        docx_output.close()
+        return error, None
+    return None, docx_output
 
 #WORD
 def extract_text_from_docx(docx_path):
@@ -178,50 +231,6 @@ def extract_text_from_docx(docx_path):
     for paragraph in doc.paragraphs:
         text += paragraph.text + '\n'
     return text
-
-# PDF
-@auth_bp.route('/convertir-a-pdf', methods=['POST'])
-def convertir_a_pdf():
-    global resultado_global
-
-    pdf_output = BytesIO()
-
-    pdf = FPDF(orientation='P', unit='mm', format='A4')
-    pdf.add_page()
-    pdf.set_font('Arial', 'B', 16)
-    pdf.cell(190, 10, txt='PDF extraído de OCRTeam', ln=True, align='C')
-    pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(190, 10, txt=resultado_global, border=0, align='L')
-
-    pdf_output.write(pdf.output(dest='S').encode('latin1'))
-
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    filename = f'mitexto_{timestamp}.pdf'
-
-    pdf_output.seek(0)
-
-    return send_file(pdf_output, as_attachment=True, download_name=filename)
-
-
-# WORD
-@auth_bp.route('/convertir-a-word', methods=['POST'])
-def convertir_a_word():
-    global resultado_global
-    texto_limpio = re.sub(r'[^\x20-\x7E]', '', resultado_global)
-    docx_output = BytesIO()
-
-    document = Document()
-    document.add_heading('Documento Word extraído de OCRTeam', 0)
-    document.add_paragraph(texto_limpio)
-
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    filename = f'mitexto_{timestamp}.docx'
-
-    document.save(docx_output)
-
-    docx_output.seek(0)
-
-    return send_file(docx_output, as_attachment=True, download_name=filename)
 
 
 #Perfil
@@ -265,30 +274,15 @@ def generar_pdf(id):
     if not session.get('logged_in'):
         return redirect(url_for('auth.inicio_sesion'))
     usuario_id = obtener_id_usuario_actual()
-
     if usuario_id is not None:
         documento = db_manager.obtener_documento_por_id(usuario_id, id)
-
         if documento is not None:
-
             contenido = documento[1]
-            
-            pdf_output = BytesIO()
-            pdf = FPDF(orientation='P', unit='mm', format='A4')
-            pdf.add_page()
-            pdf.set_font('Arial', 'B', 16)
-            pdf.cell(190, 10, txt='PDF extraído de OCRTeam', ln=True, align='C')
-            pdf.set_font('Arial', '', 12)
-            pdf.multi_cell(190, 10, txt=contenido, border=0, align='L')
-            pdf_output.write(pdf.output(dest='S').encode('latin1'))
-
-
-            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-            filename = f'mitexto_{timestamp}.pdf'
-
-            pdf_output.seek(0)
-            
-            return send_file(pdf_output, download_name=filename, as_attachment=True)
+            error, success= convertir_a_pdf(contenido)
+            if success:
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                filename = f'mitexto_{timestamp}.pdf'
+                return send_file(success, as_attachment=True, download_name=filename, mimetype='application/pdf')
         else:
             return "Documento no encontrado."
     else:
@@ -302,27 +296,19 @@ def generar_word(id):
 
     if usuario_id is not None:
         documento = db_manager.obtener_documento_por_id(usuario_id, id)
-
         if documento is not None:
             contenido = documento[1]
-
-            docx_output = BytesIO()
-            document = Document()
-            document.add_heading('Documento Word extraído de OCRTeam', 0)   
-            document.add_paragraph(contenido)
-
-            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-            filename = f'mitexto{timestamp}.docx'
-
-            document.save(docx_output)
-            docx_output.seek(0)
-            
-            # Devolver el Word como respuesta para descargar
-            return send_file(docx_output, download_name=filename, as_attachment=True)
+            error, success = convertir_a_word(contenido)
+            if success:
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                filename = f'mitexto{timestamp}.docx'
+                return send_file(success, as_attachment=True, download_name=filename, mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
         else:
-            return "Documento no encontrado."
+            error = "Documento no encontrado."
+            return error
     else:
-        return "Error al obtener ID del usuario."
+        error = "Error al obtener ID del usuario."
+        return error
     
 @auth_bp.route('/borrar-texto/<int:id>', methods=['GET'])
 def borrar_texto(id):
@@ -366,10 +352,6 @@ def editar_texto(id):
     else:
         return "Error al obtener ID del usuario."
 
- 
-
-
-
 @auth_bp.route('/chat', methods=['GET', 'POST'])
 def chat():
     if not session.get('logged_in'):
@@ -402,9 +384,6 @@ def chat():
 #        })
 #    return processed_messages
 
-
-
-
 @auth_bp.route('/ayuda')
 def ayuda():
     if not session.get('logged_in'):
@@ -415,18 +394,14 @@ def ayuda():
 @auth_bp.route('/olvido_contrasena', methods=['GET', 'POST'])
 def olvide_contrasena(): 
     error = None
-
+    success = None
     if request.method == 'POST':
         correo = request.form['correo']
         if correo:
             error, success = db_manager.verificar_usuario_por_correo(correo)
             if success:
                 enviar_correo_restablecer(correo)
-                return render_template('inicio_sesion.html', error=error, success=success)
-        else:
-            return render_template('olvido_contrasena.html', error = error)
-
-    return render_template('olvido_contrasena.html', error = error)
+    return render_template('olvido_contrasena.html', error = error, success=success)
 
 @auth_bp.route('/restablecer_contrasena/<token>', methods=['GET', 'POST'])
 def restablecer_contrasena(token):
@@ -444,5 +419,6 @@ def restablecer_contrasena(token):
            error = "Las contraseñas nuevas no coinciden"
         else:
             error, success = db_manager.restablecer_contrasena(correo, nueva_contrasena)
-
-    return render_template('restablecer_contrasena.html', error=error, success=success, token=token)
+            if success:
+                return render_template('inicio_sesion.html', success = success)
+    return render_template('restablecer_contrasena.html', error=error, token=token)

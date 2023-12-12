@@ -12,4 +12,7 @@
 </div>
 {% if error %}
 <p class="alert alert-danger" role="alert">{{ error }}</p>
+{% elif success %}
+<p class="alert alert-success" role="alert">{{success}}</p>
 {% endif %}
+

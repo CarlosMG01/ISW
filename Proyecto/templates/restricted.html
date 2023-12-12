@@ -35,9 +35,9 @@
 				<button type="submit" id="boton_submit" style="display: none;"></button>
 		</form>
 	</div>
-	<input type="button" id="generarPDF" value="Generar PDF">
-	<input type = "button" id="generarWORD" value="Generar Word">
 	<form method="POST" action="/restricted" >
+		<input type="submit" name ="PDF" value="Generar PDF">
+		<input type = "submit" name ="WORD" value="Generar Word"><br>
 		<input type ="submit" name="dest_lang" value="Traducir al Ingles">
 		<div class="dropdown">
 			<input type="button" value="Otro idioma">
@@ -48,6 +48,9 @@
 				</div>
 		</div>
 	</form>
+	{% if error %}
+	<p class="alert alert-danger" role="alert">{{ error }}</p>
+	{% endif %}
 	{% if resultado %}
 	<h2>Texto extraído:</h2>
 	<p> {{ resultado }}</p>
@@ -57,9 +60,6 @@
 		<h1>Texto Traducido:</h1>
 		<p> {{ translated_text }}</p>
 	</div>
-	{% endif %}
-	{% if error %}
-	<p class="alert alert-danger" role="alert">{{ error }}</p>
 	{% endif %}
 
 </div>
@@ -162,68 +162,6 @@
 		adImage2.src = adImages2[currentAdIndex2];
 	}
 	setInterval(changeAd2, 5000);
-</script>
-
-<!-- Conversor a PDF -->
-<script>
-	async function generarPDF() {
-		try {
-			const response = await fetch('/convertir-a-pdf', { method: 'POST' });
-
-			if (!response.ok) {
-				throw new Error(`Error al generar el PDF: ${response.status} - ${response.statusText}`);
-			}
-
-			const blob = await response.blob();
-
-			const url = window.URL.createObjectURL(new Blob([blob]));
-			const a = document.createElement('a');
-			a.href = url;
-			a.download = 'mitexto.pdf';
-			document.body.appendChild(a);
-			a.click();
-			document.body.removeChild(a);
-			window.URL.revokeObjectURL(url);
-
-			alert('PDF generado correctamente');
-		} catch (error) {
-			console.error('Error:', error);
-			alert('Error al generar el PDF. Consulta la consola para obtener más información.');
-		}
-	}
-
-	document.getElementById('generarPDF').addEventListener('click', generarPDF);
-</script>
-
-<!-- Conversor a WORD -->
-<script>
-	async function generarWord() {
-		try {
-			const response = await fetch('/convertir-a-word', { method: 'POST' });
-
-			if (!response.ok) {
-				throw new Error(`Error al generar el Word: ${response.status} - ${response.statusText}`);
-			}
-
-			const blob = await response.blob();
-
-			const url = window.URL.createObjectURL(new Blob([blob]));
-			const a = document.createElement('a');
-			a.href = url;
-			a.download = 'mitexto.docx';
-			document.body.appendChild(a);
-			a.click();
-			document.body.removeChild(a);
-			window.URL.revokeObjectURL(url);
-
-			alert('Word generado correctamente');
-		} catch (error) {
-			console.error('Error:', error);
-			alert('Error al generar el Word. Consulta la consola para obtener más información.');
-		}
-	}
-
-	document.getElementById('generarWORD').addEventListener('click', generarWord);
 </script>
 
 <script>

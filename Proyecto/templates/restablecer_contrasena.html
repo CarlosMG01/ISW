@@ -4,8 +4,6 @@
 	<div id="formContent">
 		<!-- Tabs Titles -->
 		<h2 class="active">Restablecer Contraseña</h2>
-		<a class="inactive underlineHover" href="/inicio_sesion">Iniciar Sesión</a>
-
 		<!-- Change Password Form -->
 		<form action="{{ url_for('auth.restablecer_contrasena', token=token) }}" method="post">
 			<input type="password" id="nueva_contrasena" class="fadeIn third" name="nueva_contrasena" placeholder="Nueva Contraseña" required>
@@ -14,8 +12,6 @@
 		</form>
 		{% if error %}
 		<p class="alert alert-danger" role="alert">{{ error }}</p>
-		{% elif success %}
-		<p class="alert alert-success" role="alert">{{ success }}</p>
 		{% endif %}
 	</div>
 </div>
