@@ -152,7 +152,7 @@ def restricted():
                     page = pdf_reader.pages[page_num]
                     texto_extraido += page.extract_text()
             # Comprobar DOCX
-            elif file_extension.lower() == '.docx':
+            elif file_extension.lower() =='.docx':
                 texto_extraido = extract_text_from_docx(file)
             else:
                 error = "Tipo de archivo no admitido."
@@ -204,7 +204,7 @@ def restricted():
 def convertir_a_pdf(resultado_global):
     pdf_output = BytesIO()
     try:
-        texto_limpio = re.sub(r'[^\x20-\x7E]', '', resultado_global)
+        texto_limpio = re.sub(r'[^\x00-\xFF]', '', resultado_global)
         pdf = FPDF(orientation='P', unit='mm', format='A4')
         pdf.add_page()
         pdf.set_font('Arial', 'B', 16)
@@ -222,7 +222,7 @@ def convertir_a_pdf(resultado_global):
 
 # WORD
 def convertir_a_word(resultado_global):
-    texto_limpio = re.sub(r'[^\x20-\x7E]', '', resultado_global)
+    texto_limpio = re.sub(r'[^\x00-\xFF]', '', resultado_global)
     docx_output = BytesIO()
     try:
         document = Document()
