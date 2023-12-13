@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Actualizar según el sistema operativo
+ Actualizar según el sistema operativo
 if command -v apt &> /dev/null; then
-    apt update
-    apt install -y tesseract-ocr
+	apt update
+	apt-get install -y tesseract-ocr
 elif command -v yum &> /dev/null; then
     yum update
     yum install -y tesseract

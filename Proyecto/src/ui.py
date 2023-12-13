@@ -4,16 +4,14 @@ from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, make_response
 from flask import Flask, render_template, request, jsonify, send_file, abort
 from uuid import uuid4
-
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
 #guardar_documento, obtener_textos
 from fpdf import FPDF
 import fitz # pip install pymupdf
 from docx import Document
-from googletrans import Translator
+from pygoogletranslation import Translator
 from datetime import datetime
-import googletrans
 import re
 import pytesseract
 import os
@@ -37,17 +35,16 @@ app = Flask(__name__)
 
 docker = 0
 
-
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
 chat_bp = Blueprint('chat', __name__)
 
-
+resultado_global = ""
 
 if docker == 1:
     db_manager = DatabaseManager('mysql-container', 'root', 'root', 'prueba')
 else:
-    db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
+    db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
 
 def obtener_id_usuario_actual():
     correo = session.get('correo_usuario')

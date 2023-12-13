@@ -35,7 +35,7 @@ class BaseDeDatosMariaDB:
             self.conexion = None
         else:
             self.host = "localhost"
-            self.usuario = "root"
+            self.usuario = "carlos"
             self.contraseña = "root"
             self.base_de_datos = "prueba"
             self.conexion = None
