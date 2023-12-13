@@ -1,15 +1,17 @@
 from flask import Flask
 from flask_mail import Mail
 import webbrowser
-from src import auth_bp, home_bp
+from src import auth_bp, home_bp,chat_bp
 import os, sys, ipaddress
+
+from chatapp import create_app, socketio  # Importa create_app y socketio desde el módulo chatapp
 
 app = Flask(__name__)
 app.register_blueprint(home_bp)
 app.register_blueprint(auth_bp)
+app.register_blueprint(chat_bp)
 
 app.testing = True
-
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -41,4 +43,10 @@ if __name__ == '__main__':
         ip, port = "127.0.0.1", 5000
 
     webbrowser.open(url)
-    app.run(debug=False, host="0.0.0.0")
+
+    # Crea la aplicación Flask y el objeto Socket.IO
+    socketio.init_app(app)
+    
+
+    # Ejecuta la aplicación Flask con Socket.IO
+    socketio.run(app, debug=False, host="0.0.0.0")

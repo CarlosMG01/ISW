@@ -1,77 +1,59 @@
-{% include 'header.html' %} 
+<!-- chat.html -->
+{% include 'header.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
-</head>
-<body>
-    <p>Bienvenido, <strong>{{ correo.split('@')[0] }}</strong>, aquí podrás hablar con otros usuarios y compartir tus textos:</p>
-    <div class="chat-container">
-        <div class="messages" id="chat-messages">
-            {% for user_id, user_avatar, message_text in messages %}
-                <div class="message {% if user_id == user %}sent{% else %}received{% endif %}">
-                    <img src="{{ user_avatar }}" alt="{{ user_id }}" class="avatar">
-                    <div class="message-content">
-                        <p>{{ message_text }}</p>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        
-        <div class="footer">
-            <img src="{{ avatar }}" alt="User Avatar" class="avatar">
-            <form method="post" action="{{ url_for('auth.chat') }}" style="display: flex; align-items: center;">
-            <input type="text" id="text-input" name="text" class="input-message" placeholder="Escribe aquí...">
-            <input type="file" id="file-input" style="display: none;">
-            <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(this)">
-            <label for="fileInput" class="attach-button">Adjuntar Archivo</label>
-            <div id="selectedFilePath"></div>
-            <button type="submit" class="send-button-chat">Enviar</button>
-            </form>
+    <title>Flask-SocketIO Example</title>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+
+    <div id="landing">
+        <div>
+            <input type="text" id="username" placeholder="Username">
+            <button id="join-btn">JOIN</button>
         </div>
     </div>
 
+    <div id="chat" style="display:none;">
+
+        <ul id="chat-messages">
+        </ul>
+        <input type="text" id="message" placeholder="Enter a Message">
+    </div>
     <script>
-        function sendMessage() {
-        const message = document.getElementById('messageInput').value;
-        const filePath = document.getElementById('selectedFilePath').textContent;
+        const socket = io({autoConnect: false});
 
-        const chatMessages = document.getElementById('chatMessages');
-        chatMessages.innerHTML += '<div class="message sent">' + message + '</div>';
-        if (filePath) {
-            chatMessages.innerHTML += '<div class="message sent">' + filePath + '</div>';
-        }
+        document.getElementById("join-btn").addEventListener("click", function() {
+            let username = document.getElementById("username").value;
 
-        document.getElementById('messageInput').value = '';
-        document.getElementById('selectedFilePath').textContent = '';
-        document.getElementById('fileInput').value = '';
-        }
-        function handleFileSelect(input) {
-        const file = input.files[0];
-            if (file) {
-                const filePath = file.name;
-                displayFilePath(filePath);
+            socket.connect();
+
+            socket.on("connect", function() {
+                socket.emit("user_join", username);
+            })
+
+            document.getElementById("chat").style.display = "block";
+            document.getElementById("landing").style.display = "none";
+        })
+
+        document.getElementById("message").addEventListener("keyup", function (event) {
+            if (event.key == "Enter") {
+                let message = document.getElementById("message").value;
+                socket.emit("new_message", message);
+                document.getElementById("message").value = "";
             }
-        }
+        })
 
-        function displayFilePath(filePath) {
-            const selectedFilePath = document.getElementById('selectedFilePath');
-            selectedFilePath.textContent = 'Archivo seleccionado: ' + filePath;
-        }
-        
+        socket.on("chat", function(data) {
+            let ul = document.getElementById("chat-messages");
+            let li = document.createElement("li");
+            li.appendChild(document.createTextNode(data["username"] + ": " + data["message"]));
+            ul.appendChild(li);
+            ul.scrollTop = ul.scrollHeight;
+        })
     </script>
-    
-   
-        
-    
+
+    {% include 'footer.html' %}
 </body>
 </html>
-
-
-
-{% include 'footer.html' %} 
-

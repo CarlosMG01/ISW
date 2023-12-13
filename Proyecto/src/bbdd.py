@@ -35,7 +35,7 @@ class BaseDeDatosMariaDB:
             self.conexion = None
         else:
             self.host = "localhost"
-            self.usuario = "carlos"
+            self.usuario = "root"
             self.contraseña = "root"
             self.base_de_datos = "prueba"
             self.conexion = None
@@ -252,7 +252,7 @@ class DatabaseManager:
             success = 'Se ha enviado un correo electrónico con el enlace para restablecer la contraseña'
         else:
             error = 'Correo electrónico no registrado en la página web'
-        return error, success;
+        return error, success
 
     def restablecer_contrasena(self, correo, nueva_contrasena):
         error = None
@@ -393,7 +393,7 @@ def enviar_correo_restablecer(correo):
     url_restablecer = url_for('auth.restablecer_contrasena', token=token, _external=True)
 
     mensaje = Message('Restablecimiento de contraseña', sender='ceupractica@gmail.com', recipients=[correo])
-    mensaje.body = f'Haz click en el siguiente enlace para restablecer tu contraseña: ´{url_restablecer}'
+    mensaje.body = f'Haz click en el siguiente enlace para restablecer tu contraseña: {url_restablecer}'
 
     mail.send(mensaje)
 
@@ -403,6 +403,7 @@ def enviar_correo_restablecer(correo):
 
 
 def login(correo, contrasena, cursor):
+    bcrypt.hash('gon')
     error = None
 
     if not correo or not contrasena:

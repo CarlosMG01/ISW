@@ -3,6 +3,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, make_response
 from flask import Flask, render_template, request, jsonify, send_file, abort
+from uuid import uuid4
+
 from .bbdd import DatabaseManager
 from .bbdd import confirmar_correo_en_bd, enviar_correo_verificacion, obtener_correo_desde_token,login, enviar_correo_restablecer
 #guardar_documento, obtener_textos
@@ -20,16 +22,32 @@ from io import BytesIO
 from uuid import uuid4
 from PIL import Image
 import PyPDF2
+import sys
+from flask_socketio import emit, SocketIO
+
+
+
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+socketio = SocketIO()
+app = Flask(__name__)
+
+
 
 docker = 0
 
+
 auth_bp = Blueprint('auth', __name__)
 home_bp = Blueprint('home', __name__)
+chat_bp = Blueprint('chat', __name__)
+
+
 
 if docker == 1:
     db_manager = DatabaseManager('mysql-container', 'root', 'root', 'prueba')
 else:
-    db_manager = DatabaseManager('localhost', 'carlos', 'root', 'prueba')
+    db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
 
 messages = []   
 resultado_global = ""
@@ -352,37 +370,35 @@ def editar_texto(id):
     else:
         return "Error al obtener ID del usuario."
 
-@auth_bp.route('/chat', methods=['GET', 'POST'])
+
+@chat_bp.route('/chat')
 def chat():
     if not session.get('logged_in'):
         return redirect(url_for('auth.inicio_sesion'))
-    user = str(uuid4())
-    avatar = f'https://robohash.org/{user}?bgset=bg2'
-    
-    if 'user' not in session:
-        session['user'] = str(uuid4())
-        session['avatar'] = f'https://robohash.org/{session["user"]}?bgset=bg2'
-
-    user = session['user']
-    avatar = session['avatar']
-
-    if request.method == 'POST':
-        text = request.form.get('text', '')
-        messages.append((user, avatar, text))
 
     correo = session.get('correo_usuario')
-    return render_template('chat.html', user=user, avatar=avatar, messages=messages, correo=correo)
+    return render_template('chat.html', correo=correo)
 
-#def chat_messages(own_id, messages):
-#    processed_messages = []
-#    for user_id, avatar, text in messages:
-#        sent_by_own_id = user_id == own_id
-#        processed_messages.append({
-#            'avatar': avatar,
-#            'text': text,
-#            'sent_by_own_id': sent_by_own_id
-#        })
-#    return processed_messages
+users = {}
+
+@socketio.on("connect")
+def handle_connect():
+    print("Client connected!")
+
+@socketio.on("user_join")
+def handle_user_join(username):
+    print(f"User {username} joined!")
+    users[username] = request.sid
+
+@socketio.on("new_message")
+def handle_new_message(message):
+    print(f"New message: {message}")
+    username = None 
+    for user in users:
+        if users[user] == request.sid:
+            username = user
+    emit("chat", {"message": message, "username": username}, broadcast=True)
+
 
 @auth_bp.route('/ayuda')
 def ayuda():
