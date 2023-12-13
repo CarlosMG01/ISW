@@ -24,7 +24,7 @@ services:
       - ./:/app
     environment:
       - MYSQL_HOST=${MYSQL_HOST:-127.0.0.1}
-    command: ["sh", "/app/otroscript.sh", "${MYSQL_HOST:-127.0.0.1}"]
+    command: ["sh", "cambiarTesseracct.sh", "${MYSQL_HOST:-127.0.0.1}"]
     networks:
       - mysql-python-app-network
 

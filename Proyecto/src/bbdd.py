@@ -98,7 +98,7 @@ class BaseDeDatosMariaDB:
                     )
             cursor = database.cursor()
             # Crear la tabla de usuarios
-            cursor.execute("CREATE DATABASE prueba;")
+            cursor.execute("CREATE DATABASE IF NOT EXISTS prueba;")
             cursor.close()
         except mysql.connector.Error as err:
             print(f"Error al crear las tablas: {err}")
@@ -204,7 +204,7 @@ class DatabaseManager:
                 return datos_binarios_procesados
 
             else:
-                with Image.open("static/perfil.png") as imagen:
+                with Image.open("static/img/perfil.png") as imagen:
                     # Obtener los datos binarios de la imagen
                     with io.BytesIO() as output:
                         imagen.save(output, format=imagen.format)  # Guardar en el mismo formato original

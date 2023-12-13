@@ -49,10 +49,6 @@ if docker == 1:
 else:
     db_manager = DatabaseManager('localhost', 'root', 'root', 'prueba')
 
-messages = []   
-resultado_global = ""
-contador_archivos = 0
-
 def obtener_id_usuario_actual():
     correo = session.get('correo_usuario')
     if correo:
@@ -211,13 +207,14 @@ def restricted():
 def convertir_a_pdf(resultado_global):
     pdf_output = BytesIO()
     try:
+        texto_limpio = re.sub(r'[^\x20-\x7E]', '', resultado_global)
         pdf = FPDF(orientation='P', unit='mm', format='A4')
         pdf.add_page()
         pdf.set_font('Arial', 'B', 16)
         pdf.cell(190, 10, txt='PDF extraído de OCRTeam', ln=True, align='C')
         pdf.set_font('Arial', '', 12)
-        pdf.multi_cell(190, 10, txt=resultado_global, border=0, align='L')
-        pdf_output.write(pdf.output(dest='S').encode('latin1'))
+        pdf.multi_cell(190, 10, txt=texto_limpio, border=0, align='L')
+        pdf_output.write(pdf.output(dest='S').encode('latin-1'))
         pdf_output.seek(0)
         success = pdf_output
     except Exception as e:
@@ -373,6 +370,7 @@ def editar_texto(id):
 
 @chat_bp.route('/chat')
 def chat():
+    messages = []   
     if not session.get('logged_in'):
         return redirect(url_for('auth.inicio_sesion'))
 

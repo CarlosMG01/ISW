@@ -9,11 +9,11 @@
             <div class="texto-container">
                 <h3>{{ titulo }}</h3>
                 <p>{{ contenido }}</p>
-                <a href="{{ url_for('auth.generar_pdf', id=documento_id) }}"><img src="static/pdf.png" alt="Generar PDF" style="width: 30px;">Generar PDF</a>
-                <a href="{{ url_for('auth.generar_word', id=documento_id) }}"><img src="static/word.png" alt="Generar Word" style="width: 30px;">Generar Word</a>
-                <a href="{{ url_for('auth.editar_texto', id=documento_id) }}"><img src="static/editar.png" alt="Editar" style="width: 30px;">Editar</a>
-                <a href="mailto:?subject={{titulo}}&body={{contenido}}"><img src="static/correo.png" alt="Compartir con correo" style="width: 30px;">Compartir por correo</a>
-                <a class="borrar" href="{{ url_for('auth.borrar_texto', id=documento_id) }}" onclick="return confirm('¿Estás seguro de que quieres borrar este texto?')"><img src="static/borrar.jpg" alt="Borrar" style="width: 30px;">Borrar</a>
+                <a href="{{ url_for('auth.generar_pdf', id=documento_id) }}"><img src="static/img/pdf.png" alt="Generar PDF" style="width: 30px;">Generar PDF</a>
+                <a href="{{ url_for('auth.generar_word', id=documento_id) }}"><img src="static/img/word.png" alt="Generar Word" style="width: 30px;">Generar Word</a>
+                <a href="{{ url_for('auth.editar_texto', id=documento_id) }}"><img src="static/img/editar.png" alt="Editar" style="width: 30px;">Editar</a>
+                <a href="mailto:?subject={{titulo}}&body={{contenido}}"><img src="static/img/correo.png" alt="Compartir con correo" style="width: 30px;">Compartir por correo</a>
+                <a class="borrar" href="{{ url_for('auth.borrar_texto', id=documento_id) }}" onclick="return confirm('¿Estás seguro de que quieres borrar este texto?')"><img src="static/img/borrar.jpg" alt="Borrar" style="width: 30px;">Borrar</a>
             </div>
         {% endfor %}
     {% else %}

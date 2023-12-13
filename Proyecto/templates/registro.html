@@ -43,25 +43,13 @@
 					<button onclick="cerrarVentanaEmergente()">Cerrar</button>
 				</div>
 			</p>
-			<script>
-				function mostrarVentanaEmergente() {
-					document.getElementById("popup-container").style.display = "block";
-				}
-				function cerrarVentanaEmergente() {
-					document.getElementById("popup-container").style.display = "none";
-				}
-			</script>
 		</div>
 	    </form>
-
-
 	    {% if error %}
 	    <p class="alert alert-danger" role="alert">{{ error }}</p>
 	    {% elif success %}
 	    <p class="alert alert-success" role="alert">{{success}}</p>
 	    {% endif %}
-
-
 	</div>
 </div>
 </body>
