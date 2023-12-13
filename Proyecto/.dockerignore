@@ -1,0 +1,7 @@
+containerRun.sh
+.DS_Store
+hacerCambios.py
+deshacerCambios.py
+docker-compose.dev.yml
+crearContenedor.sh
+__pycache__

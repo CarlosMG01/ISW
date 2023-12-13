@@ -9,19 +9,14 @@ y se descargará la versión compatible con el sistema operativo. Luego habrá q
 
 Lo siguiente será darle permisos de ejecución a los scripts:
 ```
-chmod +x script.sh
+chmod +x containerRun.sh
 ```
-
+Lo siguiente será generar la imagen que usaremos en el contenedor, para ello se hará:
 ```
-chmod +x conteinerrRun.sh
+docker build -t app-flask .
 ```
 
 Lo siguiente será ejecutar el primer script:
-```
-./script
-```
-
-Una vez terminada la sesión en el servidor ya se tendrá todo montado, por lo que a partir de ahora se hará:
 ```
 ./conteinerRun.sh
 ``` 
