@@ -375,6 +375,7 @@ def chat():
         return redirect(url_for('auth.inicio_sesion'))
 
     correo = session.get('correo_usuario')
+    
     return render_template('chat.html', correo=correo)
 
 users = {}

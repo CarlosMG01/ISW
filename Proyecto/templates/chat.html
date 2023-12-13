@@ -1,59 +1,133 @@
 <!-- chat.html -->
 {% include 'header.html' %}
 
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flask-SocketIO Example</title>
 
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask-SocketIO Example</title>
-    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+    }
+    h2{
+        text-align: center;
+        margin-top: 0;
+        margin-right: 200px;
+        margin-left: 600px;
+    }
 
-    <div id="landing">
-        <div>
-            <input type="text" id="username" placeholder="Username">
-            <button id="join-btn">JOIN</button>
-        </div>
+    #landing {
+        background-color: #f0f0f0;
+        padding: 20px;
+        text-align: center;
+    }
+
+    #chat-container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #fff;
+        border: 5px solid rgb(27, 112, 154)c;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    #chat {
+        display: none;
+        border: 2px solid #3b59d3; /* Borde para el chat */
+        padding: 10px;
+        background-color: #f8f8f8; /* Color de fondo para el chat */
+    }
+
+    #chat-messages {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 300px;
+        overflow-y: auto;
+        border-bottom: 1px solid #16649c;
+        margin-bottom: 10px;
+    }
+
+    #message {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    /* Estilo para el nombre del usuario en el chat */
+    .username {
+        font-weight: bold;
+        color: #{{ username_color }};
+        background-color: #{{ username_background_color }}; 
+        padding: 3px;
+        border-radius: 5px; 
+        margin-right: 5px;
+    }
+</style>
+
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<h2><strong>CHAT</strong></h2>
+<div id="landing">
+    <div>
+        <input type="text" id="username" placeholder="Nombre para el chat">
+        <button id="join-btn">UNIRSE</button>
     </div>
+</div>
 
+<div id="chat-container">
     <div id="chat" style="display:none;">
-
         <ul id="chat-messages">
         </ul>
         <input type="text" id="message" placeholder="Enter a Message">
     </div>
-    <script>
-        const socket = io({autoConnect: false});
+</div>
 
-        document.getElementById("join-btn").addEventListener("click", function() {
-            let username = document.getElementById("username").value;
+<script>
+    const socket = io({autoConnect: false});
 
-            socket.connect();
+    document.getElementById("join-btn").addEventListener("click", function() {
+        let username = document.getElementById("username").value;
 
-            socket.on("connect", function() {
-                socket.emit("user_join", username);
-            })
+        socket.connect();
 
-            document.getElementById("chat").style.display = "block";
-            document.getElementById("landing").style.display = "none";
+        socket.on("connect", function() {
+            socket.emit("user_join", username);
         })
 
-        document.getElementById("message").addEventListener("keyup", function (event) {
-            if (event.key == "Enter") {
-                let message = document.getElementById("message").value;
-                socket.emit("new_message", message);
-                document.getElementById("message").value = "";
-            }
-        })
+        document.getElementById("chat").style.display = "block";
+        document.getElementById("landing").style.display = "none";
+    })
 
-        socket.on("chat", function(data) {
-            let ul = document.getElementById("chat-messages");
-            let li = document.createElement("li");
-            li.appendChild(document.createTextNode(data["username"] + ": " + data["message"]));
-            ul.appendChild(li);
-            ul.scrollTop = ul.scrollHeight;
-        })
-    </script>
+    document.getElementById("message").addEventListener("keyup", function (event) {
+        if (event.key == "Enter") {
+            let message = document.getElementById("message").value;
+            socket.emit("new_message", message);
+            document.getElementById("message").value = "";
+        }
+    })
 
-    {% include 'footer.html' %}
+    socket.on("chat", function(data) {
+        let ul = document.getElementById("chat-messages");
+        let li = document.createElement("li");
+
+        // Crear un span para el nombre de usuario
+        let usernameSpan = document.createElement("span");
+        usernameSpan.className = "username";
+        usernameSpan.appendChild(document.createTextNode(data["username"] + ": "));
+
+        // Agregar el span del nombre de usuario y el mensaje al li
+        li.appendChild(usernameSpan);
+        li.appendChild(document.createTextNode(data["message"]));
+
+        ul.appendChild(li);
+        ul.scrollTop = ul.scrollHeight;
+    })
+</script>
+
+{% include 'footer.html' %}
 </body>
 </html>
